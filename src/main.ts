@@ -2,6 +2,8 @@ import { createApp, h, Suspense } from 'vue';
 
 import App from './App.vue';
 
+import router from './router';
+
 const app = createApp({
   render: () => {
     return h(
@@ -16,5 +18,7 @@ const app = createApp({
     );
   }
 });
+
+app.use(router);
 
 app.mount('#app');
