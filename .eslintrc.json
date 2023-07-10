@@ -1,0 +1,135 @@
+{
+  "root": true,
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    "plugin:vue/vue3-strongly-recommended",
+    "plugin:tailwindcss/recommended"
+  ],
+  "overrides": [
+    {
+      "files": [
+        "*.vue"
+      ],
+      "rules": {
+        "@typescript-eslint/indent": "off"
+      }
+    }
+  ],
+  "parser": "vue-eslint-parser",
+  "parserOptions": {
+    "project": true,
+    "parser": {
+      "ts": "@typescript-eslint/parser"
+    },
+    "ecmaVersion": "latest",
+    "sourceType": "module",
+    "extraFileExtensions": [
+      ".vue"
+    ]
+  },
+  "plugins": [
+    "@typescript-eslint",
+    "vue",
+    "tailwindcss"
+  ],
+  "rules": {
+    "linebreak-style": [
+      "error",
+      "unix"
+    ],
+    "quotes": [
+      "error",
+      "single"
+    ],
+    "semi": [
+      "error",
+      "always"
+    ],
+    "max-len": [
+      "warn",
+      120
+    ],
+    "no-trailing-spaces": "error",
+    "comma-dangle": "error",
+    "no-multiple-empty-lines": [
+      "error",
+      {
+        "max": 1
+      }
+    ],
+    "comma-spacing": "error",
+    "space-in-parens": [
+      "error",
+      "never"
+    ],
+    "space-infix-ops": "error",
+    "array-bracket-spacing": [
+      "error",
+      "always"
+    ],
+    "arrow-spacing": "error",
+    "one-var": [
+      "error",
+      "never"
+    ],
+    "object-curly-spacing": [
+      "error",
+      "always"
+    ],
+    "no-unused-vars": "off",
+    "default-case": "error",
+    "@typescript-eslint/explicit-function-return-type": "error",
+    "@typescript-eslint/indent": [
+      "error",
+      2,
+      {
+        "SwitchCase": 1,
+        "MemberExpression": 1,
+        "FunctionDeclaration": {
+          "parameters": "first"
+        },
+        "FunctionExpression": {
+          "parameters": "first"
+        }
+      }
+    ],
+    "vue/script-indent": [
+      "error",
+      2,
+      {
+        "baseIndent": 1,
+        "switchCase": 1
+      }
+    ],
+    "vue/block-lang": [
+      "error",
+      {
+        "script": {
+          "lang": "ts",
+          "allowNoLang": false
+        }
+      }
+    ],
+    "vue/comma-dangle": "error",
+    "vue/comma-spacing": "error",
+    "vue/space-in-parens": [
+      "error",
+      "never"
+    ],
+    "vue/space-infix-ops": "error",
+    "vue/array-bracket-spacing": [
+      "error",
+      "always"
+    ],
+    "vue/object-curly-spacing": [
+      "error",
+      "always"
+    ],
+    "tailwindcss/no-custom-classname": "off"
+  }
+}
