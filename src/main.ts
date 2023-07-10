@@ -34,4 +34,7 @@ app.component('FontAwesomeIcon', FontAwesomeIcon);
 app.component('FontAwesomeLayers', FontAwesomeLayers);
 app.component('FontAwesomeLayersText', FontAwesomeLayersText);
 
+declare const COMMIT_HASH: string;
+app.provide('COMMIT_HASH', COMMIT_HASH);
+
 app.mount('#app');
