@@ -16,6 +16,8 @@
     "vue": "^3.3.4"
   },
   "devDependencies": {
+    "@capacitor/android": "^5.0.5",
+    "@capacitor/cli": "^5.0.5",
     "@fortawesome/fontawesome-svg-core": "^6.4.0",
     "@fortawesome/free-brands-svg-icons": "^6.4.0",
     "@fortawesome/free-regular-svg-icons": "^6.4.0",
