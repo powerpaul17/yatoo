@@ -7,7 +7,8 @@
     "build": "bun run ./scripts/build.ts",
     "build-tw": "tailwindcss -i ./src/main.css -o ./build/main.css",
     "build-dev": "npm run build",
-    "build-prod": "BUILD_MODE=production npm run build-dev"
+    "build-prod": "BUILD_MODE=production npm run build-dev",
+    "dev": "bun dev --disable-hmr"
   },
   "author": "Paul Tirk",
   "license": "ISC",
