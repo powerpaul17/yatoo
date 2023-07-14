@@ -7,7 +7,17 @@
     >
     <div class="drawer-content flex flex-col">
       <Suspense>
-        <router-view />
+        <router-view v-slot="{ Component, route }">
+          <transition
+            name="fade"
+            mode="out-in"
+          >
+            <component
+              :is="Component"
+              :key="route.path"
+            />
+          </transition>
+        </router-view>
       </Suspense>
     </div>
 
