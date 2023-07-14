@@ -19,3 +19,11 @@ export default createRouter({
     });
   }
 });
+
+declare module 'vue-router' {
+
+  interface RouteMeta {
+    titleTk: string;
+  }
+
+}
