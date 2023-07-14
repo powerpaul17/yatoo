@@ -1,4 +1,7 @@
 import { createApp, h, Suspense } from 'vue';
+import { createI18n } from 'vue-i18n';
+
+import en from '../i18n/en.json';
 
 import App from './App.vue';
 
@@ -18,6 +21,19 @@ const app = createApp({
     );
   }
 });
+
+type MessageSchema = typeof en;
+
+const i18n = createI18n<[MessageSchema]>({
+  legacy: false,
+  locale: 'en',
+  fallbackLocale: 'en',
+  messages: {
+    'en': en
+  }
+});
+
+app.use(i18n);
 
 app.use(router);
 
