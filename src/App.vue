@@ -6,6 +6,8 @@
       class="drawer-toggle"
     >
     <div class="drawer-content flex flex-col">
+      <TopNavigation />
+
       <Suspense>
         <router-view v-slot="{ Component, route }">
           <transition
@@ -28,5 +30,6 @@
 <script setup lang="ts">
 
   import NavigationBar from './components/NavigationBar.vue';
+  import TopNavigation from './components/TopNavigation.vue';
 
 </script>
