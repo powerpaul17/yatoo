@@ -1,8 +1,18 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
 
+import TodoView from './views/TodoView.vue';
+
 export default createRouter({
   history: createWebHashHistory(),
   routes: [
+    {
+      path: '/todos',
+      name: 'todos',
+      component: TodoView,
+      meta: {
+        titleTk: 'routes.todos'
+      }
+    }
   ],
   scrollBehavior(to, _from, _savedPosition) {
     return new Promise((res) => {
