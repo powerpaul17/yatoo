@@ -4,10 +4,11 @@
   "description": "Organize your life!",
   "main": "build/main.js",
   "scripts": {
-    "build": "bun run ./scripts/build.ts",
+    "build": "npm run build-src && npm run build-tw",
+    "build-src": "bun run ./scripts/build.ts",
     "build-tw": "tailwindcss -i ./src/main.css -o ./build/main.css",
     "build-dev": "npm run build",
-    "build-prod": "BUILD_MODE=production npm run build-dev",
+    "build-prod": "BUILD_MODE=production npm run build",
     "dev": "bun dev --disable-hmr"
   },
   "author": "Paul Tirk",
