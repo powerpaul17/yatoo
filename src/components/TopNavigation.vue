@@ -1,5 +1,8 @@
 <template>
-  <div class="navbar">
+  <div
+    class="navbar z-10 transition-shadow"
+    :class="{ 'shadow-md': scrolled }"
+  >
     <div class="flex-none lg:hidden">
       <label
         for="navigation-drawer"
@@ -21,5 +24,12 @@
 <script setup lang="ts">
 
   import { Menu } from 'lucide-vue-next';
+
+  defineProps({
+    scrolled: {
+      type: Boolean,
+      default: false
+    }
+  });
 
 </script>
