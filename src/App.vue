@@ -1,26 +1,30 @@
 <template>
-  <div class="drawer h-full overflow-x-hidden lg:drawer-open">
+  <div class="drawer h-full lg:drawer-open">
     <input
       id="navigation-drawer"
       type="checkbox"
       class="drawer-toggle"
     >
-    <div class="drawer-content flex flex-col">
+    <div class="drawer-content flex flex-col overflow-y-scroll">
       <TopNavigation />
 
-      <Suspense>
-        <router-view v-slot="{ Component, route }">
-          <transition
-            name="fade"
-            mode="out-in"
-          >
-            <component
-              :is="Component"
-              :key="route.path"
-            />
-          </transition>
-        </router-view>
-      </Suspense>
+      <div class="flex h-full overflow-x-hidden">
+        <div class="grow px-3">
+          <Suspense>
+            <router-view v-slot="{ Component, route }">
+              <transition
+                name="fade"
+                mode="out-in"
+              >
+                <component
+                  :is="Component"
+                  :key="route.path"
+                />
+              </transition>
+            </router-view>
+          </Suspense>
+        </div>
+      </div>
     </div>
 
     <NavigationBar />
