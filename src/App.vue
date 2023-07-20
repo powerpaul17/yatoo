@@ -22,6 +22,7 @@
                 <component
                   :is="Component"
                   :key="route.path"
+                  v-bind="route.params"
                 />
               </transition>
             </Suspense>
