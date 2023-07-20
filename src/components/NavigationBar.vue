@@ -14,6 +14,10 @@
           </router-link>
         </li>
       </ul>
+
+      <div class="p-2">
+        <DarkModeSwitcher />
+      </div>
     </div>
   </div>
 </template>
@@ -21,5 +25,7 @@
 <script setup lang="ts">
 
   import { CheckCheck } from 'lucide-vue-next';
+
+  import DarkModeSwitcher from './DarkModeSwitcher.vue';
 
 </script>
