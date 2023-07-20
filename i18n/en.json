@@ -1,4 +1,9 @@
 {
+  "components": {
+    "NavigationBar": {
+      "todos": "Todos"
+    }
+  },
   "routes": {
     "todos": "Todos"
   }
