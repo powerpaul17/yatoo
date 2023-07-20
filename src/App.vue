@@ -13,8 +13,8 @@
         v-scroll="onScroll"
       >
         <div class="grow px-3">
-          <Suspense>
-            <router-view v-slot="{ Component, route }">
+          <router-view v-slot="{ Component, route }">
+            <Suspense>
               <transition
                 name="fade"
                 mode="out-in"
@@ -24,8 +24,8 @@
                   :key="route.path"
                 />
               </transition>
-            </router-view>
-          </Suspense>
+            </Suspense>
+          </router-view>
         </div>
       </div>
     </div>
