@@ -11,26 +11,13 @@
 
 <script setup lang="ts">
 
-  import { onMounted, ref, watch } from 'vue';
+  import { useDark } from '@vueuse/core';
 
   import { MoonStar, Sun } from 'lucide-vue-next';
 
-  const darkmode = ref(false);
-
-  function updateClass(): void {
-    if (darkmode.value) {
-      document.documentElement.setAttribute('data-theme', 'dark');
-    } else {
-      document.documentElement.removeAttribute('data-theme');
-    }
-  }
-
-  onMounted(() => {
-    updateClass();
-  });
-
-  watch(darkmode, () => {
-    updateClass();
+  const darkmode = useDark({
+    attribute: 'data-theme',
+    storageKey: 'yatoo-color-scheme'
   });
 
 </script>
