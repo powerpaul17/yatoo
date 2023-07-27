@@ -1,3 +1,6 @@
+import type { Query } from 'blinkdb';
+import type { Ref } from 'vue';
+
 import { Store, type Entity } from './Store';
 
 let todoStore: TodoStore|null = null;
@@ -11,6 +14,10 @@ class TodoStore extends Store<Todo> {
 
   constructor() {
     super('todos');
+  }
+
+  public getRef(query: Query<Todo, 'id'>): Ref<Array<Todo>> {
+    return this._getRef(query);
   }
 
 }
