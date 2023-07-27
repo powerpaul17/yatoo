@@ -1,7 +1,10 @@
 import {
   many,
+  watch,
   upsertMany
 } from 'blinkdb';
+
+import { effectScope, onScopeDispose, ref, type Ref } from 'vue';
 
 import { MigrationHelper } from '../classes/MigrationHelper';
 import { BaseStore } from './BaseStore';
@@ -18,6 +21,51 @@ export class Store<T extends Entity> extends BaseStore<T> {
           resolve();
         });
       }
+    });
+  }
+
+  protected _watch(
+    query: Query<T, PrimaryKeyOf<T>>,
+    callback: (entities: Array<T>) => void
+  ): void {
+    effectScope().run(() => {
+      let dispose = (): void => { };
+      let disposed = false;
+
+      void this.initializePromise.then(() => watch(this.table, query, (entities) => {
+        callback(entities.slice());
+      }).then((d) => {
+        dispose = d;
+        if (disposed) dispose();
+      }));
+
+      onScopeDispose(() => {
+        dispose();
+        disposed = true;
+      });
+    });
+  }
+
+  protected _getRef(query: Query<T, PrimaryKeyOf<T>>): Ref<Array<T>> {
+    return effectScope().run(() => {
+      const reference = ref<Array<T>>([]);
+
+      let dispose = (): void => { };
+      let disposed = false;
+
+      void this.initializePromise.then(() => watch(this.table, query, (entities) => {
+        reference.value = entities.slice();
+      }).then((d) => {
+        dispose = d;
+        if (disposed) dispose();
+      }));
+
+      onScopeDispose(() => {
+        dispose();
+        disposed = true;
+      });
+
+      return reference;
     });
   }
 
