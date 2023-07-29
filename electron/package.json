@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "description": "An Amazing Capacitor App",
   "author": {
-    "name": "",
-    "email": ""
+    "name": "Paul Tirk",
+    "email": "paultirk@paultirk.com"
   },
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/powerpaul17/yatoo.git"
   },
   "license": "AGPL-3.0-or-later",
   "main": "build/src/index.js",
