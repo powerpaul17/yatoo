@@ -10,7 +10,7 @@
     "type": "git",
     "url": ""
   },
-  "license": "MIT",
+  "license": "AGPL-3.0-or-later",
   "main": "build/src/index.js",
   "scripts": {
     "build": "tsc && electron-rebuild",

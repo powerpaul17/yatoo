@@ -12,7 +12,7 @@
     "dev": "bun dev --disable-hmr"
   },
   "author": "Paul Tirk",
-  "license": "ISC",
+  "license": "AGPL-3.0-or-later",
   "dependencies": {
     "vue": "^3.3.4"
   },
