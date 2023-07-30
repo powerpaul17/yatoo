@@ -1,12 +1,15 @@
 <template>
-  <div class="drawer h-full lg:drawer-open">
-    <input
-      id="navigation-drawer"
-      type="checkbox"
-      class="drawer-toggle"
-    >
-    <div class="drawer-content flex flex-col overflow-y-scroll">
-      <TopNavigation :scrolled="!!scrollTop" />
+  <div class="flex h-full w-fit lg:w-full">
+    <NavigationBar
+      :open="menuOpen"
+      @close="menuOpen = false"
+    />
+
+    <div class="flex w-screen grow flex-col overflow-y-scroll lg:w-auto">
+      <TopNavigation
+        :scrolled="!!scrollTop"
+        @toggle-menu="menuOpen = !menuOpen"
+      />
 
       <div
         class="flex h-full overflow-x-hidden"
@@ -30,8 +33,6 @@
         </div>
       </div>
     </div>
-
-    <NavigationBar />
   </div>
 </template>
 
@@ -49,5 +50,7 @@
   function onScroll({ y }: ReturnType<typeof useScroll>): void {
     scrollTop.value = y.value;
   }
+
+  const menuOpen = ref(false);
 
 </script>

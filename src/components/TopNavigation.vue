@@ -4,12 +4,12 @@
     :class="{ 'shadow-md': scrolled }"
   >
     <div class="flex-none lg:hidden">
-      <label
-        for="navigation-drawer"
+      <button
         class="btn-ghost btn-square btn"
+        @click="emit('toggle-menu')"
       >
         <Menu />
-      </label>
+      </button>
     </div>
 
     <div class="mx-2 min-w-0 flex-1 px-2">
@@ -31,5 +31,9 @@
       default: false
     }
   });
+
+  const emit = defineEmits<{
+    (event: 'toggle-menu'): void;
+  }>();
 
 </script>
