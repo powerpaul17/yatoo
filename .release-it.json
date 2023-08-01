@@ -40,6 +40,11 @@
         "search": "versionName\\s\"{{version}}\"",
         "replace": "versionName \"{{version}}\""
       }
+    },
+    "./scripts/bumpVersionCodePlugin.mjs": {
+      "file": "android/app/build.gradle",
+      "search": "versionCode\\s([0-9]+)",
+      "replace": "versionCode {{code}}"
     }
   }
 }
