@@ -1,0 +1,45 @@
+{
+  "hooks": {
+    "before:init": "npm run test",
+    "after:@release-it/bumper:bump": [
+      "npm i",
+      "npm run build-prod",
+      "npm run capacitor-sync",
+      "npm run build-android",
+      "npm run build-electron"
+    ],
+    "after:git:release": [
+
+    ],
+    "after:release": [
+
+    ]
+  },
+  "git": {},
+  "npm": false,
+  "github": {
+    "release": true,
+    "assets": [
+      "electron/dist/yatoo-*.AppImage",
+      "electron/dist/yatoo-*.flatpak"
+    ]
+  },
+  "plugins": {
+    "@release-it/bumper": {
+      "out": [
+        "package.json",
+        "electron/package.json"
+      ]
+    },
+    "@release-it/keep-a-changelog": {
+      "addUnreleased": true
+    },
+    "@j-ulrich/release-it-regex-bumper": {
+      "out": {
+        "file": "android/app/build.gradle",
+        "search": "versionName\\s\"{{version}}\"",
+        "replace": "versionName \"{{version}}\""
+      }
+    }
+  }
+}
