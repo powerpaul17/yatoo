@@ -20,6 +20,7 @@
   "github": {
     "release": true,
     "assets": [
+      "android/app/build/outputs/apk/release/app-release-signed.apk",
       "electron/dist/yatoo-*.AppImage",
       "electron/dist/yatoo-*.flatpak"
     ]
