@@ -7,6 +7,14 @@ import App from './App.vue';
 
 import router from './router';
 
+// FIXME: should be sorted out in hyperid/bundler
+
+/* @ts-ignore */
+import { v4 } from 'uuid';
+
+// eslint-disable-next-line @typescript-eslint/no-unsafe-call
+v4();
+
 const app = createApp({
   render: () => {
     return h(
