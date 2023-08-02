@@ -23,7 +23,11 @@
 
 <script setup lang="ts">
 
+  import { useRoute } from 'vue-router';
+
   import { Menu } from 'lucide-vue-next';
+
+  const route = useRoute();
 
   defineProps({
     scrolled: {
