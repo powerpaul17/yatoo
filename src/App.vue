@@ -31,6 +31,10 @@
             </Suspense>
           </router-view>
         </div>
+
+        <Suspense>
+          <router-view name="sidebar" />
+        </Suspense>
       </div>
     </div>
   </div>

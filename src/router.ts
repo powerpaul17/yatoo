@@ -2,15 +2,25 @@ import { createRouter, createWebHashHistory } from 'vue-router';
 
 import TodoView from './views/TodoView.vue';
 
+import TodoSidebar from './components/todos/TodoSidebar.vue';
+
 export default createRouter({
   history: createWebHashHistory(),
   routes: [
     {
       path: '/todos',
       name: 'todos',
-      component: TodoView,
+      components: {
+        default: TodoView,
+        sidebar: TodoSidebar
+      },
       meta: {
         titleTk: 'routes.todos'
+      },
+      props: {
+        sidebar: (route) => ({
+          todoId: route.query.todoId
+        })
       }
     }
   ],
