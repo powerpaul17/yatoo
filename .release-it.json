@@ -1,18 +1,12 @@
 {
   "hooks": {
     "before:init": "npm run test",
-    "after:@release-it/bumper:bump": [
+    "after:bump": [
       "npm i",
       "npm run build-prod",
       "npm run capacitor-sync",
       "npm run build-android",
       "npm run build-electron"
-    ],
-    "after:git:release": [
-
-    ],
-    "after:release": [
-
     ]
   },
   "git": {},
