@@ -91,9 +91,12 @@ export class BaseStore<T> {
   }
 
   private async saveToStorage(): Promise<void> {
+    await this.localStorageTable.clear();
+
     const entities = await many(this.table);
     for (const entity of entities) {
       const rawEntity = JSON.parse(JSON.stringify(entity)) as T;
+
       await this.localStorageTable.setItem(entity[this.primaryKey], rawEntity);
     }
   }
