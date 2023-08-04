@@ -37,16 +37,34 @@
         >
           <X />
         </button>
+
+        <div class="grow" />
+
+        <button
+          class="btn-ghost btn-warning btn-circle btn"
+          @click="handleDelete()"
+        >
+          <Trash />
+        </button>
       </div>
     </div>
   </div>
+
+  <DeleteDialog
+    :open="deleteDialogOpen"
+    @close="deleteDialogOpen = false"
+    @delete="handleDeleteTodo()"
+  />
 </template>
 
 <script setup lang="ts">
 
+  import { ref } from 'vue';
   import { useRouter } from 'vue-router';
 
-  import { X } from 'lucide-vue-next';
+  import { Trash, X } from 'lucide-vue-next';
+
+  import DeleteDialog from '../dialogs/DeleteDialog.vue';
 
   defineProps({
     todoId: {
@@ -63,6 +81,16 @@
         todoId: undefined
       }
     });
+  }
+
+  const deleteDialogOpen = ref(false);
+
+  function handleDelete(): void {
+    deleteDialogOpen.value = true;
+  }
+
+  async function handleDeleteTodo(): Promise<void> {
+
   }
 
 </script>
