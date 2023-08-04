@@ -1,7 +1,8 @@
 import {
   many,
   watch,
-  upsertMany
+  upsertMany,
+  remove
 } from 'blinkdb';
 
 import { effectScope, onScopeDispose, ref, type Ref } from 'vue';
@@ -67,6 +68,11 @@ export class Store<T extends Entity> extends BaseStore<T> {
 
       return reference;
     });
+  }
+
+  protected async _remove(id: string): Promise<void> {
+    await this.initializePromise;
+    await remove(this.table, { id });
   }
 
   private async migrate(): Promise<void> {

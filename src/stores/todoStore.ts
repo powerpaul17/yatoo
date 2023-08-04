@@ -20,6 +20,10 @@ class TodoStore extends Store<Todo> {
     return this._getRef(query);
   }
 
+  public remove(todoId: string): Promise<void> {
+    return this._remove(todoId);
+  }
+
 }
 
 export type Todo = Entity & {
