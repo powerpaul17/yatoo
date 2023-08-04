@@ -59,17 +59,31 @@
 
 <script setup lang="ts">
 
-  import { ref } from 'vue';
+  import { ref, watch } from 'vue';
   import { useRouter } from 'vue-router';
 
   import { Trash, X } from 'lucide-vue-next';
 
   import DeleteDialog from '../dialogs/DeleteDialog.vue';
 
-  defineProps({
+  import { useTodoStore, type Todo } from '../../stores/todoStore';
+
+  const todoStore = useTodoStore();
+
+  const props = defineProps({
     todoId: {
       type: String,
       default: null
+    }
+  });
+
+  const todo = ref<Todo|null>(null);
+
+  watch(() => props.todoId, async () => {
+    if (props.todoId) {
+      todo.value =  await todoStore.getById(props.todoId);
+    } else {
+      todo.value = null;
     }
   });
 
