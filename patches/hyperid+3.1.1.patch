@@ -1,0 +1,13 @@
+diff --git a/node_modules/hyperid/hyperid.js b/node_modules/hyperid/hyperid.js
+index 7f32004..f613995 100644
+--- a/node_modules/hyperid/hyperid.js
++++ b/node_modules/hyperid/hyperid.js
+@@ -3,7 +3,7 @@
+ const uuidv4 = require('./uuid-node')
+ const parser = require('uuid-parse')
+ const maxInt = Math.pow(2, 31) - 1
+-const Buffer = require('buffer').Buffer
++const Buffer = require('buffer').default;
+ const base64Padding = Buffer.from('==', 'base64')
+ 
+ function hyperid (opts) {
