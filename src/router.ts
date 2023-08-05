@@ -8,6 +8,12 @@ export default createRouter({
   history: createWebHashHistory(),
   routes: [
     {
+      path: '/',
+      redirect: {
+        name: 'todos'
+      }
+    },
+    {
       path: '/todos',
       name: 'todos',
       components: {
