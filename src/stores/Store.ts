@@ -2,6 +2,7 @@ import { v4 as uuid } from 'uuid';
 
 import {
   many,
+  one,
   upsert,
   watch,
   upsertMany,
@@ -72,6 +73,11 @@ export class Store<T extends Entity> extends BaseStore<T> {
 
       return reference;
     });
+  }
+
+  protected async _getById(id: string): Promise<T> {
+    await this.initializePromise;
+    return await one(this.table, id);
   }
 
   protected async _create(entity: Omit<T, 'id'>): Promise<string> {

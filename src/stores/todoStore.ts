@@ -20,6 +20,10 @@ class TodoStore extends Store<Todo> {
     return this._getRef(query);
   }
 
+  public getById(id: string): Promise<Todo> {
+    return this._getById(id);
+  }
+
   public create(todo: Omit<Todo, 'id'>): Promise<string> {
     return this._create(todo);
   }
