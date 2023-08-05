@@ -5,6 +5,8 @@ import {
   one,
   upsert,
   watch,
+  type Query,
+  type PrimaryKeyOf,
   upsertMany,
   type ValidEntity,
   remove
