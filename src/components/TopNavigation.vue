@@ -17,15 +17,29 @@
     </div>
 
     <div class="flex-none">
+      <button
+        class="btn-ghost btn-circle btn"
+        @click="createInputOverlayOpen = true"
+      >
+        <Plus />
+      </button>
     </div>
   </div>
+
+  <CreateInputOverlay
+    :open="createInputOverlayOpen"
+    @close="createInputOverlayOpen = false"
+  />
 </template>
 
 <script setup lang="ts">
 
+  import { ref } from 'vue';
   import { useRoute } from 'vue-router';
 
-  import { Menu } from 'lucide-vue-next';
+  import { Menu, Plus } from 'lucide-vue-next';
+
+  import CreateInputOverlay from './CreateInputOverlay.vue';
 
   const route = useRoute();
 
@@ -39,5 +53,7 @@
   const emit = defineEmits<{
     (event: 'toggle-menu'): void;
   }>();
+
+  const createInputOverlayOpen = ref(false);
 
 </script>
