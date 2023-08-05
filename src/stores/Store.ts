@@ -1,7 +1,11 @@
+import { v4 as uuid } from 'uuid';
+
 import {
   many,
+  upsert,
   watch,
   upsertMany,
+  type ValidEntity,
   remove
 } from 'blinkdb';
 
@@ -68,6 +72,20 @@ export class Store<T extends Entity> extends BaseStore<T> {
 
       return reference;
     });
+  }
+
+  protected async _create(entity: Omit<T, 'id'>): Promise<string> {
+    await this.initializePromise;
+
+    const id = uuid();
+    const validEntity: ValidEntity<T> = {
+      ...entity,
+      id
+    };
+
+    await upsert(this.table, validEntity);
+
+    return id;
   }
 
   protected async _remove(id: string): Promise<void> {
