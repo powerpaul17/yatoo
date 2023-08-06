@@ -1,6 +1,6 @@
 <template>
   <div
-    class="navbar z-10 transition-shadow"
+    class="navbar relative transition-shadow"
     :class="{ 'shadow-md': scrolled }"
   >
     <div class="flex-none lg:hidden">
