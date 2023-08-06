@@ -9,6 +9,7 @@
     "build-tw": "tailwindcss -i ./src/main.css -o ./build/main.css",
     "build-dev": "npm run build",
     "build-prod": "BUILD_MODE=production npm run build",
+    "test": "bun test",
     "dev": "bun dev --disable-hmr",
     "capacitor-sync": "npx cap sync && npx cap sync @capacitor-community/electron",
     "run-android": "npx cap run android",
