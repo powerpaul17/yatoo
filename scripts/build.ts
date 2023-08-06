@@ -19,6 +19,9 @@ const result = await Bun.build({
   }
 });
 
+const indexFile = Bun.file('./src/index.html');
+await Bun.write('./build/index.html', indexFile);
+
 for (const log of result.logs) {
   console.log(log);
 }
