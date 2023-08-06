@@ -25,14 +25,14 @@
             }"
           >
             <Trash />
-            {{ $t('delete') }}
+            {{ $t('components.Dialogs.DeleteDialog.delete') }}
           </button>
           <button
             class="btn"
             @click="emit('close')"
           >
             <Ban />
-            {{ $t('cancel') }}
+            {{ $t('components.Dialogs.DeleteDialog.cancel') }}
           </button>
         </div>
       </form>

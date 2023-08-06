@@ -1,7 +1,18 @@
 {
   "components": {
+    "Dialogs": {
+      "DeleteDialog": {
+        "cancel": "Cancel",
+        "delete": "Delete"
+      }
+    },
     "NavigationBar": {
       "todos": "Todos"
+    },
+    "Todos": {
+      "TodoSidebar": {
+        "deleteTodo": "Delete Todo"
+      }
     }
   },
   "routes": {

@@ -52,6 +52,7 @@
 
   <DeleteDialog
     :open="deleteDialogOpen"
+    :title="$t('components.Todos.TodoSidebar.deleteTodo')"
     @close="deleteDialogOpen = false"
     @delete="handleDeleteTodo()"
   />
