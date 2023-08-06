@@ -32,7 +32,7 @@
     "@j-ulrich/release-it-regex-bumper": {
       "out": {
         "file": "android/app/build.gradle",
-        "search": "versionName\\s\"{{version}}\"",
+        "search": "versionName\\s\"([0-9.]+)\"",
         "replace": "versionName \"{{version}}\""
       }
     },
