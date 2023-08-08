@@ -4,6 +4,7 @@
   "description": "Organize your life!",
   "main": "build/main.js",
   "scripts": {
+    "postinstall": "patch-package",
     "build": "npm run build-src && npm run build-tw",
     "build-src": "bun run ./scripts/build.ts",
     "build-tw": "tailwindcss -i ./src/main.css -o ./build/main.css",
