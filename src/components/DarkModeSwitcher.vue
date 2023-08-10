@@ -17,7 +17,9 @@
 
   const darkmode = useDark({
     attribute: 'data-theme',
-    storageKey: 'yatoo-color-scheme'
+    storageKey: 'yatoo-color-scheme',
+    valueDark: 'dark',
+    valueLight: 'light'
   });
 
 </script>
