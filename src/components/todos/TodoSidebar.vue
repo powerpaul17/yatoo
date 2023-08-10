@@ -3,7 +3,7 @@
     <!-- Backdrop -->
     <div
       class="
-        absolute top-0
+        fixed right-0 top-0
         h-full w-full
         cursor-pointer
         bg-black/40
@@ -18,7 +18,7 @@
     <!-- Sidebar -->
     <div
       class="
-        absolute right-0 top-0
+        fixed right-0 top-0
         h-full w-full
         bg-base-200
         p-2
