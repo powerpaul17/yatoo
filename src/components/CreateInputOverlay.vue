@@ -5,7 +5,7 @@
   >
     <form
       method="dialog"
-      class="modal-box mx-auto sm:w-10/12"
+      class="modal-box mx-auto max-w-5xl"
     >
       <div class="join w-full">
         <input
