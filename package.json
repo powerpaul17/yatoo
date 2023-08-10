@@ -15,7 +15,7 @@
     "capacitor-sync": "npx cap sync && npx cap sync @capacitor-community/electron",
     "run-android": "npx cap run android",
     "run-electron": "npx cap open @capacitor-community/electron",
-    "build-android": "dotenv -- bash -c 'npx cap build android --keystorepath $ANDROID_KEYSTORE_PATH --keystorepass $ANDROID_KEYSTORE_PASSWORD --keystorealias yatoo --keystorealiaspass $ANDROID_KEYSTORE_PASSWORD --androidreleasetype APK'",
+    "build-android": "dotenv -- bash -c './android/gradlew -p android assembleRelease'",
     "build-electron": "cd electron && npm run electron:make",
     "release": "dotenv release-it",
     "pre-release": "dotenv npm run release -- --preRelease"
