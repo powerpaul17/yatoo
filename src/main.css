@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+#app {
+  overflow-x: hidden;
+}
+
 /* FADE ANIMATION */
 
 .fade-enter-active,
