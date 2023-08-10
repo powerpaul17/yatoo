@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+
+  dialog {
+    color: inherit;
+  }
+
+}
+
 #app {
   overflow-x: hidden;
 }
