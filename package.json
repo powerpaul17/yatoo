@@ -35,6 +35,7 @@
   "devDependencies": {
     "@capacitor-community/electron": "^4.1.2",
     "@capacitor/android": "^5.0.5",
+    "@capacitor/assets": "^2.0.4",
     "@capacitor/cli": "^5.0.5",
     "@j-ulrich/release-it-regex-bumper": "^5.0.0",
     "@release-it/bumper": "^5.1.0",
