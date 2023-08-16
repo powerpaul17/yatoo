@@ -15,7 +15,8 @@ const result = await Bun.build({
   target: 'browser',
   minify: prod,
   define: {
-    'COMMIT_HASH': JSON.stringify(lastCommitHash)
+    'COMMIT_HASH': JSON.stringify(lastCommitHash),
+    '__INTLIFY_JIT_COMPILATION__': 'true'
   }
 });
 
