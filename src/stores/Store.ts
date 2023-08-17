@@ -19,7 +19,7 @@ import { BaseStore } from './BaseStore';
 
 export class Store<T extends Entity> extends BaseStore<T> {
 
-  constructor(
+  protected constructor(
     tableName: string,
     private readonly migrations?: Array<Migration<T>>
   ) {

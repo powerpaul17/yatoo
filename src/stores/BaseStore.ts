@@ -27,7 +27,7 @@ export class BaseStore<T> {
 
   private saveToStorageRateLimited = Utils.rateLimitFunction(this.saveToStorage.bind(this));
 
-  constructor(
+  protected constructor(
     protected readonly tableName: string,
     {
       primaryKey,
