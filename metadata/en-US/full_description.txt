@@ -1,0 +1,1 @@
+Yatoo (yet another todo app) focuses in providing you with the todos you can actually get done at the moment.
