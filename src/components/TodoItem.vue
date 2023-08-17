@@ -5,6 +5,11 @@
       bg-neutral text-neutral-content hover:bg-neutral-focus
       focus:bg-neutral-focus
     "
+    :class="
+      {
+        'opacity-40': todo.done
+      }
+    "
   >
     <div class="flex items-center p-1">
       <div>
