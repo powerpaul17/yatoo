@@ -15,6 +15,13 @@
       <div>
         <button
           class="btn-ghost btn-square btn"
+          @click="handleToggleDoneClicked()"
+        >
+          <Check v-if="!todo.done" />
+          <Undo v-else />
+        </button>
+        <button
+          class="btn-ghost btn-square btn"
           @click="handleToggleOpenClicked()"
         >
           <X v-if="isOpen" />
@@ -30,9 +37,11 @@
   import { type PropType, computed, ref } from 'vue';
   import { useRoute } from 'vue-router';
 
-  import { PanelRightOpen, X } from 'lucide-vue-next';
+  import { Check, PanelRightOpen, Undo, X } from 'lucide-vue-next';
 
-  import type { Todo } from '../stores/todoStore';
+  import { useTodoStore, type Todo } from '../stores/todoStore';
+
+  const todoStore = useTodoStore();
 
   const props = defineProps({
     todo: {
@@ -59,6 +68,10 @@
     } else {
       emit('open', props.todo.id);
     }
+  }
+
+  async function handleToggleDoneClicked(): Promise<void> {
+    await todoStore.setDone(todo.value, !todo.value.done);
   }
 
 </script>

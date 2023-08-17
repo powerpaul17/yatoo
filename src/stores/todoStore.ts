@@ -32,6 +32,13 @@ class TodoStore extends Store<Todo> {
     return this._remove(todoId);
   }
 
+  public async setDone(todo: Todo, done = true): Promise<void> {
+    todo.done = done;
+    todo.doneAt = done ? Date.now() : null;
+
+    await this._upsert(todo);
+  }
+
 }
 
 export type Todo = Entity & {
