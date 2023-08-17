@@ -27,7 +27,7 @@
 
 <script setup lang="ts">
 
-  import { type PropType, computed } from 'vue';
+  import { type PropType, computed, ref } from 'vue';
   import { useRoute } from 'vue-router';
 
   import { PanelRightOpen, X } from 'lucide-vue-next';
@@ -42,6 +42,8 @@
   });
 
   const route = useRoute();
+
+  const todo = ref(props.todo);
 
   const emit = defineEmits<{
     (event: 'open', id?: string): void
