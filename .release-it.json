@@ -2,7 +2,9 @@
   "hooks": {
     "before:init": "npm run test",
     "after:bump": [
-      "npm ci",
+      "npm ci"
+    ],
+    "after:git:release": [
       "npm run build-prod",
       "npm run capacitor-sync",
       "npm run build-android",
