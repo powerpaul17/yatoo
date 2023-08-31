@@ -13,7 +13,10 @@ const result = await Bun.build({
     vuePlugin()
   ],
   target: 'browser',
-  minify: prod,
+  minify: prod ? {
+    whitespace: true,
+    syntax: true
+  } : false,
   define: {
     'COMMIT_HASH': JSON.stringify(lastCommitHash),
     '__INTLIFY_JIT_COMPILATION__': 'true'
