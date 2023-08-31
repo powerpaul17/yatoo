@@ -3,6 +3,7 @@
   "directories": {
     "buildResources": "resources"
   },
+  "artifactName": "${productName}.${ext}",
   "files": [
     "assets/**/*",
     "build/**/*",
@@ -14,5 +15,8 @@
       "AppImage",
       "flatpak"
     ]
+  },
+  "flatpak": {
+    "artifactName": "${productName}-${arch}.${ext}"
   }
 }
