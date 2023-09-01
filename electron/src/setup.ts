@@ -2,27 +2,31 @@ import type { CapacitorElectronConfig } from '@capacitor-community/electron';
 import {
   CapElectronEventEmitter,
   CapacitorSplashScreen,
-  setupCapacitorElectronPlugins,
+  setupCapacitorElectronPlugins
 } from '@capacitor-community/electron';
-import chokidar from 'chokidar';
+import chokidar, { FSWatcher } from 'chokidar';
 import type { MenuItemConstructorOptions } from 'electron';
 import { app, BrowserWindow, Menu, MenuItem, nativeImage, Tray, session } from 'electron';
 import electronIsDev from 'electron-is-dev';
-import electronServe from 'electron-serve';
-import windowStateKeeper from 'electron-window-state';
+import electronServe, { loadURL } from 'electron-serve';
+import windowStateKeeper, { State } from 'electron-window-state';
 import { join } from 'path';
 
 // Define components for a watcher to detect when the webapp is changed so we can reload in Dev mode.
-const reloadWatcher = {
+const reloadWatcher: {
+  debouncer: null | NodeJS.Timeout;
+  ready: boolean;
+  watcher: null | FSWatcher;
+} = {
   debouncer: null,
   ready: false,
-  watcher: null,
+  watcher: null
 };
 export function setupReloadWatcher(electronCapacitorApp: ElectronCapacitorApp): void {
   reloadWatcher.watcher = chokidar
     .watch(join(app.getAppPath(), 'app'), {
       ignored: /[/\\]\./,
-      persistent: true,
+      persistent: true
     })
     .on('ready', () => {
       reloadWatcher.ready = true;
@@ -30,7 +34,7 @@ export function setupReloadWatcher(electronCapacitorApp: ElectronCapacitorApp): 
     .on('all', (_event, _path) => {
       if (reloadWatcher.ready) {
         clearTimeout(reloadWatcher.debouncer);
-        reloadWatcher.debouncer = setTimeout(async () => {
+        reloadWatcher.debouncer = setTimeout(() => {
           electronCapacitorApp.getMainWindow().webContents.reload();
           reloadWatcher.ready = false;
           clearTimeout(reloadWatcher.debouncer);
@@ -44,19 +48,20 @@ export function setupReloadWatcher(electronCapacitorApp: ElectronCapacitorApp): 
 
 // Define our class to manage our app.
 export class ElectronCapacitorApp {
+
   private MainWindow: BrowserWindow | null = null;
   private SplashScreen: CapacitorSplashScreen | null = null;
   private TrayIcon: Tray | null = null;
   private CapacitorFileConfig: CapacitorElectronConfig;
   private TrayMenuTemplate: (MenuItem | MenuItemConstructorOptions)[] = [
-    new MenuItem({ label: 'Quit App', role: 'quit' }),
+    new MenuItem({ label: 'Quit App', role: 'quit' })
   ];
   private AppMenuBarMenuTemplate: (MenuItem | MenuItemConstructorOptions)[] = [
     { role: process.platform === 'darwin' ? 'appMenu' : 'fileMenu' },
-    { role: 'viewMenu' },
+    { role: 'viewMenu' }
   ];
-  private mainWindowState;
-  private loadWebApp;
+  private mainWindowState: State;
+  private loadWebApp: loadURL;
   private customScheme: string;
 
   constructor(
@@ -79,12 +84,12 @@ export class ElectronCapacitorApp {
     // Setup our web app loader, this lets us load apps like react, vue, and angular without changing their build chains.
     this.loadWebApp = electronServe({
       directory: join(app.getAppPath(), 'app'),
-      scheme: this.customScheme,
+      scheme: this.customScheme
     });
   }
 
   // Helper function to load in the app.
-  private async loadMainWindow(thisRef: any) {
+  private async loadMainWindow(thisRef: ElectronCapacitorApp): Promise<void> {
     await thisRef.loadWebApp(thisRef.MainWindow);
   }
 
@@ -103,7 +108,7 @@ export class ElectronCapacitorApp {
     );
     this.mainWindowState = windowStateKeeper({
       defaultWidth: 1000,
-      defaultHeight: 800,
+      defaultHeight: 800
     });
     // Setup preload script path and construct our main window.
     const preloadPath = join(app.getAppPath(), 'build', 'src', 'preload.js');
@@ -119,8 +124,8 @@ export class ElectronCapacitorApp {
         contextIsolation: true,
         // Use preload to inject the electron varriant overrides for capacitor plugins.
         // preload: join(app.getAppPath(), "node_modules", "@capacitor-community", "electron", "dist", "runtime", "electron-rt.js"),
-        preload: preloadPath,
-      },
+        preload: preloadPath
+      }
     });
     this.mainWindowState.manage(this.MainWindow);
 
@@ -165,7 +170,8 @@ export class ElectronCapacitorApp {
     // Setup the main manu bar at the top of our window.
     Menu.setApplicationMenu(Menu.buildFromTemplate(this.AppMenuBarMenuTemplate));
 
-    // If the splashscreen is enabled, show it first while the main window loads then dwitch it out for the main window, or just load the main window from the start.
+    /* If the splashscreen is enabled, show it first while the main window loads then dwitch it out for the main window,
+       or just load the main window from the start. */
     if (this.CapacitorFileConfig.electron?.splashScreenEnabled) {
       this.SplashScreen = new CapacitorSplashScreen({
         imageFilePath: join(
@@ -174,11 +180,11 @@ export class ElectronCapacitorApp {
           this.CapacitorFileConfig.electron?.splashScreenImageName ?? 'splash.png'
         ),
         windowWidth: 400,
-        windowHeight: 400,
+        windowHeight: 400
       });
-      this.SplashScreen.init(this.loadMainWindow, this);
+      await this.SplashScreen.init(this.loadMainWindow.bind(this), this);
     } else {
-      this.loadMainWindow(this);
+      await this.loadMainWindow(this);
     }
 
     // Security
@@ -214,6 +220,7 @@ export class ElectronCapacitorApp {
       }, 400);
     });
   }
+
 }
 
 // Set a CSP up for our application based on the custom scheme
@@ -225,9 +232,9 @@ export function setupContentSecurityPolicy(customScheme: string): void {
         'Content-Security-Policy': [
           electronIsDev
             ? `default-src ${customScheme}://* 'unsafe-inline' devtools://* 'unsafe-eval' data:`
-            : `default-src ${customScheme}://* 'unsafe-inline' data:`,
-        ],
-      },
+            : `default-src ${customScheme}://* 'unsafe-inline' data:`
+        ]
+      }
     });
   });
 }

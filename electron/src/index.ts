@@ -12,10 +12,12 @@ import { ElectronCapacitorApp, setupContentSecurityPolicy, setupReloadWatcher } 
 unhandled();
 
 // Define our menu templates (these are optional)
-const trayMenuTemplate: (MenuItemConstructorOptions | MenuItem)[] = [new MenuItem({ label: 'Quit App', role: 'quit' })];
-const appMenuBarMenuTemplate: (MenuItemConstructorOptions | MenuItem)[] = [
+const trayMenuTemplate: Array<MenuItemConstructorOptions | MenuItem> = [
+  new MenuItem({ label: 'Quit App', role: 'quit' })
+];
+const appMenuBarMenuTemplate: Array<MenuItemConstructorOptions | MenuItem> = [
   { role: process.platform === 'darwin' ? 'appMenu' : 'fileMenu' },
-  { role: 'viewMenu' },
+  { role: 'viewMenu' }
 ];
 
 // Get Config options from capacitor.config
@@ -28,7 +30,7 @@ const myCapacitorApp = new ElectronCapacitorApp(capacitorFileConfig, trayMenuTem
 // If deeplinking is enabled then we will set it up here.
 if (capacitorFileConfig.electron?.deepLinkingEnabled) {
   setupElectronDeepLinking(myCapacitorApp, {
-    customProtocol: capacitorFileConfig.electron.deepLinkingCustomProtocol ?? 'mycapacitorapp',
+    customProtocol: capacitorFileConfig.electron.deepLinkingCustomProtocol ?? 'mycapacitorapp'
   });
 }
 
@@ -38,7 +40,7 @@ if (electronIsDev) {
 }
 
 // Run Application
-(async () => {
+void (async (): Promise<void> => {
   // Wait for electron app to be ready.
   await app.whenReady();
   // Security - Set Content-Security-Policy based on whether or not we are in dev mode.
@@ -46,7 +48,7 @@ if (electronIsDev) {
   // Initialize our app, build windows, and load content.
   await myCapacitorApp.init();
   // Check for updates if we are in a packaged app.
-  autoUpdater.checkForUpdatesAndNotify();
+  void autoUpdater.checkForUpdatesAndNotify();
 })();
 
 // Handle when all of our windows are close (platforms have their own expectations).
@@ -59,11 +61,11 @@ app.on('window-all-closed', function () {
 });
 
 // When the dock icon is clicked.
-app.on('activate', async function () {
+app.on('activate', function () {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (myCapacitorApp.getMainWindow().isDestroyed()) {
-    await myCapacitorApp.init();
+    void myCapacitorApp.init();
   }
 });
 
