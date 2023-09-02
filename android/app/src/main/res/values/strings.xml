@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">yatoo</string>
-    <string name="title_activity_main">yatoo</string>
+    <string name="app_name">Yatoo</string>
+    <string name="title_activity_main">Yatoo</string>
     <string name="package_name">com.paultirk.yatoo</string>
     <string name="custom_url_scheme">com.paultirk.yatoo</string>
 </resources>

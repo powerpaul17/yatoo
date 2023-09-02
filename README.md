@@ -1,1 +1,1 @@
-# YaToO
+# Yatoo - yet another todo app
