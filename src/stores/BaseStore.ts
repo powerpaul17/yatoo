@@ -9,17 +9,15 @@ import {
   insertMany,
   many
 } from 'blinkdb';
-import { createInstance } from 'localforage';
 
 import { useBlinkDB } from './blinkdb';
 import { Utils } from '../classes/Utils';
+import type { LocalStorage } from './LocalStorage/LocalStorage';
 
 export class BaseStore<T> {
 
   protected table;
   private primaryKey: keyof T|'id';
-
-  private localStorageTable;
 
   protected initializePromise;
 
@@ -28,7 +26,7 @@ export class BaseStore<T> {
   private saveToStorageRateLimited = Utils.rateLimitFunction(this.saveToStorage.bind(this));
 
   protected constructor(
-    protected readonly tableName: string,
+    protected readonly localStorage: LocalStorage<T>,
     {
       primaryKey,
       init
@@ -44,13 +42,8 @@ export class BaseStore<T> {
 
     const db = useBlinkDB();
     this.primaryKey = primaryKey ?? 'id';
-    this.table = createTable<T>(db, tableName)({
+    this.table = createTable<T>(db, localStorage.getTableName())({
       primary: this.primaryKey
-    });
-
-    this.localStorageTable = createInstance({
-      name: 'yatoo',
-      storeName: this.tableName
     });
 
     void this.init().then(() => {
@@ -76,11 +69,7 @@ export class BaseStore<T> {
   }
 
   private async loadFromStorage(): Promise<void> {
-    const items: Array<T> = [];
-
-    await this.localStorageTable.iterate<T, void>((value, _key) => {
-      items.push(value);
-    });
+    const items = await this.localStorage.getItems();
 
     if (items.length)
       await insertMany(this.table, items);
@@ -91,13 +80,13 @@ export class BaseStore<T> {
   }
 
   private async saveToStorage(): Promise<void> {
-    await this.localStorageTable.clear();
+    await this.localStorage.clear();
 
     const entities = await many(this.table);
     for (const entity of entities) {
       const rawEntity = JSON.parse(JSON.stringify(entity)) as T;
 
-      await this.localStorageTable.setItem(entity[this.primaryKey], rawEntity);
+      await this.localStorage.setItem(entity[this.primaryKey], rawEntity);
     }
   }
 }

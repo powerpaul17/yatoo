@@ -1,18 +1,24 @@
 import { ItemNotFoundError } from 'blinkdb';
 
 import { BaseStore } from './BaseStore';
+import { useLocalStorage } from './LocalStorage/useLocalStorage';
+import type { LocalStorage } from './LocalStorage/LocalStorage';
 
 let systemStore: SystemStore|null = null;
 
-export const useSystemStore = (): SystemStore => {
-  if (!systemStore) systemStore = new SystemStore();
+export const useSystemStore = async (): Promise<SystemStore> => {
+  if (!systemStore) {
+    const storage = await useLocalStorage<SystemData>('system');
+    systemStore = new SystemStore(storage);
+  }
+
   return systemStore;
 };
 
 class SystemStore extends BaseStore<SystemData> {
 
-  constructor() {
-    super('system', {
+  constructor(storage: LocalStorage<SystemData>) {
+    super(storage, {
       primaryKey: 'name'
     });
   }
@@ -55,3 +61,5 @@ type SystemData = {
   name: string;
   value: string;
 }
+
+export type { SystemStore };

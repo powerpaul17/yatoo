@@ -35,7 +35,7 @@
 
   import ModalComponent from './dialogs/ModalComponent.vue';
 
-  const todoStore = useTodoStore();
+  const todoStore = await useTodoStore();
 
   defineProps({
     open: {

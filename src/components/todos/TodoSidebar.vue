@@ -69,7 +69,7 @@
 
   import { useTodoStore, type Todo } from '../../stores/todoStore';
 
-  const todoStore = useTodoStore();
+  const todoStore = await useTodoStore();
 
   const props = defineProps({
     todoId: {
