@@ -32,7 +32,7 @@
     >
       <div class="flex">
         <button
-          class="btn-ghost btn-circle btn"
+          class="ds-btn-ghost ds-btn-circle ds-btn"
           @click="handleClose()"
         >
           <X />
@@ -41,7 +41,7 @@
         <div class="grow" />
 
         <button
-          class="btn-ghost btn-warning btn-circle btn"
+          class="ds-btn-ghost ds-btn-warning ds-btn-circle ds-btn"
           @click="handleDelete()"
         >
           <Trash />

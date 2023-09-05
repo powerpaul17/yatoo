@@ -13,6 +13,7 @@ export default {
     require('daisyui')
   ],
   daisyui: {
+    prefix: 'ds-',
     themes: [
       {
         light: {

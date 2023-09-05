@@ -1,14 +1,14 @@
 <template>
   <Teleport to="body">
     <dialog
-      class="modal modal-bottom sm:modal-middle"
+      class="ds-modal ds-modal-bottom sm:ds-modal-middle"
       :class="{
-        'modal-open': isOpen
+        'ds-modal-open': isOpen
       }"
     >
       <form
         method="dialog"
-        class="modal-box m-0"
+        class="ds-modal-box m-0"
       >
         <h3 class="text-lg font-bold">
           {{ title }}
@@ -16,9 +16,9 @@
         <p class="py-4">
           {{ text }}
         </p>
-        <div class="modal-action">
+        <div class="ds-modal-action">
           <button
-            class="btn-warning btn"
+            class="ds-btn-warning ds-btn"
             @click="() => {
               emit('delete');
               emit('close')
@@ -28,7 +28,7 @@
             {{ $t('components.Dialogs.DeleteDialog.delete') }}
           </button>
           <button
-            class="btn"
+            class="ds-btn"
             @click="emit('close')"
           >
             <Ban />
@@ -38,7 +38,7 @@
       </form>
       <form
         method="dialog"
-        class="modal-backdrop"
+        class="ds-modal-backdrop"
       >
         <button @click="emit('close')" />
       </form>

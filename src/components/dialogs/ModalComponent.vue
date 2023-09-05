@@ -2,15 +2,15 @@
   <Teleport to="body">
     <dialog
       v-bind="$attrs"
-      class="modal"
+      class="ds-modal"
       :class="{
-        'modal-open': isOpen
+        'ds-modal-open': isOpen
       }"
     >
       <slot />
       <form
         method="dialog"
-        class="modal-backdrop"
+        class="ds-modal-backdrop"
       >
         <button @click="emit('close')" />
       </form>

@@ -30,7 +30,7 @@
     }"
   >
     <div class="flex h-full flex-col overflow-y-scroll bg-base-200">
-      <ul class="menu menu-lg my-1 grow p-4 text-base-content">
+      <ul class="ds-menu ds-menu-lg my-1 grow p-4 text-base-content">
         <li>
           <router-link :to="{ name: 'todos' }">
             <CheckCheck />

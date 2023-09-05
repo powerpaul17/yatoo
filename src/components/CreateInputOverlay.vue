@@ -1,20 +1,20 @@
 <template>
   <ModalComponent
-    class="modal-top"
+    class="ds-modal-top"
     :open="open"
   >
     <form
       method="dialog"
-      class="modal-box mx-auto max-w-5xl"
+      class="ds-modal-box mx-auto max-w-5xl"
     >
-      <div class="join w-full">
+      <div class="ds-join w-full">
         <input
           type="text"
-          class="input-bordered input-primary input join-item w-full text-neutral-content"
+          class="ds-input-bordered ds-input-primary ds-input ds-join-item w-full text-neutral-content"
           v-model="creationString"
         >
         <button
-          class="btn-primary join-item btn"
+          class="ds-btn-primary ds-join-item ds-btn"
           :disabled="!isValidInput"
           @click="handleCreateButtonClicked"
         >

@@ -1,11 +1,11 @@
 <template>
-  <label class="swap btn-ghost swap-rotate btn-circle btn">
+  <label class="ds-swap ds-btn-ghost ds-swap-rotate ds-btn-circle ds-btn">
     <input
       type="checkbox"
       v-model="darkmode"
     >
-    <Sun class="swap-off" />
-    <MoonStar class="swap-on" />
+    <Sun class="ds-wap-off" />
+    <MoonStar class="ds-swap-on" />
   </label>
 </template>
 

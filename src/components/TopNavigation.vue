@@ -1,11 +1,11 @@
 <template>
   <div
-    class="navbar relative transition-shadow"
+    class="ds-navbar relative transition-shadow"
     :class="{ 'shadow-md': scrolled }"
   >
     <div class="flex-none lg:hidden">
       <button
-        class="btn-ghost btn-square btn"
+        class="ds-btn-ghost ds-btn-square ds-btn"
         @click="emit('toggle-menu')"
       >
         <Menu />
@@ -18,7 +18,7 @@
 
     <div class="flex-none">
       <button
-        class="btn-ghost btn-circle btn"
+        class="ds-btn-ghost ds-btn-circle ds-btn"
         @click="createInputOverlayOpen = true"
       >
         <Plus />

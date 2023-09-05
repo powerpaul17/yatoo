@@ -19,14 +19,14 @@
       </div>
       <div>
         <button
-          class="btn-ghost btn-square btn"
+          class="ds-btn-ghost ds-btn-square ds-btn"
           @click="handleToggleDoneClicked()"
         >
           <Check v-if="!todo.done" />
           <Undo v-else />
         </button>
         <button
-          class="btn-ghost btn-square btn"
+          class="ds-btn-ghost ds-btn-square ds-btn"
           @click="handleToggleOpenClicked()"
         >
           <X v-if="isOpen" />
