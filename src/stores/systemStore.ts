@@ -55,6 +55,10 @@ class SystemStore extends BaseStore<SystemData> {
     }
   }
 
+  public async clear(): Promise<void> {
+    await this._clear();
+  }
+
 }
 
 type SystemData = {

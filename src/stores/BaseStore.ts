@@ -7,7 +7,8 @@ import {
   one,
   watch,
   insertMany,
-  many
+  many,
+  clear
 } from 'blinkdb';
 
 import { useBlinkDB } from './blinkdb';
@@ -64,6 +65,10 @@ export class BaseStore<T> {
   protected async _one(query: Query<T, PrimaryKeyOf<T>>): Promise<T> {
     await this.initializePromise;
     return await one(this.table, query);
+  }
+
+  protected async _clear(): Promise<void> {
+    await clear(this.table);
   }
 
   private async init(): Promise<void> {
