@@ -32,12 +32,14 @@ export class BaseStore<T> {
       init
     }: {
       primaryKey?: keyof T,
-      init?: (resolve: () => void) => void
+      init?: (resolve: () => void, reject: (reason: unknown) => void) => void
     }
   ) {
     let resolve: () => void;
-    this.initializePromise = new Promise<void>((res) => {
+    let reject: (reason: unknown) => void;
+    this.initializePromise = new Promise<void>((res, rej) => {
       resolve = res;
+      reject = rej;
     });
 
     const db = useBlinkDB();
@@ -47,7 +49,7 @@ export class BaseStore<T> {
     });
 
     void this.init().then(() => {
-      if (init) init(resolve);
+      if (init) init(resolve, reject);
       else resolve();
     });
   }

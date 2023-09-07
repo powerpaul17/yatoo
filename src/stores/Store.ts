@@ -25,9 +25,11 @@ export class Store<T extends Entity> extends BaseStore<T> {
     private readonly migrations?: Array<Migration<T>>
   ) {
     super(storage, {
-      init: (resolve) => {
+      init: (resolve, reject) => {
         void this.migrate().then(() => {
           resolve();
+        }).catch((reason) => {
+          reject(reason);
         });
       }
     });
