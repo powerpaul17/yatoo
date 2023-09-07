@@ -19,7 +19,7 @@ export const useTodoStore = async (): Promise<TodoStore> => {
 class TodoStore extends Store<Todo> {
 
   constructor(storage: LocalStorage<Todo>) {
-    super(storage);
+    super(storage, {});
   }
 
   public getRef(query: Query<Todo, 'id'>): Ref<Array<Todo>> {

@@ -15,10 +15,10 @@ export class MigrationHelper {
     });
   }
 
-  public async getLastMigrationIndex(): Promise<number> {
+  public async getLastDbVersion(): Promise<number> {
     await this.readyPromise;
 
-    const value = await this.systemStore!.getValue(`lastMigrationIndex_${this.tableName}`);
+    const value = await this.systemStore!.getValue(`lastDbVersion_${this.tableName}`);
     if (value) {
       return Number(value);
     }
@@ -26,9 +26,9 @@ export class MigrationHelper {
     return -1;
   }
 
-  public async setLastMigrationIndex(index: number): Promise<void> {
+  public async setLastDbVersion(version: number): Promise<void> {
     await this.readyPromise;
-    await this.systemStore!.setValue(`lastMigrationIndex_${this.tableName}`, index.toString());
+    await this.systemStore!.setValue(`lastDbVersion_${this.tableName}`, version.toString());
   }
 
 }

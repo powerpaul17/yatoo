@@ -22,11 +22,20 @@ export class Store<T extends Entity> extends BaseStore<T> {
 
   protected constructor(
     storage: LocalStorage<T>,
-    private readonly migrations?: Array<Migration<T>>
+    {
+      migrationConfig
+    }: {
+      migrationConfig?: MigrationConfig<T>
+    }
   ) {
     super(storage, {
       init: (resolve, reject) => {
-        void this.migrate().then(() => {
+        if (!migrationConfig) {
+          resolve();
+          return;
+        }
+
+        void this.migrate(migrationConfig).then(() => {
           resolve();
         }).catch((reason) => {
           reject(reason);
@@ -104,29 +113,38 @@ export class Store<T extends Entity> extends BaseStore<T> {
     await remove(this.table, { id });
   }
 
-  private async migrate(): Promise<void> {
-    if (!this.migrations) return;
-
+  private async migrate(migrationConfig: MigrationConfig<T>): Promise<void> {
     const migrationHelper = new MigrationHelper(this.localStorage.getTableName());
 
-    const lastMigrationIndex = await migrationHelper.getLastMigrationIndex();
+    const lastDbVersion = await migrationHelper.getLastDbVersion();
+    const newDbVersion = migrationConfig.version;
 
-    for (const [ index, migration ] of this.migrations.entries()) {
-      if (index <= lastMigrationIndex) continue;
-      const entities = await many(this.table);
+    if (newDbVersion < lastDbVersion) {
+      throw new DbVersionMismatchError();
+    } else if (newDbVersion === lastDbVersion) return;
 
-      const migratedEntities = migration(entities);
-      await upsertMany(this.table, migratedEntities);
+    const entities = await many(this.table);
 
-      await migrationHelper.setLastMigrationIndex(index);
-    }
+    const migratedEntities = migrationConfig.migrationFunction(entities);
+    await upsertMany(this.table, migratedEntities);
+
+    await migrationHelper.setLastDbVersion(migrationConfig.version);
   }
 
 }
+
+export class DbVersionMismatchError extends Error {}
 
 export type Entity = {
   id: string;
   pluginId?: string;
 }
 
-type Migration<T extends Entity> = (entities: Array<T>) => Array<T>;
+export type MigrationConfig<TEntity extends Entity> = {
+  version: number;
+  migrationFunction: Migration<TEntity>
+}
+
+export type Migration<TEntity extends Entity> = (entities: Array<PartialEntity<TEntity>>) => Array<TEntity>;
+
+type PartialEntity<T extends Entity> = Partial<Omit<T, 'id'>> & Entity;
