@@ -17,24 +17,33 @@
       >
         <div class="grow px-3">
           <router-view v-slot="{ Component, route }">
-            <Suspense>
-              <transition
-                name="fade"
-                mode="out-in"
-              >
+            <Transition
+              name="fade"
+              mode="out-in"
+            >
+              <Suspense>
                 <component
                   :is="Component"
                   :key="route.path"
                   v-bind="route.params"
                 />
-              </transition>
-            </Suspense>
+              </Suspense>
+            </Transition>
           </router-view>
         </div>
 
-        <Suspense>
-          <router-view name="sidebar" />
-        </Suspense>
+        <router-view
+          name="sidebar"
+          v-slot="{ Component, route }"
+        >
+          <Suspense>
+            <component
+              :is="Component"
+              :key="route.path"
+              v-bind="route.params"
+            />
+          </Suspense>
+        </router-view>
       </div>
     </div>
   </div>
