@@ -11,7 +11,7 @@
     "build-dev": "npm run build",
     "build-prod": "NODE_ENV=production npm run build",
     "test": "BUN_TEST=true bun test",
-    "dev": "bun dev --disable-hmr",
+    "dev": "bun ./scripts/serve.ts",
     "capacitor-sync": "npx cap sync && npx cap sync @capacitor-community/electron",
     "run-android": "npx cap run android",
     "run-electron": "npx cap open @capacitor-community/electron",
