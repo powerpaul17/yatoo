@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [0.2.1] - 2023-09-11
+
 - build after creating tag to support reproducible builds for f-droid
 
 ## [0.2.0] - 2023-08-31
