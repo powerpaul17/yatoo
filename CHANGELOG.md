@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- build after creating tag to support reproducible builds for f-droid
+
 ## [0.2.0] - 2023-08-31
 
 - update app icon
