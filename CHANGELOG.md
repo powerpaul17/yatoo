@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- patch esbuild-plugin-vue-next to use relative paths for scope ids
+
 ## [0.2.1] - 2023-09-11
 
 - build after creating tag to support reproducible builds for f-droid

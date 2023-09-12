@@ -1,0 +1,20 @@
+diff --git a/node_modules/esbuild-plugin-vue-next/dist/cache.js b/node_modules/esbuild-plugin-vue-next/dist/cache.js
+index ad383d7..3d47cd6 100644
+--- a/node_modules/esbuild-plugin-vue-next/dist/cache.js
++++ b/node_modules/esbuild-plugin-vue-next/dist/cache.js
+@@ -1,4 +1,5 @@
+ "use strict";
++const path = require('path');
+ var __importDefault = (this && this.__importDefault) || function (mod) {
+     return (mod && mod.__esModule) ? mod : { "default": mod };
+ };
+@@ -20,7 +21,8 @@ function getDesCache(filename) {
+ exports.getDesCache = getDesCache;
+ const idCache = {};
+ function setId(filename) {
+-    return (idCache[filename] = `data-v-${(0, hash_sum_1.default)(filename)}`);
++    const relativeFilename = path.relative(process.cwd(), filename);
++    return (idCache[filename] = `data-v-${(0, hash_sum_1.default)(relativeFilename)}`);
+ }
+ exports.setId = setId;
+ function getId(filename) {
