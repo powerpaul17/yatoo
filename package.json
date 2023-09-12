@@ -9,7 +9,7 @@
     "build-src": "bun run ./scripts/build.ts",
     "build-tw": "tailwindcss -i ./src/main.css -o ./build/main.css",
     "build-dev": "npm run build",
-    "build-prod": "BUILD_MODE=production npm run build",
+    "build-prod": "NODE_ENV=production npm run build",
     "test": "BUN_TEST=true bun test",
     "dev": "bun dev --disable-hmr",
     "capacitor-sync": "npx cap sync && npx cap sync @capacitor-community/electron",

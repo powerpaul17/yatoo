@@ -2,7 +2,7 @@ import { spawnSync } from 'bun';
 
 import vuePlugin from 'esbuild-plugin-vue-next';
 
-const prod = process.env.BUILD_MODE === 'production' ? true : false;
+const prod = process.env.NODE_ENV === 'production' ? true : false;
 
 const lastCommitHash = spawnSync([ 'git', 'rev-parse', '--short', 'HEAD' ]).stdout.toString().trim();
 
