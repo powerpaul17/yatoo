@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- sort todos by done status & title
+
 ## [0.2.2] - 2023-09-12
 
 - patch esbuild-plugin-vue-next to use relative paths for scope ids
