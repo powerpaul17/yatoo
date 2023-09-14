@@ -3,11 +3,17 @@ import process from 'process';
 import type {LocalStorage} from './LocalStorage';
 import { MemoryLocalStorage } from './MemoryLocalStorage';
 
+const localStorageMap: Map<string, LocalStorage<any>> = new Map();
+
 export const useLocalStorage = async <T>(tableName: string): Promise<LocalStorage<T>> => {
-  if (process.env.BUN_TEST) {
-    return new MemoryLocalStorage(tableName);
+  if (!localStorageMap.has(tableName)) {
+    if (process.env.BUN_TEST) {
+      localStorageMap.set(tableName, new MemoryLocalStorage(tableName));
+    } else {
+      const localForageLocalStorage = await import('./LocalForageLocalStorage');
+      localStorageMap.set(tableName, new localForageLocalStorage.LocalForageLocalStorage(tableName));
+    }
   }
 
-  const localForageLocalStorage = await import('./LocalForageLocalStorage');
-  return new localForageLocalStorage.LocalForageLocalStorage(tableName);
+  return localStorageMap.get(tableName);
 };
