@@ -89,6 +89,11 @@ export class Store<T extends Entity> extends BaseStore<T> {
     });
   }
 
+  protected async _getAll(): Promise<Array<T>> {
+    await this.initializePromise;
+    return await many(this.table);
+  }
+
   protected async _getById(id: string): Promise<T> {
     await this.initializePromise;
     return await one(this.table, id);

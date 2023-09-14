@@ -22,6 +22,10 @@ class TodoStore extends Store<Todo> {
     super(storage, {});
   }
 
+  public getAll(): Promise<Array<Todo>> {
+    return this._getAll();
+  }
+
   public getRef(query: Query<Todo, 'id'>): Ref<Array<Todo>> {
     return this._getRef(query);
   }
