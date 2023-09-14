@@ -18,14 +18,14 @@ import { MigrationHelper } from '../classes/MigrationHelper';
 import { BaseStore } from './BaseStore';
 import type { LocalStorage } from './LocalStorage/LocalStorage';
 
-export class Store<T extends Entity> extends BaseStore<T> {
+export class Store<T extends Entity, TRenamedProperties = {}> extends BaseStore<T> {
 
   protected constructor(
     storage: LocalStorage<T>,
     {
       migrationConfig
     }: {
-      migrationConfig?: MigrationConfig<T>
+      migrationConfig?: MigrationConfig<T, TRenamedProperties>
     }
   ) {
     super(storage, {
@@ -118,7 +118,7 @@ export class Store<T extends Entity> extends BaseStore<T> {
     await remove(this.table, { id });
   }
 
-  private async migrate(migrationConfig: MigrationConfig<T>): Promise<void> {
+  private async migrate(migrationConfig: MigrationConfig<T, TRenamedProperties>): Promise<void> {
     const migrationHelper = new MigrationHelper(this.localStorage.getTableName());
 
     const lastDbVersion = await migrationHelper.getLastDbVersion();
@@ -145,11 +145,12 @@ export type Entity = {
   pluginId?: string;
 }
 
-export type MigrationConfig<TEntity extends Entity> = {
+export type MigrationConfig<TEntity extends Entity, TRenamedProperties = {}> = {
   version: number;
-  migrationFunction: Migration<TEntity>
+  migrationFunction: Migration<TEntity, TRenamedProperties>
 }
 
-export type Migration<TEntity extends Entity> = (entities: Array<PartialEntity<TEntity>>) => Array<TEntity>;
+export type Migration<TEntity extends Entity, TRenamedProperties = {}> =
+  (entities: Array<PartialEntity<TEntity & TRenamedProperties>>) => Array<TEntity>;
 
 type PartialEntity<T extends Entity> = Partial<Omit<T, 'id'>> & Entity;
