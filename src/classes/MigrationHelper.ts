@@ -23,7 +23,7 @@ export class MigrationHelper {
       return Number(value);
     }
 
-    return -1;
+    return 0;
   }
 
   public async setLastDbVersion(version: number): Promise<void> {
