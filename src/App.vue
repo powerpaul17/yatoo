@@ -15,7 +15,7 @@
         class="flex h-full overflow-x-hidden"
         v-scroll="onScroll"
       >
-        <div class="grow px-3">
+        <div class="w-full grow px-3">
           <router-view v-slot="{ Component, route }">
             <Transition
               name="fade"
