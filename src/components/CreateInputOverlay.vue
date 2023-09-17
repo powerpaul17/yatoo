@@ -9,6 +9,7 @@
     >
       <div class="ds-join w-full">
         <input
+          ref="creationStringInputElement"
           type="text"
           class="ds-input-bordered ds-input-primary ds-input ds-join-item w-full text-neutral-content"
           v-model="creationString"
@@ -27,7 +28,7 @@
 
 <script setup lang="ts">
 
-  import { computed, ref } from 'vue';
+  import { computed, ref, watch } from 'vue';
 
   import { useTodoStore } from '../stores/todoStore';
 
@@ -37,11 +38,17 @@
 
   const todoStore = await useTodoStore();
 
-  defineProps({
+  const creationStringInputElement = ref(null);
+
+  const props = defineProps({
     open: {
       type: Boolean,
       required: true
     }
+  });
+
+  watch(() => props.open, () => {
+    if (props.open) creationStringInputElement.value?.focus();
   });
 
   const creationString = ref('');
