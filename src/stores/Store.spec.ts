@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it } from 'bun:test';
+import { afterEach, describe, expect, it } from 'bun:test';
 import sinon from 'sinon';
 
 import { Store, type Entity, DbVersionMismatchError, type Migration } from './Store';
@@ -73,19 +73,13 @@ describe('Store', () => {
 
   });
 
-  let clock: sinon.SinonFakeTimers;
-
-  beforeEach(() => {
-    clock = sinon.useFakeTimers();
-  });
-
   afterEach(async () => {
     const systemStore = await useSystemStore();
     await systemStore.clear();
 
     await localStorage.clear();
 
-    clock.restore();
+    await window.happyDOM.whenAsyncComplete();
   });
 
   async function createTestStore({
@@ -100,9 +94,9 @@ describe('Store', () => {
     });
     await store.awaitReady();
 
-    if(entities) await store.upsertMany(entities);
+    if (entities) await store.upsertMany(entities);
 
-    await clock.nextAsync();
+    await window.happyDOM.whenAsyncComplete();
 
     return {
       store
