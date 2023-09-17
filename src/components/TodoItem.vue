@@ -14,7 +14,7 @@
     <div class="flex items-center p-1">
       <div>
       </div>
-      <div class="flex-auto">
+      <div class="flex-auto overflow-hidden text-ellipsis whitespace-nowrap">
         {{ todo.title }}
       </div>
       <div class="shrink-0">
