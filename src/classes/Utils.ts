@@ -7,13 +7,13 @@ export class Utils {
     const f: RateLimitedFunction<F> = function () {
       f._lastArguments = arguments as unknown as Parameters<F>;
 
-      if (!f._timeoutInfo) {
+      if (!f._timeout) {
         const id = window.setTimeout(() => {
-          f._timeoutInfo = null;
+          f._timeout = null;
           f._callCallback();
         }, rate);
 
-        f._timeoutInfo = { id, clearTimeout };
+        f._timeout = id;
       }
     };
 
@@ -25,7 +25,7 @@ export class Utils {
       f._lastArguments = null;
     };
 
-    f._timeoutInfo = null;
+    f._timeout  = null;
     f._lastArguments = null;
 
     return f;
@@ -35,10 +35,7 @@ export class Utils {
 
 type RateLimitedFunction<F extends (...args: Array<any>) => void | Promise<void>> = {
   (...args: Parameters<F>): ReturnType<F>;
-  _timeoutInfo: {
-    id: number,
-    clearTimeout: (id: number) => void;
-  }|null;
+  _timeout: number|null;
   _lastArguments: Parameters<F> | null;
 
   _callCallback: () => void;
