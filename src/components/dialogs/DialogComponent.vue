@@ -1,56 +1,38 @@
 <template>
-  <Teleport to="body">
-    <dialog
-      class="ds-modal ds-modal-bottom sm:ds-modal-middle"
-      :class="{
-        'ds-modal-open': isOpen
-      }"
+  <ModalComponent
+    :open="open"
+    class="ds-modal-bottom sm:ds-modal-middle"
+  >
+    <form
+      method="dialog"
+      class="ds-modal-box m-0"
     >
-      <form
-        method="dialog"
-        class="ds-modal-box m-0"
-      >
-        <h3 class="text-lg font-bold">
-          {{ title }}
-        </h3>
-        <p class="py-4">
-          <slot />
-        </p>
-        <div class="ds-modal-action">
-          <slot name="actions" />
-        </div>
-      </form>
-      <form
-        method="dialog"
-        class="ds-modal-backdrop"
-      >
-        <button @click="emit('close')" />
-      </form>
-    </dialog>
-  </Teleport>
+      <h3 class="text-lg font-bold">
+        {{ title }}
+      </h3>
+      <p class="py-4">
+        <slot />
+      </p>
+      <div class="ds-modal-action">
+        <slot name="actions" />
+      </div>
+    </form>
+  </ModalComponent>
 </template>
 
 <script setup lang="ts">
 
-  import { ref, watch } from 'vue';
+  import ModalComponent from './ModalComponent.vue';
 
-  const props = defineProps({
+  defineProps({
     open: {
       type: Boolean,
-      default: false
+      required: true
     },
     title: {
       type: String,
       required: true
     }
   });
-
-  watch(() => props.open, () => isOpen.value = props.open);
-
-  const emit = defineEmits<{
-    (event: 'close'): void;
-  }>();
-
-  const isOpen = ref(props.open);
 
 </script>
