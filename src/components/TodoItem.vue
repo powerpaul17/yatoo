@@ -17,7 +17,7 @@
       <div class="flex-auto">
         {{ todo.title }}
       </div>
-      <div>
+      <div class="shrink-0">
         <button
           class="ds-btn-ghost ds-btn-square ds-btn"
           @click="handleToggleDoneClicked()"
