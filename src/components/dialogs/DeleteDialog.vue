@@ -1,58 +1,41 @@
 <template>
-  <Teleport to="body">
-    <dialog
-      class="ds-modal ds-modal-bottom sm:ds-modal-middle"
-      :class="{
-        'ds-modal-open': isOpen
-      }"
-    >
-      <form
-        method="dialog"
-        class="ds-modal-box m-0"
+  <DialogComponent
+    :open="open"
+    :title="title"
+  >
+    <template>
+      {{ text }}
+    </template>
+
+    <template #actions>
+      <button
+        class="ds-btn-warning ds-btn"
+        @click="() => {
+          emit('delete');
+          emit('close')
+        }"
       >
-        <h3 class="text-lg font-bold">
-          {{ title }}
-        </h3>
-        <p class="py-4">
-          {{ text }}
-        </p>
-        <div class="ds-modal-action">
-          <button
-            class="ds-btn-warning ds-btn"
-            @click="() => {
-              emit('delete');
-              emit('close')
-            }"
-          >
-            <Trash />
-            {{ $t('components.Dialogs.DeleteDialog.delete') }}
-          </button>
-          <button
-            class="ds-btn"
-            @click="emit('close')"
-          >
-            <Ban />
-            {{ $t('components.Dialogs.DeleteDialog.cancel') }}
-          </button>
-        </div>
-      </form>
-      <form
-        method="dialog"
-        class="ds-modal-backdrop"
+        <Trash />
+        {{ $t('delete') }}
+      </button>
+      <button
+        class="ds-btn"
+        @click="emit('close')"
       >
-        <button @click="emit('close')" />
-      </form>
-    </dialog>
-  </Teleport>
+        <Ban />
+        {{ $t('cancel') }}
+      </button>
+    </template>
+  </DialogComponent>
 </template>
 
 <script setup lang="ts">
 
-  import { ref, watch } from 'vue';
-
   import { Ban, Trash } from 'lucide-vue-next';
 
-  const props = defineProps({
+  import DialogComponent from './DialogComponent.vue';
+
+  defineProps({
     open: {
       type: Boolean,
       default: false
@@ -67,13 +50,9 @@
     }
   });
 
-  watch(() => props.open, () => isOpen.value = props.open);
-
   const emit = defineEmits<{
     (event: 'close'): void;
     (event: 'delete'): void;
   }>();
-
-  const isOpen = ref(props.open);
 
 </script>
