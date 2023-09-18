@@ -29,6 +29,7 @@
         md:static
       "
       :class="{ 'mr-[-100%] sm:-mr-80': !todoId }"
+      v-if="todo"
     >
       <div class="flex">
         <button
