@@ -38,6 +38,10 @@ class TodoStore extends Store<Todo> {
     return this._create(todo);
   }
 
+  public upsert(todo: Todo): Promise<void> {
+    return this._upsert(todo);
+  }
+
   public remove(todoId: string): Promise<void> {
     return this._remove(todoId);
   }

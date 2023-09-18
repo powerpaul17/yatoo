@@ -47,6 +47,28 @@
           <Trash />
         </button>
       </div>
+
+      <div class="ds-form-control">
+        <label class="ds-label">
+          <span class="ds-label-text">{{ $t('entities.Todo.title') }}</span>
+        </label>
+        <input
+          class="ds-input-bordered ds-input"
+          v-model="todo.title"
+          @change="handleTodoChanged()"
+        >
+      </div>
+
+      <div class="ds-form-control">
+        <label class="ds-label">
+          <span class="ds-label-text">{{ $t('entities.Todo.description') }}</span>
+        </label>
+        <textarea
+          class="ds-textarea-bordered ds-textarea"
+          v-model="todo.description"
+          @change="handleTodoChanged()"
+        />
+      </div>
     </div>
   </div>
 
@@ -108,6 +130,11 @@
     if (!todo.value) throw new Error('cannot delete todo');
     await todoStore.remove(todo.value.id);
     await handleClose();
+  }
+
+  async function handleTodoChanged(): Promise<void> {
+    if (!todo.value) return;
+    await todoStore.upsert(todo.value);
   }
 
 </script>

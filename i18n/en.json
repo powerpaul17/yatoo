@@ -15,6 +15,12 @@
       }
     }
   },
+  "entities": {
+    "Todo": {
+      "title": "Title",
+      "description": "Description"
+    }
+  },
   "routes": {
     "todos": "Todos"
   }
