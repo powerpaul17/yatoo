@@ -1,6 +1,6 @@
 {
   "name": "yatoo",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Organize your life!",
   "main": "build/main.js",
   "scripts": {

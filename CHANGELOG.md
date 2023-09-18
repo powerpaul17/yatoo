@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [0.3.0] - 2023-09-18
+
 - sort todos by done status & title
 - allow editing of todo title & description in sidebar
 
