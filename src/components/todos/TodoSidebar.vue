@@ -29,46 +29,47 @@
         md:static
       "
       :class="{ 'mr-[-100%] sm:-mr-80': !todoId }"
-      v-if="todo"
     >
-      <div class="flex">
-        <button
-          class="ds-btn-ghost ds-btn-circle ds-btn"
-          @click="handleClose()"
-        >
-          <X />
-        </button>
+      <div v-if="todo">
+        <div class="flex">
+          <button
+            class="ds-btn-ghost ds-btn-circle ds-btn"
+            @click="handleClose()"
+          >
+            <X />
+          </button>
 
-        <div class="grow" />
+          <div class="grow" />
 
-        <button
-          class="ds-btn-ghost ds-btn-warning ds-btn-circle ds-btn"
-          @click="handleDelete()"
-        >
-          <Trash />
-        </button>
-      </div>
+          <button
+            class="ds-btn-ghost ds-btn-warning ds-btn-circle ds-btn"
+            @click="handleDelete()"
+          >
+            <Trash />
+          </button>
+        </div>
 
-      <div class="ds-form-control">
-        <label class="ds-label">
-          <span class="ds-label-text">{{ $t('entities.Todo.title') }}</span>
-        </label>
-        <input
-          class="ds-input-bordered ds-input"
-          v-model="todo.title"
-          @change="handleTodoChanged()"
-        >
-      </div>
+        <div class="ds-form-control">
+          <label class="ds-label">
+            <span class="ds-label-text">{{ $t('entities.Todo.title') }}</span>
+          </label>
+          <input
+            class="ds-input-bordered ds-input"
+            v-model="todo.title"
+            @change="handleTodoChanged()"
+          >
+        </div>
 
-      <div class="ds-form-control">
-        <label class="ds-label">
-          <span class="ds-label-text">{{ $t('entities.Todo.description') }}</span>
-        </label>
-        <textarea
-          class="ds-textarea-bordered ds-textarea"
-          v-model="todo.description"
-          @change="handleTodoChanged()"
-        />
+        <div class="ds-form-control">
+          <label class="ds-label">
+            <span class="ds-label-text">{{ $t('entities.Todo.description') }}</span>
+          </label>
+          <textarea
+            class="ds-textarea-bordered ds-textarea"
+            v-model="todo.description"
+            @change="handleTodoChanged()"
+          />
+        </div>
       </div>
     </div>
   </div>
