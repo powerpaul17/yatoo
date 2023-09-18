@@ -82,7 +82,7 @@
 
 <script setup lang="ts">
 
-  import { ref, watch } from 'vue';
+  import { onMounted, ref, watch } from 'vue';
   import { useRouter } from 'vue-router';
 
   import { Trash, X } from 'lucide-vue-next';
@@ -103,12 +103,20 @@
   const todo = ref<Todo|null>(null);
 
   watch(() => props.todoId, async () => {
+    await updateTodo();
+  });
+
+  onMounted(async () => {
+    await updateTodo();
+  })
+
+  async function updateTodo(): Promise<void> {
     if (props.todoId) {
       todo.value =  await todoStore.getById(props.todoId);
     } else {
       todo.value = null;
     }
-  });
+  }
 
   const router = useRouter();
 
