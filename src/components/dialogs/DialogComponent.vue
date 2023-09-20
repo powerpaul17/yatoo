@@ -2,6 +2,7 @@
   <ModalComponent
     :open="open"
     class="ds-modal-bottom sm:ds-modal-middle"
+    @backdrop-clicked="emit('close')"
   >
     <form
       method="dialog"
@@ -34,5 +35,9 @@
       required: true
     }
   });
+
+  const emit = defineEmits<{
+    (event: 'close'): void;
+  }>();
 
 </script>

@@ -2,6 +2,7 @@
   <ModalComponent
     class="ds-modal-top"
     :open="open"
+    @backdrop-clicked="emit('close')"
   >
     <form
       method="dialog"
@@ -46,6 +47,10 @@
       required: true
     }
   });
+
+  const emit = defineEmits<{
+    (event: 'close'): void;
+  }>();
 
   watch(() => props.open, () => {
     if (props.open) creationStringInputElement.value?.focus();

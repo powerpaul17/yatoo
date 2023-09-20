@@ -12,7 +12,7 @@
         method="dialog"
         class="ds-modal-backdrop"
       >
-        <button @click="emit('close')" />
+        <button @click="emit('backdrop-clicked')" />
       </form>
     </dialog>
   </Teleport>
@@ -30,7 +30,7 @@
   });
 
   const emit = defineEmits<{
-    (event: 'close'): void;
+    (event: 'backdrop-clicked'): void;
   }>();
 
   const isOpen = ref(false);

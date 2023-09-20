@@ -2,6 +2,7 @@
   <DialogComponent
     :open="open"
     :title="title"
+    @close="emit('close')"
   >
     <template>
       {{ text }}
