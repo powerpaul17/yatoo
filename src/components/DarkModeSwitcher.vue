@@ -4,7 +4,7 @@
       type="checkbox"
       v-model="darkmode"
     >
-    <Sun class="ds-wap-off" />
+    <Sun class="ds-swap-off" />
     <MoonStar class="ds-swap-on" />
   </label>
 </template>

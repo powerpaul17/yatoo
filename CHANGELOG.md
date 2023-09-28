@@ -1,6 +1,7 @@
 ## [Unreleased]
 
 - remove `@capacitor/assets` package to try and fix f-droid build
+- fix dark mode switcher icon
 
 ## [0.3.0] - 2023-09-18
 
