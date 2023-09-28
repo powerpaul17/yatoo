@@ -37,7 +37,6 @@ app.use(i18n);
 
 app.use(router);
 
-declare const COMMIT_HASH: string;
-app.provide('COMMIT_HASH', COMMIT_HASH);
+app.provide('COMMIT_HASH', process.env.COMMIT_HASH);
 
 app.mount('#app');

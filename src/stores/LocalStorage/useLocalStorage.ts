@@ -1,5 +1,3 @@
-import process from 'process';
-
 import type { LocalStorage } from './LocalStorage';
 import { MemoryLocalStorage } from './MemoryLocalStorage';
 

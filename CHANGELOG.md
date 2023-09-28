@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- use parcel instead of bun for bundling
+
 ## [0.3.1] - 2023-09-28
 
 - remove `@capacitor/assets` package to try and fix f-droid build
