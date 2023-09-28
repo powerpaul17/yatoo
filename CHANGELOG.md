@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [0.3.2] - 2023-09-28
+
 - use parcel instead of bun for bundling
 
 ## [0.3.1] - 2023-09-28
