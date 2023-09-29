@@ -45,7 +45,7 @@
 
 <script setup lang="ts">
 
-  import { type PropType, computed, ref } from 'vue';
+  import { type PropType, computed, ref, watch } from 'vue';
   import { useRoute } from 'vue-router';
 
   import {
@@ -71,6 +71,10 @@
   const route = useRoute();
 
   const todo = ref(props.todo);
+
+  watch(() => props.todo, () => {
+    todo.value = props.todo;
+  });
 
   const emit = defineEmits<{
     (event: 'open', id?: string): void
