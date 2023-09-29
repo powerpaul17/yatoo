@@ -53,7 +53,7 @@ export class Store<T extends Entity, TRenamedProperties = {}> extends BaseStore<
       let disposed = false;
 
       void this.initializePromise.then(() => watch(this.table, query, (entities) => {
-        callback(entities.slice());
+        callback(entities);
       }).then((d) => {
         dispose = d;
         if (disposed) dispose();
@@ -74,7 +74,7 @@ export class Store<T extends Entity, TRenamedProperties = {}> extends BaseStore<
       let disposed = false;
 
       void this.initializePromise.then(() => watch(this.table, query, (entities) => {
-        reference.value = entities.slice();
+        reference.value = entities;
       }).then((d) => {
         dispose = d;
         if (disposed) dispose();
