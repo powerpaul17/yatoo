@@ -4,7 +4,7 @@
   "description": "Organize your life!",
   "scripts": {
     "build-dev": "COMMIT_HASH=`git rev-parse --short HEAD` parcel watch",
-    "build-prod": "COMMIT_HASH=`git rev-parse --short HEAD` parcel build",
+    "build-prod": "COMMIT_HASH=`git rev-parse --short HEAD` parcel build --no-content-hash",
     "test": "BUN_TEST=true bun test",
     "dev": "COMMIT_HASH=`git rev-parse --short HEAD` parcel serve --port 3000",
     "capacitor-sync": "npx cap sync && npx cap sync @capacitor-community/electron",

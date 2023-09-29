@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- disable content hashing for production builds
+
 ## [0.3.2] - 2023-09-28
 
 - use parcel instead of bun for bundling
