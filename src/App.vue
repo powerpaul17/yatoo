@@ -53,13 +53,13 @@
 
 .fade-enter-active,
 .fade-leave-active {
-  transition: all 0.3s ease;
+  transition: all 0.15s ease;
 }
 
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
-  scale: 0.95;
+  scale: 0.98;
 }
 
 </style>
