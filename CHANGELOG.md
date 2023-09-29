@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- do not include source maps in production builds
+
 ## [0.4.0] - 2023-09-29
 
 - disable content hashing for production builds
