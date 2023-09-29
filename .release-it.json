@@ -17,7 +17,7 @@
     "release": true,
     "assets": [
       "android/app/build/outputs/apk/release/app-release.apk",
-      "electron/dist/yatoo-*.AppImage",
+      "electron/dist/yatoo.AppImage",
       "electron/dist/yatoo-*.flatpak"
     ]
   },
