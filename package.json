@@ -1,6 +1,6 @@
 {
   "name": "yatoo",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Organize your life!",
   "scripts": {
     "build-dev": "COMMIT_HASH=`git rev-parse --short HEAD` parcel watch",
