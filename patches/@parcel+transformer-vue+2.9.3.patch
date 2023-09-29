@@ -1,0 +1,21 @@
+diff --git a/node_modules/@parcel/transformer-vue/lib/VueTransformer.js b/node_modules/@parcel/transformer-vue/lib/VueTransformer.js
+index 6e77a66..a6de57a 100644
+--- a/node_modules/@parcel/transformer-vue/lib/VueTransformer.js
++++ b/node_modules/@parcel/transformer-vue/lib/VueTransformer.js
+@@ -125,10 +125,15 @@ var _default = new (_plugin().Transformer)({
+       });
+     }
+     const descriptor = parsed.descriptor;
++
++    const path = require('path');
++    const relativeFilePath = path.relative(process.cwd(), asset.filePath)
++
+     let id = (0, _utils().hashObject)({
+-      filePath: asset.filePath,
++      filePath: relativeFilePath,
+       source: options.mode === 'production' ? code : null
+     }).slice(-6);
++
+     return {
+       type: 'vue',
+       version: '3.0.0',
