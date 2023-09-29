@@ -2,31 +2,37 @@
   <div
     class="
       rounded-md
-      bg-neutral text-neutral-content hover:bg-neutral-focus
-      focus:bg-neutral-focus
+      text-neutral-content
+      hover:bg-neutral
+      focus:bg-neutral
     "
     :class="
       {
-        'opacity-40': todo.done
+        'opacity-40': todo.done,
+        'bg-neutral': isOpen
       }
     "
   >
-    <div class="flex items-center p-1">
-      <div>
-      </div>
-      <div class="flex-auto overflow-hidden text-ellipsis whitespace-nowrap">
-        {{ todo.title }}
+    <div class="flex items-center gap-2 p-1">
+      <button
+        class="ds-btn ds-btn-square ds-btn-ghost"
+        @click="handleToggleDoneClicked()"
+      >
+        <Square v-if="!todo.done" />
+        <CheckSquare v-else />
+      </button>
+      <div class="flex-auto truncate">
+        <span
+          :class="
+            {
+              'line-through': todo.done
+            }
+          "
+        >{{ todo.title }}</span>
       </div>
       <div class="shrink-0">
         <button
-          class="ds-btn-ghost ds-btn-square ds-btn"
-          @click="handleToggleDoneClicked()"
-        >
-          <Check v-if="!todo.done" />
-          <Undo v-else />
-        </button>
-        <button
-          class="ds-btn-ghost ds-btn-square ds-btn"
+          class="ds-btn ds-btn-square ds-btn-ghost"
           @click="handleToggleOpenClicked()"
         >
           <X v-if="isOpen" />
@@ -42,7 +48,14 @@
   import { type PropType, computed, ref } from 'vue';
   import { useRoute } from 'vue-router';
 
-  import { Check, PanelRightOpen, Undo, X } from 'lucide-vue-next';
+  import {
+    Check,
+    CheckSquare,
+    PanelRightOpen,
+    Square,
+    Undo,
+    X
+  } from 'lucide-vue-next';
 
   import { useTodoStore, type Todo } from '../stores/todoStore';
 

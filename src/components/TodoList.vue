@@ -4,7 +4,7 @@
       v-for="todo of todos"
       :key="todo.id"
       :todo="todo"
-      class="mb-1 w-full max-w-5xl"
+      class="mb-2 w-full max-w-5xl"
       @open="handleTodoOpenClicked"
     />
   </ListTransition>
