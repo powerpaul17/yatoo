@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [0.4.0] - 2023-09-29
+
 - disable content hashing for production builds
 - improve design/layout of todo list
 
