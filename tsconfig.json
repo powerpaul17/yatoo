@@ -1,0 +1,42 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "include": [
+    "*.ts",
+    "src/**/*.ts",
+    "src/**/*.vue",
+    "scripts/*.ts",
+    "scripts/*.mjs",
+    "i18n/**/*.json",
+    "test/**/*.ts"
+  ],
+  "compilerOptions": {
+    "types": [
+      "bun-types"
+    ],
+
+    "lib": ["esnext", "dom"],
+    "module": "esnext",
+    "target": "esnext",
+
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "moduleDetection": "force",
+
+    "allowJs": true,
+    "esModuleInterop": true,
+
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noUnusedParameters": true,
+    "noUnusedLocals": true,
+    "noUncheckedIndexedAccess": true,
+    "composite": true,
+    "rootDir": ".",
+    "resolveJsonModule": true
+  }
+}
