@@ -7,6 +7,8 @@
     "build-dev": "COMMIT_HASH=`git rev-parse --short HEAD` parcel watch",
     "build-prod": "COMMIT_HASH=`git rev-parse --short HEAD` parcel build --no-content-hash --no-source-maps",
     "test": "BUN_TEST=true bun test",
+    "lint": "eslint ./src",
+    "check": "vue-tsc --noEmit",
     "dev": "COMMIT_HASH=`git rev-parse --short HEAD` parcel serve --port 3000",
     "capacitor-sync": "npx cap sync && npx cap sync @capacitor-community/electron",
     "run-android": "npx cap run android",
