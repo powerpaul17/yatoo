@@ -18,14 +18,16 @@ import { MigrationHelper } from '../classes/MigrationHelper';
 import { BaseStore } from './BaseStore';
 import type { LocalStorage } from './LocalStorage/LocalStorage';
 
-export class Store<T extends Entity, TRenamedProperties = {}> extends BaseStore<T> {
-
+export class Store<
+  T extends Entity,
+  TRenamedProperties = {}
+> extends BaseStore<T> {
   protected constructor(
     storage: LocalStorage<T>,
     {
       migrationConfig
     }: {
-      migrationConfig?: MigrationConfig<T, TRenamedProperties>
+      migrationConfig?: MigrationConfig<T, TRenamedProperties>;
     }
   ) {
     super(storage, {
@@ -35,11 +37,13 @@ export class Store<T extends Entity, TRenamedProperties = {}> extends BaseStore<
           return;
         }
 
-        void this.migrate(migrationConfig).then(() => {
-          resolve();
-        }).catch((reason) => {
-          reject(reason);
-        });
+        void this.migrate(migrationConfig)
+          .then(() => {
+            resolve();
+          })
+          .catch((reason) => {
+            reject(reason);
+          });
       }
     });
   }
@@ -49,15 +53,17 @@ export class Store<T extends Entity, TRenamedProperties = {}> extends BaseStore<
     callback: (entities: Array<T>) => void
   ): void {
     effectScope().run(() => {
-      let dispose = (): void => { };
+      let dispose = (): void => {};
       let disposed = false;
 
-      void this.initializePromise.then(() => watch(this.table, query, (entities) => {
-        callback(entities);
-      }).then((d) => {
-        dispose = d;
-        if (disposed) dispose();
-      }));
+      void this.initializePromise.then(() =>
+        watch(this.table, query, (entities) => {
+          callback(entities);
+        }).then((d) => {
+          dispose = d;
+          if (disposed) dispose();
+        })
+      );
 
       onScopeDispose(() => {
         dispose();
@@ -70,15 +76,17 @@ export class Store<T extends Entity, TRenamedProperties = {}> extends BaseStore<
     return effectScope().run(() => {
       const reference = ref<Array<T>>([]);
 
-      let dispose = (): void => { };
+      let dispose = (): void => {};
       let disposed = false;
 
-      void this.initializePromise.then(() => watch(this.table, query, (entities) => {
-        reference.value = entities;
-      }).then((d) => {
-        dispose = d;
-        if (disposed) dispose();
-      }));
+      void this.initializePromise.then(() =>
+        watch(this.table, query, (entities) => {
+          reference.value = entities;
+        }).then((d) => {
+          dispose = d;
+          if (disposed) dispose();
+        })
+      );
 
       onScopeDispose(() => {
         dispose();
@@ -118,8 +126,12 @@ export class Store<T extends Entity, TRenamedProperties = {}> extends BaseStore<
     await remove(this.table, { id });
   }
 
-  private async migrate(migrationConfig: MigrationConfig<T, TRenamedProperties>): Promise<void> {
-    const migrationHelper = new MigrationHelper(this.localStorage.getTableName());
+  private async migrate(
+    migrationConfig: MigrationConfig<T, TRenamedProperties>
+  ): Promise<void> {
+    const migrationHelper = new MigrationHelper(
+      this.localStorage.getTableName()
+    );
 
     const lastDbVersion = await migrationHelper.getLastDbVersion();
     const newDbVersion = migrationConfig.version;
@@ -135,7 +147,6 @@ export class Store<T extends Entity, TRenamedProperties = {}> extends BaseStore<
 
     await migrationHelper.setLastDbVersion(migrationConfig.version);
   }
-
 }
 
 export class DbVersionMismatchError extends Error {}
@@ -143,14 +154,15 @@ export class DbVersionMismatchError extends Error {}
 export type Entity = {
   id: string;
   pluginId?: string;
-}
+};
 
 export type MigrationConfig<TEntity extends Entity, TRenamedProperties = {}> = {
   version: number;
-  migrationFunction: Migration<TEntity, TRenamedProperties>
-}
+  migrationFunction: Migration<TEntity, TRenamedProperties>;
+};
 
-export type Migration<TEntity extends Entity, TRenamedProperties = {}> =
-  (entities: Array<PartialEntity<TEntity & TRenamedProperties>>) => Array<TEntity>;
+export type Migration<TEntity extends Entity, TRenamedProperties = {}> = (
+  entities: Array<PartialEntity<TEntity & TRenamedProperties>>
+) => Array<TEntity>;
 
 type PartialEntity<T extends Entity> = Partial<Omit<T, 'id'>> & Entity;
