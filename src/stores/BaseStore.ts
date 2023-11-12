@@ -16,15 +16,16 @@ import { Utils } from '../classes/Utils';
 import type { LocalStorage } from './LocalStorage/LocalStorage';
 
 export class BaseStore<T> {
-
   protected table;
-  private primaryKey: keyof T|'id';
+  private primaryKey: keyof T | 'id';
 
   protected initializePromise;
 
-  private disposeWatcher: (() => void)|null = null;
+  private disposeWatcher: (() => void) | null = null;
 
-  private saveToStorageRateLimited = Utils.rateLimitFunction(this.saveToStorage.bind(this));
+  private saveToStorageRateLimited = Utils.rateLimitFunction(
+    this.saveToStorage.bind(this)
+  );
 
   protected constructor(
     protected readonly localStorage: LocalStorage<T>,
@@ -32,8 +33,8 @@ export class BaseStore<T> {
       primaryKey,
       init
     }: {
-      primaryKey?: keyof T,
-      init?: (resolve: () => void, reject: (reason: unknown) => void) => void
+      primaryKey?: keyof T;
+      init?: (resolve: () => void, reject: (reason: unknown) => void) => void;
     }
   ) {
     let resolve: () => void;
@@ -45,7 +46,10 @@ export class BaseStore<T> {
 
     const db = useBlinkDB();
     this.primaryKey = primaryKey ?? 'id';
-    this.table = createTable<T>(db, localStorage.getTableName())({
+    this.table = createTable<T>(
+      db,
+      localStorage.getTableName()
+    )({
       primary: this.primaryKey
     });
 
@@ -58,7 +62,8 @@ export class BaseStore<T> {
   protected async _upsert(entity: T): Promise<void> {
     await this.initializePromise;
 
-    if (!isValidEntity(entity)) throw new Error('cannot upsert an invalid entity');
+    if (!isValidEntity(entity))
+      throw new Error('cannot upsert an invalid entity');
     await upsert(this.table, entity);
   }
 
@@ -78,8 +83,7 @@ export class BaseStore<T> {
   private async loadFromStorage(): Promise<void> {
     const items = await this.localStorage.getItems();
 
-    if (items.length)
-      await insertMany(this.table, items);
+    if (items.length) await insertMany(this.table, items);
 
     this.disposeWatcher = await watch(this.table, () => {
       void this.saveToStorageRateLimited();
