@@ -31,19 +31,12 @@ export class Store<
     }
   ) {
     super(storage, {
-      init: (resolve, reject) => {
+      init: () => {
         if (!migrationConfig) {
-          resolve();
-          return;
+          return Promise.resolve();
         }
 
-        void this.migrate(migrationConfig)
-          .then(() => {
-            resolve();
-          })
-          .catch((reason) => {
-            reject(reason);
-          });
+        return this.migrate(migrationConfig);
       }
     });
   }

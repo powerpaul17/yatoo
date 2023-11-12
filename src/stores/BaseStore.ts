@@ -17,6 +17,7 @@ import type { LocalStorage } from './LocalStorage/LocalStorage';
 
 export class BaseStore<T> {
   protected table;
+
   private primaryKey: keyof T | 'id';
 
   protected initializePromise;
@@ -34,16 +35,9 @@ export class BaseStore<T> {
       init
     }: {
       primaryKey?: keyof T;
-      init?: (resolve: () => void, reject: (reason: unknown) => void) => void;
+      init?: () => Promise<void>;
     }
   ) {
-    let resolve: () => void;
-    let reject: (reason: unknown) => void;
-    this.initializePromise = new Promise<void>((res, rej) => {
-      resolve = res;
-      reject = rej;
-    });
-
     const db = useBlinkDB();
     this.primaryKey = primaryKey ?? 'id';
     this.table = createTable<T>(
@@ -53,9 +47,9 @@ export class BaseStore<T> {
       primary: this.primaryKey
     });
 
-    void this.init().then(() => {
-      if (init) init(resolve, reject);
-      else resolve();
+    this.initializePromise = this.init().then(() => {
+      if (init) return init();
+      else return Promise.resolve();
     });
   }
 
