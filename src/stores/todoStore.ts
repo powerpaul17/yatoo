@@ -5,7 +5,7 @@ import { Store, type Entity } from './Store';
 import { useLocalStorage } from './LocalStorage/useLocalStorage';
 import type { LocalStorage } from './LocalStorage/LocalStorage';
 
-let todoStore: TodoStore|null = null;
+let todoStore: TodoStore | null = null;
 
 export const useTodoStore = async (): Promise<TodoStore> => {
   if (!todoStore) {
@@ -17,7 +17,6 @@ export const useTodoStore = async (): Promise<TodoStore> => {
 };
 
 class TodoStore extends Store<Todo> {
-
   constructor(storage: LocalStorage<Todo>) {
     super(storage, {});
   }
@@ -52,7 +51,6 @@ class TodoStore extends Store<Todo> {
 
     await this._upsert(todo);
   }
-
 }
 
 export type Todo = Entity & {
@@ -60,5 +58,5 @@ export type Todo = Entity & {
   description: string;
 
   done: boolean;
-  doneAt: number|null;
-}
+  doneAt: number | null;
+};
