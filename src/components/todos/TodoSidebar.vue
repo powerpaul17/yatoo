@@ -2,38 +2,20 @@
   <div>
     <!-- Backdrop -->
     <div
-      class="
-        fixed right-0 top-0
-        h-full w-full
-        cursor-pointer
-        bg-black/40
-        transition-colors
-        duration-200
-        md:hidden
-      "
+      class="fixed right-0 top-0 h-full w-full cursor-pointer bg-black/40 transition-colors duration-200 md:hidden"
       :class="{ 'pointer-events-none bg-transparent': !todoId }"
       @click="handleClose()"
     />
 
     <!-- Sidebar -->
     <div
-      class="
-        fixed right-0 top-0
-        h-full w-full
-        bg-base-200
-        p-2
-        shadow-md
-        transition-all
-        duration-300
-        sm:w-80
-        md:static
-      "
+      class="fixed right-0 top-0 h-full w-full bg-base-200 p-2 shadow-md transition-all duration-300 sm:w-80 md:static"
       :class="{ 'mr-[-100%] sm:-mr-80': !todoId }"
     >
       <div v-if="todo">
         <div class="flex">
           <button
-            class="ds-btn-ghost ds-btn-circle ds-btn"
+            class="ds-btn ds-btn-circle ds-btn-ghost"
             @click="handleClose()"
           >
             <X />
@@ -42,7 +24,7 @@
           <div class="grow" />
 
           <button
-            class="ds-btn-ghost ds-btn-warning ds-btn-circle ds-btn"
+            class="ds-btn ds-btn-circle ds-btn-warning ds-btn-ghost"
             @click="handleDelete()"
           >
             <Trash />
@@ -54,18 +36,20 @@
             <span class="ds-label-text">{{ $t('entities.Todo.title') }}</span>
           </label>
           <input
-            class="ds-input-bordered ds-input"
+            class="ds-input ds-input-bordered"
             v-model="todo.title"
             @change="handleTodoChanged()"
-          >
+          />
         </div>
 
         <div class="ds-form-control">
           <label class="ds-label">
-            <span class="ds-label-text">{{ $t('entities.Todo.description') }}</span>
+            <span class="ds-label-text">{{
+              $t('entities.Todo.description')
+            }}</span>
           </label>
           <textarea
-            class="ds-textarea-bordered ds-textarea"
+            class="ds-textarea ds-textarea-bordered"
             v-model="todo.description"
             @change="handleTodoChanged()"
           />
@@ -83,7 +67,6 @@
 </template>
 
 <script setup lang="ts">
-
   import { onMounted, ref, watch } from 'vue';
   import { useRouter } from 'vue-router';
 
@@ -102,19 +85,22 @@
     }
   });
 
-  const todo = ref<Todo|null>(null);
+  const todo = ref<Todo | null>(null);
 
-  watch(() => props.todoId, async () => {
-    await updateTodo();
-  });
+  watch(
+    () => props.todoId,
+    async () => {
+      await updateTodo();
+    }
+  );
 
   onMounted(async () => {
     await updateTodo();
-  })
+  });
 
   async function updateTodo(): Promise<void> {
     if (props.todoId) {
-      todo.value =  await todoStore.getById(props.todoId);
+      todo.value = await todoStore.getById(props.todoId);
     } else {
       todo.value = null;
     }
@@ -146,5 +132,4 @@
     if (!todo.value) return;
     await todoStore.upsert(todo.value);
   }
-
 </script>
