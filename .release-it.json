@@ -2,7 +2,8 @@
   "hooks": {
     "before:init": "npm run test",
     "after:bump": [
-      "npm i"
+      "npm i",
+      "cd electron && npm i"
     ],
     "before:github:release": [
       "npm run build-prod",
