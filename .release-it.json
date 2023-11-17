@@ -9,7 +9,6 @@
       "npm run build-prod",
       "npm run capacitor-sync",
       "npm run build-android",
-      "npm run build-electron",
       "git push --follow-tags"
     ]
   },
