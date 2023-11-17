@@ -31,7 +31,7 @@
   "dependencies": {
     "@vueuse/components": "^10.2.1",
     "@vueuse/core": "^10.2.1",
-    "blinkdb": "^0.13.2",
+    "blinkdb": "^0.14.0",
     "localforage": "^1.10.0",
     "lucide-vue-next": "^0.259.0",
     "uuid": "^8.3.2",
