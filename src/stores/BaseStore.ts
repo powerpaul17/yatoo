@@ -14,11 +14,15 @@ import {
 import { useBlinkDB } from './blinkdb';
 import { Utils } from '../classes/Utils';
 import type { LocalStorage } from './LocalStorage/LocalStorage';
+import { useLocalStorage } from './LocalStorage/useLocalStorage';
 
 export class BaseStore<T> {
+  protected tableName;
   protected table;
 
   private primaryKey: keyof T | 'id';
+
+  private localStorage: LocalStorage<T> | null = null;
 
   protected initializePromise;
 
@@ -28,21 +32,22 @@ export class BaseStore<T> {
     this.saveToStorage.bind(this)
   );
 
-  protected constructor(
-    protected readonly localStorage: LocalStorage<T>,
-    {
-      primaryKey,
-      init
-    }: {
-      primaryKey?: keyof T;
-      init?: () => Promise<void>;
-    }
-  ) {
+  protected constructor({
+    tableName,
+    primaryKey,
+    init
+  }: {
+    tableName: string;
+    primaryKey?: keyof T;
+    init?: () => Promise<void>;
+  }) {
+    this.tableName = tableName;
+
     const db = useBlinkDB();
     this.primaryKey = primaryKey ?? 'id';
     this.table = createTable<T>(
       db,
-      localStorage.getTableName()
+      tableName
     )({
       primary: this.primaryKey
     });
@@ -71,11 +76,12 @@ export class BaseStore<T> {
   }
 
   private async init(): Promise<void> {
+    this.localStorage = await useLocalStorage(this.tableName);
     await this.loadFromStorage();
   }
 
   private async loadFromStorage(): Promise<void> {
-    const items = await this.localStorage.getItems();
+    const items = await this.localStorage!.getItems();
 
     if (items.length) await insertMany(this.table, items);
 
@@ -85,13 +91,13 @@ export class BaseStore<T> {
   }
 
   private async saveToStorage(): Promise<void> {
-    await this.localStorage.clear();
+    await this.localStorage!.clear();
 
     const entities = await many(this.table);
     for (const entity of entities) {
       const rawEntity = JSON.parse(JSON.stringify(entity)) as T;
 
-      await this.localStorage.setItem(entity[this.primaryKey], rawEntity);
+      await this.localStorage!.setItem(entity[this.primaryKey], rawEntity);
     }
   }
 }

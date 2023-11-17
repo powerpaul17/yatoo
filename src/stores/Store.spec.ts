@@ -2,11 +2,11 @@ import { afterEach, describe, expect, it } from 'bun:test';
 import sinon from 'sinon';
 
 import { Store, type Entity, DbVersionMismatchError, type Migration } from './Store';
-import { MemoryLocalStorage } from './LocalStorage/MemoryLocalStorage';
 import { useSystemStore } from './systemStore';
 
-describe('Store', () => {
+import { clearLocalStorage } from './LocalStorage/useLocalStorage';
 
+describe('Store', () => {
   describe('Migration', () => {
 
     it('should not migrate if store has the latest db version', async () => {
@@ -74,10 +74,10 @@ describe('Store', () => {
   });
 
   afterEach(async () => {
-    const systemStore = await useSystemStore();
+    const systemStore = useSystemStore();
     await systemStore.clear();
 
-    await localStorage.clear();
+    await clearLocalStorage('test');
 
     await window.happyDOM.whenAsyncComplete();
   });
@@ -105,8 +105,6 @@ describe('Store', () => {
 
 });
 
-const localStorage = new MemoryLocalStorage<TestEntity>('test');
-
 class TestStore extends Store<TestEntity> {
 
   public migrationSpy;
@@ -123,7 +121,8 @@ class TestStore extends Store<TestEntity> {
       });
     });
 
-    super(localStorage, {
+    super({
+      tableName: 'test',
       migrationConfig: {
         version: options.version,
         migrationFunction: migrationSpy

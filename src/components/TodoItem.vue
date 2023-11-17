@@ -59,7 +59,7 @@
 
   import { useTodoStore, type Todo } from '../stores/todoStore';
 
-  const todoStore = await useTodoStore();
+  const todoStore = useTodoStore();
 
   const props = defineProps({
     todo: {

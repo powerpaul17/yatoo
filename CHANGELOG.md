@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- correctly initialize stores
+
 ## [0.4.2] - 2023-09-29
 
 - patch @parcel/transformer-vue to use relative paths for scope ids

@@ -16,21 +16,20 @@ import { effectScope, onScopeDispose, ref, type Ref } from 'vue';
 
 import { MigrationHelper } from '../classes/MigrationHelper';
 import { BaseStore } from './BaseStore';
-import type { LocalStorage } from './LocalStorage/LocalStorage';
 
 export class Store<
   T extends Entity,
   TRenamedProperties = {}
 > extends BaseStore<T> {
-  protected constructor(
-    storage: LocalStorage<T>,
-    {
-      migrationConfig
-    }: {
-      migrationConfig?: MigrationConfig<T, TRenamedProperties>;
-    }
-  ) {
-    super(storage, {
+  protected constructor({
+    tableName,
+    migrationConfig
+  }: {
+    tableName: string;
+    migrationConfig?: MigrationConfig<T, TRenamedProperties>;
+  }) {
+    super({
+      tableName,
       init: () => {
         if (!migrationConfig) {
           return Promise.resolve();
@@ -122,9 +121,7 @@ export class Store<
   private async migrate(
     migrationConfig: MigrationConfig<T, TRenamedProperties>
   ): Promise<void> {
-    const migrationHelper = new MigrationHelper(
-      this.localStorage.getTableName()
-    );
+    const migrationHelper = new MigrationHelper(this.tableName);
 
     const lastDbVersion = await migrationHelper.getLastDbVersion();
     const newDbVersion = migrationConfig.version;

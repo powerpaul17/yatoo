@@ -12,7 +12,7 @@
 
   import TodoList from '../components/TodoList.vue';
 
-  const todoStore = await useTodoStore();
+  const todoStore = useTodoStore();
 
   const todos = todoStore.getRef({});
 

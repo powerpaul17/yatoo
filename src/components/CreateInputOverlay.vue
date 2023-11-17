@@ -37,7 +37,7 @@
 
   import ModalComponent from './dialogs/ModalComponent.vue';
 
-  const todoStore = await useTodoStore();
+  const todoStore = useTodoStore();
 
   const creationStringInputElement = ref(null);
 

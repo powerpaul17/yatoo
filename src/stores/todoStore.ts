@@ -2,23 +2,22 @@ import type { Query } from 'blinkdb';
 import type { Ref } from 'vue';
 
 import { Store, type Entity } from './Store';
-import { useLocalStorage } from './LocalStorage/useLocalStorage';
-import type { LocalStorage } from './LocalStorage/LocalStorage';
 
 let todoStore: TodoStore | null = null;
 
-export const useTodoStore = async (): Promise<TodoStore> => {
+export const useTodoStore = (): TodoStore => {
   if (!todoStore) {
-    const storage = await useLocalStorage<Todo>('todos');
-    todoStore = new TodoStore(storage);
+    todoStore = new TodoStore();
   }
 
   return todoStore;
 };
 
 class TodoStore extends Store<Todo> {
-  constructor(storage: LocalStorage<Todo>) {
-    super(storage, {});
+  constructor() {
+    super({
+      tableName: 'todos'
+    });
   }
 
   public getAll(): Promise<Array<Todo>> {

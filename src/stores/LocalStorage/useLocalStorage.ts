@@ -18,3 +18,7 @@ export const useLocalStorage = async <T>(tableName: string): Promise<LocalStorag
 
   return localStorage;
 };
+
+export const clearLocalStorage = async (tableName: string): Promise<void> => {
+  await localStorageMap.get(tableName)?.clear();
+};
