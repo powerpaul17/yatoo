@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [0.4.3] - 2023-11-17
+
 - correctly initialize stores
 
 ## [0.4.2] - 2023-09-29
