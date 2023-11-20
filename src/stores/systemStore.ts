@@ -9,8 +9,8 @@ export const useSystemStore = (): SystemStore => {
   return useSingleInstance(createSystemStore);
 };
 
-class SystemStore extends BaseStore<SystemData> {
 
+class SystemStore extends BaseStore<'system', SystemData> {
   constructor() {
     super({
       tableName: 'system',

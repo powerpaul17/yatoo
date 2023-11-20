@@ -5,7 +5,6 @@ import {
   one,
   watch,
   type Query,
-  type PrimaryKeyOf,
   upsertMany,
   type ValidEntity
 } from 'blinkdb';
@@ -16,15 +15,16 @@ import { MigrationHelper } from '../classes/MigrationHelper';
 import { BaseStore } from './BaseStore';
 
 export class Store<
-  T extends Entity,
+  TTableName extends string,
+  TEntity extends Entity,
   TRenamedProperties = {}
-> extends BaseStore<T> {
+> extends BaseStore<TTableName, TEntity> {
   protected constructor({
     tableName,
     migrationConfig
   }: {
-    tableName: string;
-    migrationConfig?: MigrationConfig<T, TRenamedProperties>;
+    tableName: TTableName;
+    migrationConfig?: MigrationConfig<TEntity, TRenamedProperties>;
   }) {
     super({
       tableName,
@@ -43,8 +43,8 @@ export class Store<
   }
 
   protected _watch(
-    query: Query<T, PrimaryKeyOf<T>>,
-    callback: (entities: Array<T>) => void
+    query: Query<TEntity, 'id'>,
+    callback: (entities: Array<TEntity>) => void
   ): void {
     effectScope().run(() => {
       let dispose = (): void => {};
@@ -66,9 +66,9 @@ export class Store<
     });
   }
 
-  protected _getRef(query: Query<T, PrimaryKeyOf<T>>): Ref<Array<T>> {
+  protected _getRef(query: Query<TEntity, 'id'>): Ref<Array<TEntity>> {
     return effectScope().run(() => {
-      const reference = ref<Array<T>>([]);
+      const reference = ref<Array<TEntity>>([]);
 
       let dispose = (): void => {};
       let disposed = false;
@@ -91,21 +91,21 @@ export class Store<
     });
   }
 
-  protected async _getAll(): Promise<Array<T>> {
+  protected async _getAll(): Promise<Array<TEntity>> {
     await this.initializePromise;
     return await many(this.table);
   }
 
-  protected async _getById(id: string): Promise<T> {
+  protected async _getById(id: string): Promise<TEntity> {
     await this.initializePromise;
     return await one(this.table, id);
   }
 
-  protected async _create(entity: Omit<T, 'id'>): Promise<string> {
+  protected async _create(entity: Omit<TEntity, 'id'>): Promise<string> {
     await this.initializePromise;
 
     const id = uuid();
-    const validEntity: ValidEntity<T> = {
+    const validEntity: ValidEntity<TEntity> = {
       ...entity,
       id
     };
@@ -116,7 +116,7 @@ export class Store<
   }
 
   private async migrate(
-    migrationConfig: MigrationConfig<T, TRenamedProperties>
+    migrationConfig: MigrationConfig<TEntity, TRenamedProperties>
   ): Promise<void> {
     const migrationHelper = new MigrationHelper(this.tableName);
 

@@ -9,7 +9,7 @@ export const useTodoStore = (): TodoStore => {
   return useSingleInstance(createTodoStore);
 };
 
-class TodoStore extends Store<Todo> {
+class TodoStore extends Store<'todos', Todo> {
   constructor() {
     super({
       tableName: 'todos'

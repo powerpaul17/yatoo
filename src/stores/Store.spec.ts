@@ -109,7 +109,7 @@ describe('Store', () => {
   }
 });
 
-class TestStore extends Store<TestEntity> {
+class TestStore extends Store<'test', TestEntity> {
   public migrationSpy;
 
   constructor(options: { version: number }) {

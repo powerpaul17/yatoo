@@ -14,13 +14,13 @@ import { useBlinkDB } from './blinkdb';
 import type { LocalStorage } from './LocalStorage/LocalStorage';
 import { useLocalStorage } from './LocalStorage/useLocalStorage';
 
-export class BaseStore<T> {
+export class BaseStore<TTableName extends string, TEntity> {
   protected tableName;
   protected table;
 
-  private primaryKey: keyof T | 'id';
+  private primaryKey: keyof TEntity | 'id';
 
-  private localStorage: LocalStorage<T> | null = null;
+  private localStorage: LocalStorage<TEntity> | null = null;
 
   protected initializePromise;
 
@@ -29,15 +29,15 @@ export class BaseStore<T> {
     primaryKey,
     init
   }: {
-    tableName: string;
-    primaryKey?: keyof T;
+    tableName: TTableName;
+    primaryKey?: keyof TEntity;
     init?: () => Promise<void>;
   }) {
     this.tableName = tableName;
 
     const db = useBlinkDB();
     this.primaryKey = primaryKey ?? 'id';
-    this.table = createTable<T>(
+    this.table = createTable<TEntity>(
       db,
       tableName
     )({
@@ -50,7 +50,7 @@ export class BaseStore<T> {
     });
   }
 
-  protected async _upsert(entity: T): Promise<void> {
+  protected async _upsert(entity: TEntity): Promise<void> {
     await this.initializePromise;
 
     if (!isValidEntity(entity))
@@ -60,7 +60,9 @@ export class BaseStore<T> {
     await this.saveEntityToStorage(entity);
   }
 
-  protected async _one(query: Query<T, PrimaryKeyOf<T>>): Promise<T> {
+  protected async _one(
+    query: Query<TEntity, PrimaryKeyOf<TEntity>>
+  ): Promise<TEntity> {
     await this.initializePromise;
     return await one(this.table, query);
   }
@@ -87,12 +89,12 @@ export class BaseStore<T> {
     if (items.length) await insertMany(this.table, items);
   }
 
-  private async saveEntityToStorage(entity: T): Promise<void> {
+  private async saveEntityToStorage(entity: TEntity): Promise<void> {
     const rawEntity = this.convertToRawEntity(entity);
     await this.localStorage!.setItem(entity[this.primaryKey], rawEntity);
   }
 
-  private convertToRawEntity(entity: T): T {
-    return JSON.parse(JSON.stringify(entity)) as T;
+  private convertToRawEntity(entity: TEntity): TEntity {
+    return JSON.parse(JSON.stringify(entity)) as TEntity;
   }
 }
