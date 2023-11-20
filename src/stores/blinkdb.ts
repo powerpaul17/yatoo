@@ -1,13 +1,12 @@
 import { createDB, type Database } from 'blinkdb';
 
-let database: Database | null = null;
+import { useSingleInstance } from '../classes/useSingleInstance';
+
+const createBlinkDb = (): Database =>
+  createDB({
+    clone: true
+  });
 
 export function useBlinkDB(): Database {
-  if (!database) {
-    database = createDB({
-      clone: true
-    });
-  }
-
-  return database;
+  return useSingleInstance(createBlinkDb);
 }

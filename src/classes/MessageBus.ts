@@ -1,9 +1,9 @@
-let messageBus: MessageBus | null = null;
+import { useSingleInstance } from './useSingleInstance';
+
+const createMessageBus = (): MessageBus => new MessageBus();
 
 export const useMessageBus = (): MessageBus => {
-  if (!messageBus) messageBus = new MessageBus();
-
-  return messageBus;
+  return useSingleInstance(createMessageBus);
 };
 
 export class MessageBus {

@@ -1,15 +1,12 @@
 import { ItemNotFoundError } from 'blinkdb';
 
 import { BaseStore } from './BaseStore';
+import { useSingleInstance } from '../classes/useSingleInstance';
 
-let systemStore: SystemStore|null = null;
+const createSystemStore = (): SystemStore => new SystemStore();
 
 export const useSystemStore = (): SystemStore => {
-  if (!systemStore) {
-    systemStore = new SystemStore();
-  }
-
-  return systemStore;
+  return useSingleInstance(createSystemStore);
 };
 
 class SystemStore extends BaseStore<SystemData> {

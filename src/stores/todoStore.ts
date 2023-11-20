@@ -2,15 +2,11 @@ import type { Query } from 'blinkdb';
 import type { Ref } from 'vue';
 
 import { Store, type Entity } from './Store';
+import { useSingleInstance } from '../classes/useSingleInstance';
 
-let todoStore: TodoStore | null = null;
-
+const createTodoStore = (): TodoStore => new TodoStore();
 export const useTodoStore = (): TodoStore => {
-  if (!todoStore) {
-    todoStore = new TodoStore();
-  }
-
-  return todoStore;
+  return useSingleInstance(createTodoStore);
 };
 
 class TodoStore extends Store<Todo> {
