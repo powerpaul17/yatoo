@@ -3,7 +3,6 @@ import { v4 as uuid } from 'uuid';
 import {
   many,
   one,
-  upsert,
   watch,
   type Query,
   type PrimaryKeyOf,
@@ -111,7 +110,7 @@ export class Store<
       id
     };
 
-    await upsert(this.table, validEntity);
+    await this._upsert(validEntity);
 
     return id;
   }
