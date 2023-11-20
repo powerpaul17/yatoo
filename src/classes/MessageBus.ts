@@ -34,7 +34,10 @@ export class MessageBus {
     };
   }
 
-  public subscribe(message: string, callback: Subscriber): Disposable {
+  public subscribe<TConfig extends MessageConfig<string, unknown> = never>(
+    message: TConfig['message'],
+    callback: Subscriber<TConfig['payload']>
+  ): Disposable {
     const messageInfo = this.getOrCreateMessageInfo(message);
 
     messageInfo.subscribers.add(callback);
@@ -70,7 +73,7 @@ type Disposable = {
   dispose: () => void;
 };
 
-type Subscriber = (payload) => Promise<void>;
+type Subscriber<TPayload> = (payload: TPayload) => Promise<void>;
 
 export type MessageConfig<TMessage, TPayload> = {
   message: TMessage;

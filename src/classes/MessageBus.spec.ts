@@ -34,7 +34,7 @@ describe('MessageBus', () => {
       const { messageBus, notify } = setupEnvironment();
 
       let notified = 0;
-      messageBus.subscribe('test-message', () => {
+      messageBus.subscribe<TestMessageConfig>('test-message', () => {
         notified++;
         return Promise.resolve();
       });
@@ -48,10 +48,13 @@ describe('MessageBus', () => {
       const { messageBus, notify } = setupEnvironment();
 
       let notified = 0;
-      const { dispose } = messageBus.subscribe('test-message', () => {
-        notified++;
-        return Promise.resolve();
-      });
+      const { dispose } = messageBus.subscribe<TestMessageConfig>(
+        'test-message',
+        () => {
+          notified++;
+          return Promise.resolve();
+        }
+      );
 
       await notify({});
 
@@ -70,10 +73,13 @@ describe('MessageBus', () => {
       );
 
       let notified = 0;
-      messageBus.subscribe('test-message-2', () => {
-        notified++;
-        return Promise.resolve();
-      });
+      messageBus.subscribe<MessageConfig<'test-message-2', any>>(
+        'test-message-2',
+        () => {
+          notified++;
+          return Promise.resolve();
+        }
+      );
 
       await notify({});
 
