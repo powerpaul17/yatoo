@@ -8,8 +8,7 @@ import {
   type Query,
   type PrimaryKeyOf,
   upsertMany,
-  type ValidEntity,
-  remove
+  type ValidEntity
 } from 'blinkdb';
 
 import { effectScope, onScopeDispose, ref, type Ref } from 'vue';
@@ -115,11 +114,6 @@ export class Store<
     await upsert(this.table, validEntity);
 
     return id;
-  }
-
-  protected async _remove(id: string): Promise<void> {
-    await this.initializePromise;
-    await remove(this.table, { id });
   }
 
   private async migrate(
