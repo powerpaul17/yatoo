@@ -5,15 +5,12 @@ import {
   type Query,
   type PrimaryKeyOf,
   one,
-  watch,
   insertMany,
-  many,
   clear,
   remove
 } from 'blinkdb';
 
 import { useBlinkDB } from './blinkdb';
-import { Utils } from '../classes/Utils';
 import type { LocalStorage } from './LocalStorage/LocalStorage';
 import { useLocalStorage } from './LocalStorage/useLocalStorage';
 
@@ -26,12 +23,6 @@ export class BaseStore<T> {
   private localStorage: LocalStorage<T> | null = null;
 
   protected initializePromise;
-
-  private disposeWatcher: (() => void) | null = null;
-
-  private saveAllToStorageRateLimited = Utils.rateLimitFunction(
-    this.saveAllToStorage.bind(this)
-  );
 
   protected constructor({
     tableName,
@@ -64,7 +55,9 @@ export class BaseStore<T> {
 
     if (!isValidEntity(entity))
       throw new Error('cannot upsert an invalid entity');
+
     await upsert(this.table, entity);
+    await this.saveEntityToStorage(entity);
   }
 
   protected async _one(query: Query<T, PrimaryKeyOf<T>>): Promise<T> {
@@ -75,10 +68,13 @@ export class BaseStore<T> {
   protected async _remove(id: string): Promise<void> {
     await this.initializePromise;
     await remove(this.table, { id });
+    await this.localStorage!.removeItem(id);
   }
 
   protected async _clear(): Promise<void> {
+    await this.initializePromise;
     await clear(this.table);
+    await this.localStorage!.clear();
   }
 
   private async init(): Promise<void> {
@@ -88,21 +84,7 @@ export class BaseStore<T> {
 
   private async loadFromStorage(): Promise<void> {
     const items = await this.localStorage!.getItems();
-
     if (items.length) await insertMany(this.table, items);
-
-    this.disposeWatcher = await watch(this.table, async () => {
-      await this.saveAllToStorageRateLimited();
-    });
-  }
-
-  private async saveAllToStorage(): Promise<void> {
-    await this.localStorage!.clear();
-
-    const entities = await many(this.table);
-    for (const entity of entities) {
-      await this.saveEntityToStorage(entity);
-    }
   }
 
   private async saveEntityToStorage(entity: T): Promise<void> {
