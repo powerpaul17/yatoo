@@ -40,6 +40,10 @@ export class Store<
     });
   }
 
+  public async clear(): Promise<void> {
+    await this._clear();
+  }
+
   protected _watch(
     query: Query<T, PrimaryKeyOf<T>>,
     callback: (entities: Array<T>) => void
