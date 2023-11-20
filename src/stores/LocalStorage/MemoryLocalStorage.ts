@@ -1,12 +1,9 @@
 import type { LocalStorage } from './LocalStorage';
 
 export class MemoryLocalStorage<T> implements LocalStorage<T> {
-
   private readonly data: Map<string, T> = new Map();
 
-  constructor(
-    private readonly tableName: string
-  ) {}
+  constructor(private readonly tableName: string) {}
 
   public getTableName(): string {
     return this.tableName;
@@ -26,5 +23,4 @@ export class MemoryLocalStorage<T> implements LocalStorage<T> {
     const items = Array.from(this.data.values());
     return Promise.resolve(items);
   }
-
 }

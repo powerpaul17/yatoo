@@ -3,12 +3,9 @@ import { createInstance } from 'localforage';
 import type { LocalStorage } from './LocalStorage';
 
 export class LocalForageLocalStorage<T> implements LocalStorage<T> {
-
   private readonly localForage: LocalForage;
 
-  constructor(
-    private readonly tableName: string
-  ) {
+  constructor(private readonly tableName: string) {
     this.localForage = createInstance({
       name: 'yatoo',
       storeName: tableName
@@ -34,5 +31,4 @@ export class LocalForageLocalStorage<T> implements LocalStorage<T> {
     });
     return items;
   }
-
 }
