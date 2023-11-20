@@ -1,14 +1,18 @@
 import { afterEach, describe, expect, it } from 'bun:test';
 import sinon from 'sinon';
 
-import { Store, type Entity, DbVersionMismatchError, type Migration } from './Store';
+import {
+  Store,
+  type Entity,
+  DbVersionMismatchError,
+  type Migration
+} from './Store';
 import { useSystemStore } from './systemStore';
 
 import { clearLocalStorage } from './LocalStorage/useLocalStorage';
 
 describe('Store', () => {
   describe('Migration', () => {
-
     it('should not migrate if store has the latest db version', async () => {
       await createTestStore({
         version: 2
@@ -26,7 +30,9 @@ describe('Store', () => {
         version: 2
       });
 
-      expect(async () => await createTestStore({ version: 0 })).toThrow(DbVersionMismatchError);
+      expect(async () => await createTestStore({ version: 0 })).toThrow(
+        DbVersionMismatchError
+      );
     });
 
     it('should migrate if store has a newer version', async () => {
@@ -70,7 +76,6 @@ describe('Store', () => {
         }
       ]);
     });
-
   });
 
   afterEach(async () => {
@@ -86,9 +91,9 @@ describe('Store', () => {
     version,
     entities
   }: {
-    version: number
-    entities?: Array<Partial<TestEntity>>
-  }): Promise<{store: TestStore}> {
+    version: number;
+    entities?: Array<Partial<TestEntity>>;
+  }): Promise<{ store: TestStore }> {
     const store = new TestStore({
       version
     });
@@ -102,18 +107,14 @@ describe('Store', () => {
       store
     };
   }
-
 });
 
 class TestStore extends Store<TestEntity> {
-
   public migrationSpy;
 
-  constructor(
-    options: { version: number }
-  ) {
+  constructor(options: { version: number }) {
     const migrationSpy = sinon.spy<Migration<TestEntity>>((entities) => {
-      return entities.map(entity => {
+      return entities.map((entity) => {
         return {
           id: entity.id,
           testValue: entity.testValue ?? 'test'
@@ -149,9 +150,8 @@ class TestStore extends Store<TestEntity> {
   public async getAll(): Promise<Array<TestEntity>> {
     return await this._getAll();
   }
-
 }
 
 type TestEntity = Entity & {
   testValue: string;
-}
+};
