@@ -9,7 +9,6 @@ export const useSystemStore = (): SystemStore => {
   return useSingleInstance(createSystemStore);
 };
 
-
 class SystemStore extends BaseStore<'system', SystemData> {
   constructor() {
     super({
@@ -18,7 +17,7 @@ class SystemStore extends BaseStore<'system', SystemData> {
     });
   }
 
-  public async getValue(name: string): Promise<string|null> {
+  public async getValue(name: string): Promise<string | null> {
     try {
       const dataItem = await this._one({
         where: {
@@ -53,12 +52,11 @@ class SystemStore extends BaseStore<'system', SystemData> {
   public async clear(): Promise<void> {
     await this._clear();
   }
-
 }
 
 type SystemData = {
   name: string;
   value: string;
-}
+};
 
 export type { SystemStore };
