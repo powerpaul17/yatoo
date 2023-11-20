@@ -12,8 +12,7 @@ export class MessageBus {
   public registerMessage(message: string): Disposable & {
     notify: (payload) => Promise<Array<void>>;
   } {
-    if (this.messages.has(message))
-      throw new Error('message already registered');
+    if (this.messages.has(message)) throw new MessageAlreadyRegisteredError();
 
     const subscribers = new Set<Subscriber>();
     this.messages.set(message, subscribers);
@@ -32,7 +31,7 @@ export class MessageBus {
 
   public subscribe(message: string, callback: Subscriber): Disposable {
     const subscribers = this.messages.get(message);
-    if (!subscribers) throw new Error('message is not registered');
+    if (!subscribers) throw new MessageNotRegisteredError();
 
     subscribers.add(callback);
 
@@ -41,6 +40,18 @@ export class MessageBus {
         subscribers.delete(callback);
       }
     };
+  }
+}
+
+export class MessageAlreadyRegisteredError extends Error {
+  constructor() {
+    super('message already registered');
+  }
+}
+
+export class MessageNotRegisteredError extends Error {
+  constructor() {
+    super('message is not registered');
   }
 }
 
