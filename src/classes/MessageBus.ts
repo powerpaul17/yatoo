@@ -9,8 +9,12 @@ export const useMessageBus = (): MessageBus => {
 export class MessageBus {
   private messages: Map<string, Set<Subscriber>> = new Map();
 
-  public registerMessage(message: string): Disposable & {
-    notify: (payload) => Promise<Array<void>>;
+  public registerMessage<
+    TConfig extends MessageConfig<string, unknown> = never
+  >(
+    message: TConfig['message']
+  ): Disposable & {
+    notify: (payload: TConfig['payload']) => Promise<Array<void>>;
   } {
     if (this.messages.has(message)) throw new MessageAlreadyRegisteredError();
 
@@ -60,3 +64,8 @@ type Disposable = {
 };
 
 type Subscriber = (payload) => Promise<void>;
+
+export type MessageConfig<TMessage, TPayload> = {
+  message: TMessage;
+  payload: TPayload;
+};
