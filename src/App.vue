@@ -63,12 +63,23 @@
 </style>
 
 <script setup lang="ts">
-  import { ref } from 'vue';
+  import { provide, ref } from 'vue';
   import type { useScroll } from '@vueuse/core';
   import { vScroll } from '@vueuse/components';
 
   import NavigationBar from './components/NavigationBar.vue';
   import TopNavigation from './components/TopNavigation.vue';
+
+  import { PluginManagerKey } from './provideKeys';
+
+  import { PluginManager } from './plugins/PluginManager';
+
+  // instantiate plugins after everything else
+
+  const pluginManager = new PluginManager();
+  await pluginManager.init();
+
+  provide(PluginManagerKey, pluginManager);
 
   const scrollTop = ref(0);
 
