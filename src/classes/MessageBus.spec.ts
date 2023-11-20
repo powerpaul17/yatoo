@@ -2,7 +2,6 @@ import { describe, expect, it } from 'bun:test';
 
 import {
   MessageBus,
-  MessageNotRegisteredError,
   type MessageConfig,
   MessageAlreadyRegisteredError
 } from './MessageBus';
@@ -81,16 +80,25 @@ describe('MessageBus', () => {
       expect(notified).toBe(0);
     });
 
-    it('should throw if trying to subscribe to a not existing message', () => {
+    it('should subscribe to a message which has not been registered yet', async () => {
       const { messageBus } = setupEnvironment();
 
       let notified = 0;
-      expect(() => {
-        messageBus.subscribe('not-existing-message', () => {
+      messageBus.subscribe<MessageConfig<'not-existing-message', any>>(
+        'not-existing-message',
+        () => {
           notified++;
           return Promise.resolve();
-        });
-      }).toThrow(MessageNotRegisteredError);
+        }
+      );
+
+      const { notify } = messageBus.registerMessage<
+        MessageConfig<'not-existing-message', any>
+      >('not-existing-message');
+
+      await notify({});
+
+      expect(notified).toBe(1);
     });
   });
 

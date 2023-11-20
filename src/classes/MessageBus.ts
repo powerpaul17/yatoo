@@ -7,7 +7,7 @@ export const useMessageBus = (): MessageBus => {
 };
 
 export class MessageBus {
-  private messages: Map<string, Set<Subscriber>> = new Map();
+  private messages: Map<string, MessageInfo> = new Map();
 
   public registerMessage<
     TConfig extends MessageConfig<string, unknown> = never
@@ -16,10 +16,11 @@ export class MessageBus {
   ): Disposable & {
     notify: (payload: TConfig['payload']) => Promise<Array<void>>;
   } {
-    if (this.messages.has(message)) throw new MessageAlreadyRegisteredError();
+    const messageInfo = this.getOrCreateMessageInfo(message);
 
-    const subscribers = new Set<Subscriber>();
-    this.messages.set(message, subscribers);
+    if (messageInfo.registered) throw new MessageAlreadyRegisteredError();
+
+    messageInfo.registered = true;
 
     return {
       dispose: (): void => {
@@ -27,35 +28,41 @@ export class MessageBus {
       },
       notify: (payload): Promise<Array<void>> => {
         return Promise.all(
-          Array.from(subscribers.values()).map((s) => s(payload))
+          Array.from(messageInfo.subscribers.values()).map((s) => s(payload))
         );
       }
     };
   }
 
   public subscribe(message: string, callback: Subscriber): Disposable {
-    const subscribers = this.messages.get(message);
-    if (!subscribers) throw new MessageNotRegisteredError();
+    const messageInfo = this.getOrCreateMessageInfo(message);
 
-    subscribers.add(callback);
+    messageInfo.subscribers.add(callback);
 
     return {
       dispose: (): void => {
-        subscribers.delete(callback);
+        messageInfo.subscribers.delete(callback);
       }
     };
+  }
+
+  private getOrCreateMessageInfo(message: string): MessageInfo {
+    const existingMessageInfo = this.messages.get(message);
+    if (existingMessageInfo) return existingMessageInfo;
+
+    const messageInfo = {
+      registered: false,
+      subscribers: new Set<Subscriber<any>>()
+    };
+    this.messages.set(message, messageInfo);
+
+    return messageInfo;
   }
 }
 
 export class MessageAlreadyRegisteredError extends Error {
   constructor() {
     super('message already registered');
-  }
-}
-
-export class MessageNotRegisteredError extends Error {
-  constructor() {
-    super('message is not registered');
   }
 }
 
@@ -68,4 +75,9 @@ type Subscriber = (payload) => Promise<void>;
 export type MessageConfig<TMessage, TPayload> = {
   message: TMessage;
   payload: TPayload;
+};
+
+type MessageInfo = {
+  registered: boolean;
+  subscribers: Set<Subscriber<any>>;
 };
