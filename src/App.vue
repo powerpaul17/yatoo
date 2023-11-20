@@ -50,22 +50,19 @@
 </template>
 
 <style>
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: all 0.15s ease;
+  }
 
-.fade-enter-active,
-.fade-leave-active {
-  transition: all 0.15s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-  scale: 0.98;
-}
-
+  .fade-enter-from,
+  .fade-leave-to {
+    opacity: 0;
+    scale: 0.98;
+  }
 </style>
 
 <script setup lang="ts">
-
   import { ref } from 'vue';
   import type { useScroll } from '@vueuse/core';
   import { vScroll } from '@vueuse/components';
@@ -80,5 +77,4 @@
   }
 
   const menuOpen = ref(false);
-
 </script>
