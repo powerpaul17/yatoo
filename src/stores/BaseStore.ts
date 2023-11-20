@@ -28,8 +28,8 @@ export class BaseStore<T> {
 
   private disposeWatcher: (() => void) | null = null;
 
-  private saveToStorageRateLimited = Utils.rateLimitFunction(
-    this.saveToStorage.bind(this)
+  private saveAllToStorageRateLimited = Utils.rateLimitFunction(
+    this.saveAllToStorage.bind(this)
   );
 
   protected constructor({
@@ -85,19 +85,26 @@ export class BaseStore<T> {
 
     if (items.length) await insertMany(this.table, items);
 
-    this.disposeWatcher = await watch(this.table, () => {
-      void this.saveToStorageRateLimited();
+    this.disposeWatcher = await watch(this.table, async () => {
+      await this.saveAllToStorageRateLimited();
     });
   }
 
-  private async saveToStorage(): Promise<void> {
+  private async saveAllToStorage(): Promise<void> {
     await this.localStorage!.clear();
 
     const entities = await many(this.table);
     for (const entity of entities) {
-      const rawEntity = JSON.parse(JSON.stringify(entity)) as T;
-
-      await this.localStorage!.setItem(entity[this.primaryKey], rawEntity);
+      await this.saveEntityToStorage(entity);
     }
+  }
+
+  private async saveEntityToStorage(entity: T): Promise<void> {
+    const rawEntity = this.convertToRawEntity(entity);
+    await this.localStorage!.setItem(entity[this.primaryKey], rawEntity);
+  }
+
+  private convertToRawEntity(entity: T): T {
+    return JSON.parse(JSON.stringify(entity)) as T;
   }
 }
