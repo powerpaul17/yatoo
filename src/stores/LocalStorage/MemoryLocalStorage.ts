@@ -23,4 +23,9 @@ export class MemoryLocalStorage<T> implements LocalStorage<T> {
     const items = Array.from(this.data.values());
     return Promise.resolve(items);
   }
+
+  public removeItem(key: string): Promise<void> {
+    this.data.delete(key);
+    return Promise.resolve();
+  }
 }

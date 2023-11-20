@@ -31,4 +31,8 @@ export class LocalForageLocalStorage<T> implements LocalStorage<T> {
     });
     return items;
   }
+
+  public async removeItem(key: string): Promise<void> {
+    await this.localForage.removeItem(key);
+  }
 }
