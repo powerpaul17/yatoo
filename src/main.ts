@@ -9,16 +9,13 @@ import router from './router';
 
 const app = createApp({
   render: () => {
-    return h(
-      Suspense,
-      null,
-      {
-        default: () => h(App),
-        fallback: () => h('div', { class: 'w-full h-full flex justify-center' }, [
+    return h(Suspense, null, {
+      default: () => h(App),
+      fallback: () =>
+        h('div', { class: 'w-full h-full flex justify-center' }, [
           h('div', { class: 'loading loading-spinner loading-lg' })
         ])
-      }
-    );
+    });
   }
 });
 
@@ -29,7 +26,7 @@ const i18n = createI18n<[MessageSchema]>({
   locale: 'en',
   fallbackLocale: 'en',
   messages: {
-    'en': en
+    en
   }
 });
 
