@@ -33,7 +33,7 @@
 
         <div class="ds-form-control">
           <label class="ds-label">
-            <span class="ds-label-text">{{ $t('entities.Todo.title') }}</span>
+            <span class="ds-label-text">{{ $t('entities.todo.title') }}</span>
           </label>
           <input
             class="ds-input ds-input-bordered"
@@ -45,7 +45,7 @@
         <div class="ds-form-control">
           <label class="ds-label">
             <span class="ds-label-text">{{
-              $t('entities.Todo.description')
+              $t('entities.todo.description')
             }}</span>
           </label>
           <textarea
@@ -60,7 +60,7 @@
 
   <DeleteDialog
     :open="deleteDialogOpen"
-    :title="$t('components.Todos.TodoSidebar.deleteTodo')"
+    :title="$t('components.todos.TodoSidebar.deleteTodo')"
     @close="deleteDialogOpen = false"
     @delete="handleDeleteTodo()"
   />

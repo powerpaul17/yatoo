@@ -1,6 +1,6 @@
 {
   "components": {
-    "Dialogs": {
+    "dialogs": {
       "DeleteDialog": {
         "cancel": "Cancel",
         "delete": "Delete"
@@ -9,14 +9,14 @@
     "NavigationBar": {
       "todos": "Todos"
     },
-    "Todos": {
+    "todos": {
       "TodoSidebar": {
         "deleteTodo": "Delete Todo"
       }
     }
   },
   "entities": {
-    "Todo": {
+    "todo": {
       "title": "Title",
       "description": "Description"
     }
