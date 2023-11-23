@@ -1,17 +1,29 @@
 <template>
-  <label class="ds-swap ds-btn-ghost ds-swap-rotate ds-btn-circle ds-btn">
-    <input
-      type="checkbox"
-      v-model="darkmode"
-    >
-    <Sun class="ds-swap-off" />
-    <MoonStar class="ds-swap-on" />
-  </label>
+  <Button
+    text
+    icon
+    rounded
+    plain
+    @click="darkmode = !darkmode"
+  >
+    <template #icon="{ value, class: cls }">
+      <Sun
+        v-if="!darkmode"
+        :class="cls"
+      />
+      <MoonStar
+        v-else
+        :class="cls"
+      />
+    </template>
+  </Button>
 </template>
 
 <script setup lang="ts">
 
   import { useDark } from '@vueuse/core';
+
+  import Button from 'primevue/button';
 
   import { MoonStar, Sun } from 'lucide-vue-next';
 
