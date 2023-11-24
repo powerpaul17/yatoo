@@ -56,7 +56,6 @@
     "@vue/tsconfig": "^0.4.0",
     "bun": "^1.0.1",
     "bun-types": "^1.0.1",
-    "daisyui": "^3.1.6",
     "dotenv-cli": "^7.2.1",
     "eslint": "^8.42.0",
     "eslint-config-prettier": "^9.0.0",
