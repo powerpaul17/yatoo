@@ -1,6 +1,8 @@
 import { createApp, h, Suspense } from 'vue';
 import { createI18n } from 'vue-i18n';
 
+import PrimeVue from 'primevue/config';
+
 import en from '../i18n/en.json';
 
 import App from './App.vue';
@@ -18,6 +20,8 @@ const app = createApp({
     });
   }
 });
+
+app.use(PrimeVue);
 
 type MessageSchema = typeof en;
 
