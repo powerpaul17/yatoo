@@ -31,29 +31,21 @@
           </button>
         </div>
 
-        <div class="ds-form-control">
-          <label class="ds-label">
-            <span class="ds-label-text">{{ $t('entities.todo.title') }}</span>
-          </label>
-          <input
-            class="ds-input ds-input-bordered"
+        <TodoSidebarSection :title="$t('entities.todo.title')">
+          <InputText
+            class="w-full"
             v-model="todo.title"
             @change="handleTodoChanged()"
           />
-        </div>
+        </TodoSidebarSection>
 
-        <div class="ds-form-control">
-          <label class="ds-label">
-            <span class="ds-label-text">{{
-              $t('entities.todo.description')
-            }}</span>
-          </label>
-          <textarea
-            class="ds-textarea ds-textarea-bordered"
+        <TodoSidebarSection :title="$t('entities.todo.description')">
+          <TextArea
+            class="w-full"
             v-model="todo.description"
             @change="handleTodoChanged()"
           />
-        </div>
+        </TodoSidebarSection>
       </div>
     </div>
   </div>
@@ -70,8 +62,12 @@
   import { onMounted, ref, watch } from 'vue';
   import { useRouter } from 'vue-router';
 
+  import InputText from 'primevue/inputtext';
+  import TextArea from 'primevue/textarea';
+
   import { Trash, X } from 'lucide-vue-next';
 
+  import TodoSidebarSection from './TodoSidebarSection.vue';
   import DeleteDialog from '../dialogs/DeleteDialog.vue';
 
   import { useTodoStore, type Todo } from '../../stores/todoStore';
