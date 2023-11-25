@@ -14,21 +14,22 @@
     >
       <div v-if="todo">
         <div class="flex">
-          <button
-            class="ds-btn ds-btn-circle ds-btn-ghost"
-            @click="handleClose()"
-          >
-            <X />
-          </button>
+          <IconButton @click="handleClose()">
+            <template #icon>
+              <X />
+            </template>
+          </IconButton>
 
           <div class="grow" />
 
-          <button
-            class="ds-btn ds-btn-circle ds-btn-warning ds-btn-ghost"
+          <IconButton
+            severity="warning"
             @click="handleDelete()"
           >
-            <Trash />
-          </button>
+            <template #icon>
+              <Trash />
+            </template>
+          </IconButton>
         </div>
 
         <TodoSidebarSection :title="$t('entities.todo.title')">
