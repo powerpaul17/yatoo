@@ -1,15 +1,14 @@
 <template>
   <div
-    class="ds-navbar relative transition-shadow"
+    class="relative flex w-full items-center p-2 transition-shadow"
     :class="{ 'shadow-md': scrolled }"
   >
     <div class="flex-none lg:hidden">
-      <button
-        class="ds-btn-ghost ds-btn-square ds-btn"
-        @click="emit('toggle-menu')"
-      >
-        <Menu />
-      </button>
+      <IconButton @click="emit('toggle-menu')">
+        <template #icon>
+          <Menu />
+        </template>
+      </IconButton>
     </div>
 
     <div class="mx-2 min-w-0 flex-1 px-2">
@@ -17,12 +16,11 @@
     </div>
 
     <div class="flex-none">
-      <button
-        class="ds-btn-ghost ds-btn-circle ds-btn"
-        @click="createInputOverlayOpen = true"
-      >
-        <Plus />
-      </button>
+      <IconButton @click="createInputOverlayOpen = true">
+        <template #icon>
+          <Plus />
+        </template>
+      </IconButton>
     </div>
   </div>
 
@@ -39,6 +37,7 @@
 
   import { Menu, Plus } from 'lucide-vue-next';
 
+  import IconButton from './IconButton.vue';
   import CreateInputOverlay from './CreateInputOverlay.vue';
 
   const route = useRoute();
