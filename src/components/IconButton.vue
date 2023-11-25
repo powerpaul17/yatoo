@@ -4,6 +4,7 @@
     icon
     plain
     rounded
+    :severity="severity"
     @click="emit('click')"
   >
     <template #icon="{ class: cls }">
@@ -17,6 +18,13 @@
 
 <script setup lang="ts">
   import Button from 'primevue/button';
+
+  defineProps({
+    severity: {
+      type: String,
+      default: null
+    }
+  });
 
   const emit = defineEmits<{
     (event: 'click'): void;
