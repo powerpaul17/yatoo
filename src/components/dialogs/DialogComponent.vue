@@ -1,31 +1,29 @@
 <template>
-  <ModalComponent
-    :open="open"
-    class="ds-modal-bottom sm:ds-modal-middle"
-    @backdrop-clicked="emit('close')"
+  <Dialog
+    v-model:visible="visible"
+    :header="title"
+    :modal="true"
   >
-    <form
-      method="dialog"
-      class="ds-modal-box m-0"
-    >
-      <h3 class="text-lg font-bold">
-        {{ title }}
-      </h3>
+    <form class="m-0">
       <p class="py-4">
         <slot />
       </p>
-      <div class="ds-modal-action">
+    </form>
+
+    <template #footer>
+      <div>
         <slot name="actions" />
       </div>
-    </form>
-  </ModalComponent>
+    </template>
+  </Dialog>
 </template>
 
 <script setup lang="ts">
+  import { ref, watch } from 'vue';
 
-  import ModalComponent from './ModalComponent.vue';
+  import Dialog from 'primevue/dialog';
 
-  defineProps({
+  const props = defineProps({
     open: {
       type: Boolean,
       required: true
@@ -40,4 +38,16 @@
     (event: 'close'): void;
   }>();
 
+  const visible = ref(false);
+
+  watch(
+    () => props.open,
+    () => {
+      visible.value = props.open;
+    }
+  );
+
+  watch(visible, () => {
+    if (!visible.value) emit('close');
+  });
 </script>
