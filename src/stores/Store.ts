@@ -15,7 +15,8 @@ import {
   ref,
   watch as vueWatch,
   type ComputedRef,
-  type Ref
+  type Ref,
+  computed
 } from 'vue';
 
 import { MigrationHelper } from '../classes/MigrationHelper';
@@ -49,36 +50,11 @@ export class Store<
     await this._clear();
   }
 
-  protected _watch(
-    query: Query<TEntity, 'id'>,
+  protected _watchForComputedQuery(
+    computedQuery: ComputedRef<Query<TEntity, 'id'>>,
     callback: (entities: Array<TEntity>) => void
   ): void {
     effectScope().run(() => {
-      let dispose = (): void => {};
-      let disposed = false;
-
-      void this.initializePromise.then(() =>
-        watch(this.table, query, (entities) => {
-          callback(entities);
-        }).then((d) => {
-          dispose = d;
-          if (disposed) dispose();
-        })
-      );
-
-      onScopeDispose(() => {
-        dispose();
-        disposed = true;
-      });
-    });
-  }
-
-  protected _getRefForComputedQuery(
-    computedQuery: ComputedRef<Query<TEntity, 'id'>>
-  ): Ref<Array<TEntity>> {
-    return effectScope().run(() => {
-      const reference = ref<Array<TEntity>>([]);
-
       let dispose: (() => void) | null = null;
       let disposed = false;
 
@@ -88,7 +64,7 @@ export class Store<
           void this.initializePromise.then(() => {
             dispose?.();
             void watch(this.table, computedQuery.value, (entities) => {
-              reference.value = entities;
+              callback(entities);
             }).then((d) => {
               dispose = d;
               if (disposed) dispose();
@@ -105,34 +81,35 @@ export class Store<
         dispose?.();
         disposed = true;
       });
+    });
+  }
+
+  protected _watch(
+    query: Query<TEntity, 'id'>,
+    callback: (entities: Array<TEntity>) => void
+  ): void {
+    this._watchForComputedQuery(
+      computed(() => query),
+      callback
+    );
+  }
+
+  protected _getRefForComputedQuery(
+    computedQuery: ComputedRef<Query<TEntity, 'id'>>
+  ): Ref<Array<TEntity>> {
+    return effectScope().run(() => {
+      const reference = ref<Array<TEntity>>([]);
+
+      this._watchForComputedQuery(computedQuery, (entities) => {
+        reference.value = entities;
+      });
 
       return reference;
     });
   }
 
   protected _getRef(query: Query<TEntity, 'id'>): Ref<Array<TEntity>> {
-    return effectScope().run(() => {
-      const reference = ref<Array<TEntity>>([]);
-
-      let dispose = (): void => {};
-      let disposed = false;
-
-      void this.initializePromise.then(() =>
-        watch(this.table, query, (entities) => {
-          reference.value = entities;
-        }).then((d) => {
-          dispose = d;
-          if (disposed) dispose();
-        })
-      );
-
-      onScopeDispose(() => {
-        dispose();
-        disposed = true;
-      });
-
-      return reference;
-    });
+    return this._getRefForComputedQuery(computed(() => query));
   }
 
   protected async _getAll(): Promise<Array<TEntity>> {
