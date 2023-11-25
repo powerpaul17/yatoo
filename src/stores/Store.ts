@@ -9,7 +9,14 @@ import {
   type ValidEntity
 } from 'blinkdb';
 
-import { effectScope, onScopeDispose, ref, type Ref } from 'vue';
+import {
+  effectScope,
+  onScopeDispose,
+  ref,
+  watch as vueWatch,
+  type ComputedRef,
+  type Ref
+} from 'vue';
 
 import { MigrationHelper } from '../classes/MigrationHelper';
 import { BaseStore } from './BaseStore';
@@ -63,6 +70,43 @@ export class Store<
         dispose();
         disposed = true;
       });
+    });
+  }
+
+  protected _getRefForComputedQuery(
+    computedQuery: ComputedRef<Query<TEntity, 'id'>>
+  ): Ref<Array<TEntity>> {
+    return effectScope().run(() => {
+      const reference = ref<Array<TEntity>>([]);
+
+      let dispose: (() => void) | null = null;
+      let disposed = false;
+
+      vueWatch(
+        computedQuery,
+        () => {
+          void this.initializePromise.then(() => {
+            dispose?.();
+            void watch(this.table, computedQuery.value, (entities) => {
+              reference.value = entities;
+            }).then((d) => {
+              dispose = d;
+              if (disposed) dispose();
+            });
+          });
+        },
+        {
+          deep: true,
+          immediate: true
+        }
+      );
+
+      onScopeDispose(() => {
+        dispose?.();
+        disposed = true;
+      });
+
+      return reference;
     });
   }
 
