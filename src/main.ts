@@ -2,6 +2,7 @@ import { createApp, h, Suspense } from 'vue';
 import { createI18n } from 'vue-i18n';
 
 import PrimeVue from 'primevue/config';
+import 'primevue/resources/themes/lara-light-blue/theme.css';
 
 import en from '../i18n/en.json';
 
