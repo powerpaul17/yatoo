@@ -9,23 +9,29 @@
     </template>
 
     <template #actions>
-      <button
-        class="ds-btn-warning ds-btn"
-        @click="() => {
-          emit('delete');
-          emit('close')
-        }"
+      <Button
+        severity="warning"
+        :label="$t('delete')"
+        @click="
+          () => {
+            emit('delete');
+            emit('close');
+          }
+        "
       >
-        <Trash />
-        {{ $t('delete') }}
-      </button>
-      <button
-        class="ds-btn"
+        <template #icon="{ class: cls }">
+          <Trash :class="cls" />
+        </template>
+      </Button>
+
+      <Button
+        :label="$t('cancel')"
         @click="emit('close')"
       >
-        <Ban />
-        {{ $t('cancel') }}
-      </button>
+        <template #icon="{ class: cls }">
+          <Ban :class="cls" />
+        </template>
+      </Button>
     </template>
   </DialogComponent>
 </template>
@@ -33,6 +39,8 @@
 <script setup lang="ts">
 
   import { Ban, Trash } from 'lucide-vue-next';
+
+  import Button from 'primevue/button';
 
   import DialogComponent from './DialogComponent.vue';
 
