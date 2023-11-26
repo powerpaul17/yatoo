@@ -1,41 +1,46 @@
 <template>
-  <ModalComponent
-    class="ds-modal-top"
-    :open="open"
-    @backdrop-clicked="emit('close')"
+  <Sidebar
+    class="h-auto max-w-5xl rounded-b-md"
+    position="top"
+    v-model:visible="visible"
+    @update="emit('close')"
   >
-    <form
-      method="dialog"
-      class="ds-modal-box mx-auto max-w-5xl"
-    >
-      <div class="ds-join w-full">
-        <input
-          ref="creationStringInputElement"
-          type="text"
-          class="ds-input-bordered ds-input-primary ds-input ds-join-item w-full text-neutral-content"
-          v-model="creationString"
-        >
-        <button
-          class="ds-btn-primary ds-join-item ds-btn"
-          :disabled="!isValidInput"
-          @click="handleCreateButtonClicked"
-        >
-          <Plus />
-        </button>
+    <template #container>
+      <div class="m-3">
+        <InputGroup class="w-full">
+          <InputText
+            ref="creationStringInputElement"
+            type="text"
+            class="text-neutral-content w-full"
+            v-model="creationString"
+          />
+          <Button
+            icon
+            :disabled="!isValidInput"
+            @click="handleCreateButtonClicked"
+          >
+            <template #icon="{ class: cls }">
+              <Plus :class="cls" />
+            </template>
+          </Button>
+        </InputGroup>
       </div>
-    </form>
-  </ModalComponent>
+    </template>
+  </Sidebar>
 </template>
 
 <script setup lang="ts">
 
   import { computed, ref, watch } from 'vue';
 
+  import Sidebar from 'primevue/sidebar';
+  import InputGroup from 'primevue/inputgroup';
+  import InputText from 'primevue/inputtext';
+  import Button from 'primevue/button';
+
   import { useTodoStore } from '../stores/todoStore';
 
   import { Plus } from 'lucide-vue-next';
-
-  import ModalComponent from './dialogs/ModalComponent.vue';
 
   const todoStore = useTodoStore();
 
