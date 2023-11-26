@@ -1,17 +1,10 @@
 <template>
   <div
-    class="
-      rounded-md
-      text-neutral-content
-      hover:bg-neutral
-      focus:bg-neutral
-    "
-    :class="
-      {
-        'opacity-40': todo.done,
-        'bg-neutral': isOpen
-      }
-    "
+    class="text-neutral-content rounded-md hover:bg-neutral focus:bg-neutral"
+    :class="{
+      'opacity-40': todo.done,
+      'bg-neutral': isOpen
+    }"
   >
     <div class="flex items-center gap-2 p-1">
       <Button
@@ -33,12 +26,12 @@
       </Button>
       <div class="flex-auto truncate">
         <span
-          :class="
-            {
-              'line-through': todo.done
-            }
-          "
-        >{{ todo.title }}</span>
+          :class="{
+            'line-through': todo.done
+          }"
+        >
+          {{ todo.title }}
+        </span>
       </div>
       <div class="shrink-0">
         <Button
@@ -64,7 +57,6 @@
 </template>
 
 <script setup lang="ts">
-
   import { type PropType, computed, ref, watch } from 'vue';
   import { useRoute } from 'vue-router';
 
@@ -94,12 +86,15 @@
 
   const todo = ref(props.todo);
 
-  watch(() => props.todo, () => {
-    todo.value = props.todo;
-  });
+  watch(
+    () => props.todo,
+    () => {
+      todo.value = props.todo;
+    }
+  );
 
   const emit = defineEmits<{
-    (event: 'open', id?: string): void
+    (event: 'open', id?: string): void;
   }>();
 
   const isOpen = computed(() => {
@@ -117,5 +112,4 @@
   async function handleToggleDoneClicked(): Promise<void> {
     await todoStore.setDone(todo.value, !todo.value.done);
   }
-
 </script>
