@@ -30,7 +30,6 @@
 </template>
 
 <script setup lang="ts">
-
   import { computed, ref, watch } from 'vue';
 
   import Sidebar from 'primevue/sidebar';
@@ -57,9 +56,12 @@
     (event: 'close'): void;
   }>();
 
-  watch(() => props.open, () => {
-    if (props.open) creationStringInputElement.value?.focus();
-  });
+  watch(
+    () => props.open,
+    () => {
+      if (props.open) creationStringInputElement.value?.focus();
+    }
+  );
 
   const creationString = ref('');
 
@@ -77,5 +79,4 @@
 
     creationString.value = '';
   }
-
 </script>
