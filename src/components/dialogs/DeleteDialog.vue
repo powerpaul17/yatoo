@@ -37,7 +37,6 @@
 </template>
 
 <script setup lang="ts">
-
   import { Ban, Trash } from 'lucide-vue-next';
 
   import Button from 'primevue/button';
@@ -63,5 +62,4 @@
     (event: 'close'): void;
     (event: 'delete'): void;
   }>();
-
 </script>
