@@ -14,13 +14,23 @@
     "
   >
     <div class="flex items-center gap-2 p-1">
-      <button
-        class="ds-btn ds-btn-square ds-btn-ghost"
+      <Button
+        text
+        icon
+        plain
         @click="handleToggleDoneClicked()"
       >
-        <Square v-if="!todo.done" />
-        <CheckSquare v-else />
-      </button>
+        <template #icon="{ class: cls }">
+          <Square
+            v-if="!todo.done"
+            :class="cls"
+          />
+          <CheckSquare
+            v-else
+            :class="cls"
+          />
+        </template>
+      </Button>
       <div class="flex-auto truncate">
         <span
           :class="
@@ -31,13 +41,23 @@
         >{{ todo.title }}</span>
       </div>
       <div class="shrink-0">
-        <button
-          class="ds-btn ds-btn-square ds-btn-ghost"
+        <Button
+          text
+          icon
+          plain
           @click="handleToggleOpenClicked()"
         >
-          <X v-if="isOpen" />
-          <PanelRightOpen v-else />
-        </button>
+          <template #icon="{ class: cls }">
+            <X
+              v-if="isOpen"
+              :class="cls"
+            />
+            <PanelRightOpen
+              v-else
+              :class="cls"
+            />
+          </template>
+        </Button>
       </div>
     </div>
   </div>
@@ -47,6 +67,8 @@
 
   import { type PropType, computed, ref, watch } from 'vue';
   import { useRoute } from 'vue-router';
+
+  import Button from 'primevue/button';
 
   import {
     Check,
