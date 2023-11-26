@@ -3,6 +3,15 @@
     v-model:visible="visible"
     :header="title"
     :modal="true"
+    :position="smallScreen ? 'bottom' : 'center'"
+    :class="{
+      'm-0 w-full': smallScreen
+    }"
+    :pt="{
+      footer: {
+        class: smallScreen ? 'rounded-b-none' : ''
+      }
+    }"
   >
     <form class="m-0">
       <p class="py-4">
@@ -19,7 +28,8 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, watch } from 'vue';
+  import { computed, ref, watch } from 'vue';
+  import { useWindowSize } from '@vueuse/core';
 
   import Dialog from 'primevue/dialog';
 
@@ -49,5 +59,11 @@
 
   watch(visible, () => {
     if (!visible.value) emit('close');
+  });
+
+  const { width } = useWindowSize();
+
+  const smallScreen = computed(() => {
+    return width.value < 640;
   });
 </script>
