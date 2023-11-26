@@ -30,13 +30,15 @@
     }"
   >
     <div class="flex h-full flex-col overflow-y-scroll bg-base-200">
-      <ul class="ds-menu ds-menu-lg my-1 grow p-4 text-base-content">
-        <li>
-          <router-link :to="{ name: 'todos' }">
+      <ul class="grow p-2">
+        <NavigationItem
+          :title="t('components.NavigationBar.todos')"
+          :route="{ name: 'todos' }"
+        >
+          <template #icon>
             <CheckCheck />
-            {{ $t('components.NavigationBar.todos') }}
-          </router-link>
-        </li>
+          </template>
+        </NavigationItem>
       </ul>
 
       <div class="p-2">
@@ -50,6 +52,7 @@
 
   import { CheckCheck } from 'lucide-vue-next';
 
+  import NavigationItem from './navigation/NavigationItem.vue';
   import DarkModeSwitcher from './DarkModeSwitcher.vue';
 
   defineProps({
