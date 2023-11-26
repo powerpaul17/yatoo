@@ -1,6 +1,6 @@
 <template>
   <div
-    class="absolute top-0 h-full w-full cursor-pointer bg-black/40 transition-colors duration-200 lg:hidden"
+    class="absolute top-0 z-10 h-full w-full cursor-pointer bg-black/40 transition-colors duration-200 lg:hidden"
     :class="{
       'pointer-events-none bg-transparent': !open
     }"
@@ -8,7 +8,7 @@
   />
 
   <div
-    class="relative h-full w-80 shrink-0 shadow-md transition-all duration-300 lg:ml-0"
+    class="relative z-20 h-full w-80 shrink-0 shadow-md transition-all duration-300 lg:ml-0"
     :class="{
       '-ml-80': !open
     }"
