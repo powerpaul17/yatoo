@@ -13,23 +13,21 @@
     "types": [
       "bun-types"
     ],
-
-    "lib": ["esnext", "dom"],
     "noEmit": true,
+    "lib": [
+      "esnext",
+      "dom"
+    ],
     "module": "esnext",
     "target": "esnext",
-
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "moduleDetection": "force",
-
     "allowJs": true,
     "esModuleInterop": true,
-
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
-
     "sourceMap": true,
     "noImplicitAny": true,
     "noImplicitReturns": true,
