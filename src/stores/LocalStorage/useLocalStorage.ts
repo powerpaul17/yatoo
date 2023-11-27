@@ -7,7 +7,7 @@ export const useLocalStorage = async <T>(tableName: string): Promise<LocalStorag
   let localStorage = localStorageMap.get(tableName);
 
   if (!localStorage) {
-    if (process.env.BUN_TEST) {
+    if (BUN_TEST) {
       localStorage = new MemoryLocalStorage(tableName);
     } else {
       const localForageLocalStorage = await import('./LocalForageLocalStorage');

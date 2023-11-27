@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- use webpack instead of parcel for bundling
+
 ## [0.4.3] - 2023-11-17
 
 - correctly initialize stores

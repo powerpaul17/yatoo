@@ -1,3 +1,5 @@
+import './main.css';
+
 import { createApp, h, Suspense } from 'vue';
 import { createI18n } from 'vue-i18n';
 
@@ -39,6 +41,6 @@ app.use(i18n);
 
 app.use(router);
 
-app.provide('COMMIT_HASH', process.env.COMMIT_HASH);
+app.provide('COMMIT_HASH', COMMIT_HASH);
 
 app.mount('#app');

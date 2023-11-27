@@ -15,6 +15,7 @@
     ],
 
     "lib": ["esnext", "dom"],
+    "noEmit": true,
     "module": "esnext",
     "target": "esnext",
 
