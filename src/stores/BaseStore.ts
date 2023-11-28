@@ -13,6 +13,7 @@ import {
 import { useBlinkDB } from './blinkdb';
 import type { LocalStorage } from './LocalStorage/LocalStorage';
 import { useLocalStorage } from './LocalStorage/useLocalStorage';
+import { useMessageBus, type MessageConfig } from '../classes/MessageBus';
 
 export class BaseStore<TTableName extends string, TEntity> {
   protected tableName;
@@ -23,6 +24,8 @@ export class BaseStore<TTableName extends string, TEntity> {
   private localStorage: LocalStorage<TEntity> | null = null;
 
   protected initializePromise;
+
+  private notifyRemoved;
 
   protected constructor({
     tableName,
@@ -48,6 +51,13 @@ export class BaseStore<TTableName extends string, TEntity> {
       if (init) return init();
       else return Promise.resolve();
     });
+
+    const messageBus = useMessageBus();
+
+    const { notify: notifyRemoved } = messageBus.registerMessage<
+      EntityRemovedMessage<TTableName>
+    >(`store::entity-removed::${tableName}`);
+    this.notifyRemoved = notifyRemoved;
   }
 
   protected async _upsert(entity: TEntity): Promise<void> {
@@ -69,8 +79,11 @@ export class BaseStore<TTableName extends string, TEntity> {
 
   protected async _remove(id: string): Promise<void> {
     await this.initializePromise;
+
     await remove(this.table, { id });
     await this.localStorage!.removeItem(id);
+
+    await this.notifyRemoved({ tableName: this.tableName, id });
   }
 
   protected async _clear(): Promise<void> {
@@ -98,3 +111,11 @@ export class BaseStore<TTableName extends string, TEntity> {
     return JSON.parse(JSON.stringify(entity)) as TEntity;
   }
 }
+
+export type EntityRemovedMessage<TTableName extends string> = MessageConfig<
+  `store::entity-removed::${TTableName}`,
+  {
+    tableName: TTableName;
+    id: string;
+  }
+>;
