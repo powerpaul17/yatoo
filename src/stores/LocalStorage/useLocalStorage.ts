@@ -3,7 +3,9 @@ import { MemoryLocalStorage } from './MemoryLocalStorage';
 
 const localStorageMap: Map<string, LocalStorage<any>> = new Map();
 
-export const useLocalStorage = async <T>(tableName: string): Promise<LocalStorage<T>> => {
+export const useLocalStorage = async <T>(
+  tableName: string
+): Promise<LocalStorage<T>> => {
   let localStorage = localStorageMap.get(tableName);
 
   if (!localStorage) {
@@ -11,7 +13,9 @@ export const useLocalStorage = async <T>(tableName: string): Promise<LocalStorag
       localStorage = new MemoryLocalStorage(tableName);
     } else {
       const localForageLocalStorage = await import('./LocalForageLocalStorage');
-      localStorage = new localForageLocalStorage.LocalForageLocalStorage(tableName);
+      localStorage = new localForageLocalStorage.LocalForageLocalStorage(
+        tableName
+      );
     }
     localStorageMap.set(tableName, localStorage);
   }
