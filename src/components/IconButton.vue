@@ -1,7 +1,6 @@
 <template>
   <Button
     text
-    icon
     plain
     rounded
     :severity="severity"
