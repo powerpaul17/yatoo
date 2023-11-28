@@ -122,6 +122,13 @@ export class Store<
     return await one(this.table, id);
   }
 
+  protected async _getByQuery(
+    query: Query<TEntity, 'id'>
+  ): Promise<Array<TEntity>> {
+    await this.initializePromise;
+    return await many(this.table, query);
+  }
+
   protected async _create(entity: Omit<TEntity, 'id'>): Promise<string> {
     await this.initializePromise;
 
@@ -134,6 +141,12 @@ export class Store<
     await this._upsert(validEntity);
 
     return id;
+  }
+
+  protected async _removeByIds(ids: Array<string>): Promise<void> {
+    for (const id of ids) {
+      await this._remove(id);
+    }
   }
 
   private async migrate(
