@@ -7,14 +7,16 @@ export const useMessageBus = (): MessageBus => {
 };
 
 export class MessageBus {
-  private messages: Map<string, MessageInfo> = new Map();
+  private messages: Map<string, MessageInfo<any>> = new Map();
 
   public registerMessage<
-    TConfig extends MessageConfig<string, unknown> = never
+    TConfig extends MessageConfig<string, any, any> = never
   >(
     message: TConfig['message']
   ): Disposable & {
-    notify: (payload: TConfig['payload']) => Promise<Array<void>>;
+    notify: (
+      payload: TConfig['payload']
+    ) => Promise<Array<TConfig['returnValue']>>;
   } {
     const messageInfo = this.getOrCreateMessageInfo(message);
 
@@ -26,7 +28,7 @@ export class MessageBus {
       dispose: (): void => {
         messageInfo.registered = false;
       },
-      notify: (payload): Promise<Array<void>> => {
+      notify: (payload): Promise<Array<TConfig['returnValue']>> => {
         if (!messageInfo.registered) throw new MessageNotRegisteredError();
 
         return Promise.all(
@@ -36,9 +38,9 @@ export class MessageBus {
     };
   }
 
-  public subscribe<TConfig extends MessageConfig<string, unknown> = never>(
+  public subscribe<TConfig extends MessageConfig<string, any, any> = never>(
     message: TConfig['message'],
-    callback: Subscriber<TConfig['payload']>
+    callback: Subscriber<TConfig['payload'], TConfig['returnValue']>
   ): Disposable {
     const messageInfo = this.getOrCreateMessageInfo(message);
 
@@ -51,7 +53,9 @@ export class MessageBus {
     };
   }
 
-  private getOrCreateMessageInfo(message: string): MessageInfo {
+  private getOrCreateMessageInfo<TConfig extends MessageConfig<string, any>>(
+    message: TConfig['message']
+  ): MessageInfo<TConfig['payload'], TConfig['returnValue']> {
     const existingMessageInfo = this.messages.get(message);
     if (existingMessageInfo) return existingMessageInfo;
 
@@ -81,14 +85,17 @@ type Disposable = {
   dispose: () => void;
 };
 
-type Subscriber<TPayload> = (payload: TPayload) => Promise<void>;
+type Subscriber<TPayload, TReturnValue = void> = (
+  payload: TPayload
+) => Promise<TReturnValue>;
 
-export type MessageConfig<TMessage, TPayload> = {
+export type MessageConfig<TMessage, TPayload, TReturnValue = void> = {
   message: TMessage;
   payload: TPayload;
+  returnValue: TReturnValue;
 };
 
-type MessageInfo = {
+type MessageInfo<TPayload, TReturnValue = void> = {
   registered: boolean;
-  subscribers: Set<Subscriber<any>>;
+  subscribers: Set<Subscriber<TPayload, TReturnValue>>;
 };
