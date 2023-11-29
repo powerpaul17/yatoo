@@ -69,6 +69,12 @@ export class MessageAlreadyRegisteredError extends Error {
   }
 }
 
+export class MessageNotRegisteredError extends Error {
+  constructor() {
+    super('message not registered');
+  }
+}
+
 type Disposable = {
   dispose: () => void;
 };

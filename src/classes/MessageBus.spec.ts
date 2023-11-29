@@ -3,7 +3,8 @@ import { describe, expect, it } from 'bun:test';
 import {
   MessageBus,
   type MessageConfig,
-  MessageAlreadyRegisteredError
+  MessageAlreadyRegisteredError,
+  MessageNotRegisteredError
 } from './MessageBus';
 
 describe('MessageBus', () => {
@@ -26,6 +27,16 @@ describe('MessageBus', () => {
       expect(() => {
         messageBus.registerMessage<TestMessageConfig>('test-message');
       }).toThrow(MessageAlreadyRegisteredError);
+    });
+
+    it('should throw an exception if trying to send a message which is not registered', () => {
+      const { dispose, notify } = setupEnvironment();
+
+      dispose();
+
+      expect(() => {
+        void notify({});
+      }).toThrow(MessageNotRegisteredError);
     });
   });
 
@@ -106,20 +117,41 @@ describe('MessageBus', () => {
 
       expect(notified).toBe(1);
     });
+
+    it('should still get notified if a message was unregistered but then registered again', async () => {
+      const { messageBus, dispose } = setupEnvironment();
+
+      let notified = 0;
+      messageBus.subscribe<TestMessageConfig>('test-message', () => {
+        notified++;
+        return Promise.resolve();
+      });
+
+      dispose();
+
+      const { notify } =
+        messageBus.registerMessage<TestMessageConfig>('test-message');
+
+      await notify({});
+
+      expect(notified).toBe(1);
+    });
   });
 
   function setupEnvironment(): {
     messageBus: MessageBus;
     notify: (payload: any) => Promise<Array<void>>;
+    dispose: () => void;
   } {
     const messageBus = new MessageBus();
 
-    const { notify } =
+    const { notify, dispose } =
       messageBus.registerMessage<TestMessageConfig>('test-message');
 
     return {
       messageBus,
-      notify
+      notify,
+      dispose
     };
   }
 });
