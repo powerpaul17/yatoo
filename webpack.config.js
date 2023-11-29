@@ -56,7 +56,7 @@ module.exports = {
     ...(devMode ? [] : [new MiniCssExtractPlugin()]),
     new DefinePlugin({
       COMMIT_HASH: JSON.stringify(process.env.COMMIT_HASH),
-      BUN_TEST: JSON.stringify(process.env.BUN_TEST)
+      'process.env.BUN_TEST': JSON.stringify(process.env.BUN_TEST)
     })
   ]
 }
