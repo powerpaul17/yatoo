@@ -27,6 +27,8 @@ export class MessageBus {
         messageInfo.registered = false;
       },
       notify: (payload): Promise<Array<void>> => {
+        if (!messageInfo.registered) throw new MessageNotRegisteredError();
+
         return Promise.all(
           Array.from(messageInfo.subscribers.values()).map((s) => s(payload))
         );
