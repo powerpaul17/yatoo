@@ -24,7 +24,7 @@ export class MessageBus {
 
     return {
       dispose: (): void => {
-        this.messages.delete(message);
+        messageInfo.registered = false;
       },
       notify: (payload): Promise<Array<void>> => {
         return Promise.all(
