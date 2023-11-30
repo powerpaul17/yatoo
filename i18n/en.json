@@ -5,6 +5,11 @@
         "cancel": "Cancel",
         "delete": "Delete"
       },
+      "LabelEditDialog": {
+        "delete": "Delete label",
+        "save": "Save label",
+        "title": "Edit label"
+      },
       "LabelSelectDialog": {
         "discard": "Discard changes",
         "save": "Save labels",
@@ -32,6 +37,11 @@
     "todo": {
       "title": "Title",
       "description": "Description"
+    },
+    "label": {
+      "color": "Color",
+      "icon": "Icon",
+      "name": "Name"
     }
   },
   "routes": {
