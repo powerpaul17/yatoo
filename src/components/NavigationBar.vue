@@ -16,7 +16,7 @@
     <div class="flex h-full flex-col overflow-y-scroll bg-base-200">
       <ul class="grow p-2">
         <NavigationItem
-          :title="t('components.NavigationBar.todos')"
+          :title="$t('components.NavigationBar.todos')"
           :route="{ name: 'todos' }"
         >
           <template #icon>
