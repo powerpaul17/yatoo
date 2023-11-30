@@ -90,6 +90,7 @@
   import TodoSidebarSection from './TodoSidebarSection.vue';
   import DeleteDialog from '../dialogs/DeleteDialog.vue';
   import LabelSelectDialog from '../dialogs/LabelSelectDialog.vue';
+  import IconButton from '../IconButton.vue';
   import LabelList from '../labels/LabelList.vue';
 
   import { useTodoStore, type Todo } from '../../stores/todoStore';
