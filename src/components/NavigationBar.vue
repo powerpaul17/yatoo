@@ -23,6 +23,25 @@
             <CheckCheck />
           </template>
         </NavigationItem>
+
+        <NavigationItem :title="$t('components.NavigationBar.labels')">
+          <template #icon>
+            <Tags />
+          </template>
+
+          <template #children>
+            <LabelNavigationItem
+              v-for="label of labels"
+              :key="label.id"
+              :label="label"
+            />
+
+            <NavigationItem
+              v-if="!labels.length"
+              :title="$t('components.NavigationBar.noLabels')"
+            />
+          </template>
+        </NavigationItem>
       </ul>
 
       <div class="p-2">
@@ -33,10 +52,17 @@
 </template>
 
 <script setup lang="ts">
-  import { CheckCheck } from 'lucide-vue-next';
+  import { CheckCheck, Tags } from 'lucide-vue-next';
 
   import NavigationItem from './navigation/NavigationItem.vue';
+  import LabelNavigationItem from './navigation/LabelNavigationItem.vue';
   import DarkModeSwitcher from './DarkModeSwitcher.vue';
+
+  import { useLabelStore } from '../stores/labelStore';
+
+  const labelStore = useLabelStore();
+
+  const labels = labelStore.getRef({});
 
   defineProps({
     open: {

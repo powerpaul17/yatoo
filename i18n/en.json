@@ -17,6 +17,8 @@
       }
     },
     "NavigationBar": {
+      "labels": "Labels",
+      "noLabels": "no labels",
       "todos": "Todos"
     },
     "todos": {
