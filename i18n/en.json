@@ -11,6 +11,11 @@
         "title": "Select labels"
       }
     },
+    "navigation": {
+      "LabelNavigationItem": {
+        "noLabelName": "no name"
+      }
+    },
     "NavigationBar": {
       "todos": "Todos"
     },
