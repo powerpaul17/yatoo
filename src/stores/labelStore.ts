@@ -41,6 +41,15 @@ class LabelStore extends Store<'labels', InternalLabel> {
   public getRef(query: Query<Label, 'id'>): Ref<Array<Label>> {
     return this._getRef(query);
   }
+
+  public async create(creationLabel: Omit<Label, 'id'>): Promise<string> {
+    const label: Omit<InternalLabel, 'id'> = {
+      ...creationLabel,
+      _internalName: creationLabel.name.toLowerCase()
+    };
+
+    return this._create(label);
+  }
 }
 
 type InternalLabel = Entity & {

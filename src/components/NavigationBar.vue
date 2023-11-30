@@ -24,9 +24,16 @@
           </template>
         </NavigationItem>
 
-        <NavigationItem :title="$t('components.NavigationBar.labels')">
+        <NavigationItem
+          :title="$t('components.NavigationBar.labels')"
+          @button-click="handleAddLabelClick()"
+        >
           <template #icon>
             <Tags />
+          </template>
+
+          <template #buttonIcon>
+            <Plus />
           </template>
 
           <template #children>
@@ -52,7 +59,7 @@
 </template>
 
 <script setup lang="ts">
-  import { CheckCheck, Tags } from 'lucide-vue-next';
+  import { CheckCheck, Plus, Tags } from 'lucide-vue-next';
 
   import NavigationItem from './navigation/NavigationItem.vue';
   import LabelNavigationItem from './navigation/LabelNavigationItem.vue';
@@ -74,4 +81,12 @@
   const emit = defineEmits<{
     (event: 'close'): void;
   }>();
+
+  async function handleAddLabelClick(): Promise<void> {
+    await labelStore.create({
+      name: '',
+      color: '',
+      icon: ''
+    });
+  }
 </script>
