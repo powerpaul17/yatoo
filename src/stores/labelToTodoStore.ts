@@ -1,3 +1,5 @@
+import { computed, type Ref } from 'vue';
+
 import { useSingleInstance } from '../classes/useSingleInstance';
 import { Store, type Entity } from './Store';
 import { useMessageBus } from '../classes/MessageBus';
@@ -28,6 +30,16 @@ class LabelToTodoStore extends Store<'label_to_todos', LabelToTodo> {
       async ({ id }) => {
         await this.deleteByLabelId(id);
       }
+    );
+  }
+
+  public getRefForComputedTodoId(todoId: Ref<string>): Ref<Array<LabelToTodo>> {
+    return this._getRefForComputedQuery(
+      computed(() => ({
+        where: {
+          todoId: todoId.value
+        }
+      }))
     );
   }
 

@@ -1,3 +1,6 @@
+import { computed, type ComputedRef } from 'vue';
+import type { Query } from 'blinkdb';
+
 import { Store, type Entity } from './Store';
 import { useSingleInstance } from '../classes/useSingleInstance';
 
@@ -10,6 +13,28 @@ class LabelStore extends Store<'labels', InternalLabel> {
   constructor() {
     super({
       tableName: 'labels'
+    });
+  }
+
+  public watchForComputedQuery(
+    query: ComputedRef<Query<Label, 'id'>>,
+    callback: (entities: Array<Label>) => void
+  ): void {
+    const internalQuery: ComputedRef<Query<InternalLabel, 'id'>> = computed(
+      () => ({
+        ...query.value
+      })
+    );
+
+    return this._watchForComputedQuery(internalQuery, (internalLabels) => {
+      callback(
+        internalLabels.map((l) => ({
+          id: l.id,
+          name: l.name,
+          color: l.color,
+          icon: l.icon
+        }))
+      );
     });
   }
 }
