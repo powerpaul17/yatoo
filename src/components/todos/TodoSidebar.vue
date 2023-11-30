@@ -40,6 +40,18 @@
           />
         </TodoSidebarSection>
 
+        <TodoSidebarSection
+          :title="$t('components.todos.TodoSidebar.labels')"
+          @button-click="handleSelectLabels"
+        >
+          <template #buttonIcon>
+            <Plus v-if="!labels.length" />
+            <Pen v-else />
+          </template>
+
+          <LabelList :labels="labels" />
+        </TodoSidebarSection>
+
         <TodoSidebarSection :title="$t('entities.todo.description')">
           <TextArea
             class="w-full"
@@ -57,23 +69,36 @@
     @close="deleteDialogOpen = false"
     @delete="handleDeleteTodo()"
   />
+
+  <LabelSelectDialog
+    v-if="todo"
+    :open="labelSelectDialogOpen"
+    :todo-id="todo.id"
+    @close="labelSelectDialogOpen = false"
+  />
 </template>
 
 <script setup lang="ts">
-  import { onMounted, ref, watch } from 'vue';
+  import { computed, onMounted, ref, watch } from 'vue';
   import { useRouter } from 'vue-router';
 
   import InputText from 'primevue/inputtext';
   import TextArea from 'primevue/textarea';
 
-  import { Trash, X } from 'lucide-vue-next';
+  import { Pen, Plus, Trash, X } from 'lucide-vue-next';
 
   import TodoSidebarSection from './TodoSidebarSection.vue';
   import DeleteDialog from '../dialogs/DeleteDialog.vue';
+  import LabelSelectDialog from '../dialogs/LabelSelectDialog.vue';
+  import LabelList from '../labels/LabelList.vue';
 
   import { useTodoStore, type Todo } from '../../stores/todoStore';
 
+  import { useLabelService } from '../../services/labelService';
+
   const todoStore = useTodoStore();
+
+  const labelService = useLabelService();
 
   const props = defineProps({
     todoId: {
@@ -103,6 +128,9 @@
     }
   }
 
+  const todoId = computed(() => props.todoId);
+  const labels = labelService.getLabelRefForTodoId(todoId);
+
   const router = useRouter();
 
   async function handleClose(): Promise<void> {
@@ -129,4 +157,11 @@
     if (!todo.value) return;
     await todoStore.upsert(todo.value);
   }
+
+  const labelSelectDialogOpen = ref(false);
+
+  function handleSelectLabels(): void {
+    labelSelectDialogOpen.value = true;
+  }
+
 </script>

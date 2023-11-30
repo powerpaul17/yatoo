@@ -16,7 +16,8 @@
     },
     "todos": {
       "TodoSidebar": {
-        "deleteTodo": "Delete Todo"
+        "deleteTodo": "Delete Todo",
+        "labels": "Labels"
       }
     }
   },
