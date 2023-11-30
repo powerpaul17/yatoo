@@ -28,6 +28,7 @@
     }
   },
   "routes": {
+    "label": "Label",
     "todos": "Todos"
   }
 }

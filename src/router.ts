@@ -27,7 +27,25 @@ export default createRouter({
         sidebar: (route) => ({
           todoId: route.query.todoId
         })
-      }
+      },
+      children: [
+        {
+          path: 'label/:labelId',
+          name: 'label',
+          components: {
+            default: TodoView,
+            sidebar: TodoSidebar
+          },
+          meta: {
+            titleTk: 'routes.label'
+          },
+          props: {
+            sidebar: (route): Record<string, any> => ({
+              todoId: route.query.todoId
+            })
+          }
+        }
+      ]
     }
   ],
   scrollBehavior(to, _from, _savedPosition) {
