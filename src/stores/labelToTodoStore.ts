@@ -55,6 +55,14 @@ class LabelToTodoStore extends Store<'label_to_todos', LabelToTodo> {
     );
   }
 
+  public countRefForLabelId(labelId: string): Ref<number> {
+    return this._count({
+      where: {
+        labelId
+      }
+    });
+  }
+
   public async create(labelToTodo: Omit<LabelToTodo, 'id'>): Promise<void> {
     await this._create(labelToTodo);
   }
