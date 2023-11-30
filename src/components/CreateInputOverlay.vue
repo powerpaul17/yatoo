@@ -15,7 +15,6 @@
             v-model="creationString"
           />
           <Button
-            icon
             :disabled="!isValidInput"
             @click="handleCreateButtonClicked"
           >

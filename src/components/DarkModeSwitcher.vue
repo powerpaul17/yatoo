@@ -1,7 +1,6 @@
 <template>
   <Button
     text
-    icon
     rounded
     plain
     @click="darkmode = !darkmode"

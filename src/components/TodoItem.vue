@@ -9,7 +9,6 @@
     <div class="flex items-center gap-2 p-1">
       <Button
         text
-        icon
         plain
         @click="handleToggleDoneClicked()"
       >
@@ -36,7 +35,6 @@
       <div class="shrink-0">
         <Button
           text
-          icon
           plain
           @click="handleToggleOpenClicked()"
         >
