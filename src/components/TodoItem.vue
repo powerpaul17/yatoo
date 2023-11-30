@@ -31,6 +31,13 @@
         >
           {{ todo.title }}
         </span>
+
+        <div
+          v-if="!!labels.length"
+          class="mt-1"
+        >
+          <LabelList :labels="labels" />
+        </div>
       </div>
       <div class="shrink-0">
         <Button
@@ -69,9 +76,15 @@
     X
   } from 'lucide-vue-next';
 
+  import LabelList from './labels/LabelList.vue';
+
   import { useTodoStore, type Todo } from '../stores/todoStore';
 
+  import { useLabelService } from '../services/labelService';
+
   const todoStore = useTodoStore();
+
+  const labelService = useLabelService();
 
   const props = defineProps({
     todo: {
@@ -98,6 +111,10 @@
   const isOpen = computed(() => {
     return route.query.todoId === props.todo.id;
   });
+
+  const labels = labelService.getLabelRefForTodoId(
+    computed(() => todo.value.id)
+  );
 
   function handleToggleOpenClicked(): void {
     if (route.query.todoId === props.todo.id) {
