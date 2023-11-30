@@ -43,6 +43,29 @@ class LabelToTodoStore extends Store<'label_to_todos', LabelToTodo> {
     );
   }
 
+  public async create(labelToTodo: Omit<LabelToTodo, 'id'>): Promise<void> {
+    await this._create(labelToTodo);
+  }
+
+  public async removeByLabelAndTodoId(
+    labelId: string,
+    todoId: string
+  ): Promise<void> {
+    const labelToTodos = await this._getByQuery({
+      where: {
+        AND: [
+          {
+            labelId
+          },
+          {
+            todoId
+          }
+        ]
+      }
+    });
+    await this._removeByIds(labelToTodos.map((l) => l.id));
+  }
+
   private async deleteByTodoId(todoId: string): Promise<void> {
     const items = await this._getByQuery({
       where: {

@@ -1,4 +1,4 @@
-import { computed, type ComputedRef } from 'vue';
+import { computed, type ComputedRef, type Ref } from 'vue';
 import type { Query } from 'blinkdb';
 
 import { Store, type Entity } from './Store';
@@ -36,6 +36,10 @@ class LabelStore extends Store<'labels', InternalLabel> {
         }))
       );
     });
+  }
+
+  public getRef(query: Query<Label, 'id'>): Ref<Array<Label>> {
+    return this._getRef(query);
   }
 }
 

@@ -4,6 +4,11 @@
       "DeleteDialog": {
         "cancel": "Cancel",
         "delete": "Delete"
+      },
+      "LabelSelectDialog": {
+        "discard": "Discard changes",
+        "save": "Save labels",
+        "title": "Select labels"
       }
     },
     "NavigationBar": {
