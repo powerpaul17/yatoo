@@ -43,6 +43,18 @@ class LabelToTodoStore extends Store<'label_to_todos', LabelToTodo> {
     );
   }
 
+  public getRefForComputedLabelId(
+    labelId: Ref<string>
+  ): Ref<Array<LabelToTodo>> {
+    return this._getRefForComputedQuery(
+      computed(() => ({
+        where: {
+          labelId: labelId.value
+        }
+      }))
+    );
+  }
+
   public async create(labelToTodo: Omit<LabelToTodo, 'id'>): Promise<void> {
     await this._create(labelToTodo);
   }

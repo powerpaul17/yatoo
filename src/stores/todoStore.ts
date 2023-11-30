@@ -20,6 +20,13 @@ class TodoStore extends Store<'todos', Todo> {
     return this._getAll();
   }
 
+  public watchForComputedQuery(
+    query: ComputedRef<Query<Todo, 'id'>>,
+    callback: (todos: Array<Todo>) => void
+  ): void {
+    return this._watchForComputedQuery(query, callback);
+  }
+
   public getRef(query: Query<Todo, 'id'>): Ref<Array<Todo>> {
     return this._getRef(query);
   }
