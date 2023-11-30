@@ -11,6 +11,7 @@
       }
     }"
     :badge-value="numberOfTodos"
+    @button-click="handleEditButtonClick()"
   >
     <template #icon>
       <CustomIcon
@@ -19,7 +20,17 @@
       />
       <Tag v-else />
     </template>
+
+    <template #buttonIcon>
+      <Pen />
+    </template>
   </NavigationItem>
+
+  <LabelEditDialog
+    :label="label"
+    :open="labelEditDialogOpen"
+    @close="labelEditDialogOpen = false"
+  />
 </template>
 
 <script setup lang="ts">
@@ -28,10 +39,11 @@
   import type { Label } from '../../stores/labelStore';
   import { useLabelToTodoStore } from '../../stores/labelToTodoStore';
 
-  import { Tag } from 'lucide-vue-next';
+  import { Pen, Tag } from 'lucide-vue-next';
 
   import NavigationItem from './NavigationItem.vue';
   import CustomIcon from '../CustomIcon.vue';
+  import LabelEditDialog from '../dialogs/LabelEditDialog.vue';
 
   const labelToTodoStore = useLabelToTodoStore();
 
@@ -43,4 +55,10 @@
   });
 
   const numberOfTodos = labelToTodoStore.countRefForLabelId(props.label.id);
+
+  const labelEditDialogOpen = ref(false);
+
+  function handleEditButtonClick(): void {
+    labelEditDialogOpen.value = true;
+  }
 </script>
