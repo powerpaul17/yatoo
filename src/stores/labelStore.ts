@@ -50,6 +50,15 @@ class LabelStore extends Store<'labels', InternalLabel> {
 
     return this._create(label);
   }
+
+  public async upsert(label: Label): Promise<void> {
+    const labelToSave: InternalLabel = {
+      ...label,
+      _internalName: label.name.toLowerCase()
+    };
+
+    return this._upsert(labelToSave);
+  }
 }
 
 type InternalLabel = Entity & {

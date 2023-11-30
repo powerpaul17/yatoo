@@ -30,13 +30,14 @@
     :label="label"
     :open="labelEditDialogOpen"
     @close="labelEditDialogOpen = false"
+    @save="handleLabelSaved"
   />
 </template>
 
 <script setup lang="ts">
-  import { type PropType } from 'vue';
+  import { ref, type PropType } from 'vue';
 
-  import type { Label } from '../../stores/labelStore';
+  import { useLabelStore, type Label } from '../../stores/labelStore';
   import { useLabelToTodoStore } from '../../stores/labelToTodoStore';
 
   import { Pen, Tag } from 'lucide-vue-next';
@@ -46,6 +47,7 @@
   import LabelEditDialog from '../dialogs/LabelEditDialog.vue';
 
   const labelToTodoStore = useLabelToTodoStore();
+  const labelStore = useLabelStore();
 
   const props = defineProps({
     label: {
@@ -60,5 +62,20 @@
 
   function handleEditButtonClick(): void {
     labelEditDialogOpen.value = true;
+  }
+
+  async function handleLabelSaved(newProperties: {
+    name: string;
+    color: string;
+    icon: string;
+  }): Promise<void> {
+    labelEditDialogOpen.value = false;
+
+    await labelStore.upsert({
+      id: props.label.id,
+      name: newProperties.name,
+      color: newProperties.color,
+      icon: newProperties.icon
+    });
   }
 </script>
