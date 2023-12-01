@@ -55,12 +55,18 @@
     (event: 'close'): void;
   }>();
 
+  const visible = ref(false);
+
   watch(
     () => props.open,
     () => {
-      if (props.open) creationStringInputElement.value?.focus();
+      visible.value = props.open;
     }
   );
+
+  watch(visible, () => {
+    if (!visible.value) emit('close');
+  });
 
   const creationString = ref('');
 

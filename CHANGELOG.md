@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- fix todo creation overlay not opening
+
 ## [0.5.0] - 2023-12-01
 
 - change from daisyui to primevue
