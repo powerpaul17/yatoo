@@ -41,6 +41,7 @@
               v-for="label of labels"
               :key="label.id"
               :label="label"
+              @delete="handleDeleteLabel(label.id)"
             />
 
             <NavigationItem
@@ -88,5 +89,9 @@
       color: '',
       icon: ''
     });
+  }
+
+  async function handleDeleteLabel(labelId: string): Promise<void> {
+    await labelStore.remove(labelId);
   }
 </script>

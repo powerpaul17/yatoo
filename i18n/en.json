@@ -18,6 +18,7 @@
     },
     "navigation": {
       "LabelNavigationItem": {
+        "deleteLabel": "Delete label \"{labelName}\"",
         "noLabelName": "no name"
       }
     },

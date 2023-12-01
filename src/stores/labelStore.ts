@@ -51,6 +51,10 @@ class LabelStore extends Store<'labels', InternalLabel> {
     return this._create(label);
   }
 
+  public async remove(id: string): Promise<void> {
+    return this._remove(id);
+  }
+
   public async upsert(label: Label): Promise<void> {
     const labelToSave: InternalLabel = {
       ...label,

@@ -30,7 +30,22 @@
     :label="label"
     :open="labelEditDialogOpen"
     @close="labelEditDialogOpen = false"
+    @delete="
+      labelEditDialogOpen = false;
+      deleteDialogOpen = true;
+    "
     @save="handleLabelSaved"
+  />
+
+  <DeleteDialog
+    :open="deleteDialogOpen"
+    :title="
+      $t('components.navigation.LabelNavigationItem.deleteLabel', {
+        labelName: label.name
+      })
+    "
+    @close="deleteDialogOpen = false"
+    @delete="emit('delete')"
   />
 </template>
 
@@ -45,6 +60,7 @@
   import NavigationItem from './NavigationItem.vue';
   import CustomIcon from '../CustomIcon.vue';
   import LabelEditDialog from '../dialogs/LabelEditDialog.vue';
+  import DeleteDialog from '../dialogs/DeleteDialog.vue';
 
   const labelToTodoStore = useLabelToTodoStore();
   const labelStore = useLabelStore();
@@ -55,6 +71,10 @@
       required: true
     }
   });
+
+  const emit = defineEmits<{
+    (event: 'delete'): void;
+  }>();
 
   const numberOfTodos = labelToTodoStore.countRefForLabelId(props.label.id);
 
@@ -78,4 +98,6 @@
       icon: newProperties.icon
     });
   }
+
+  const deleteDialogOpen = ref(false);
 </script>
