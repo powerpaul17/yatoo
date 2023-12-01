@@ -10,6 +10,7 @@ import {
 import { useSystemStore } from './systemStore';
 
 import { clearLocalStorage } from './LocalStorage/useLocalStorage';
+import { useMessageBus } from '../classes/MessageBus';
 
 describe('Store', () => {
   describe('Migration', () => {
@@ -94,6 +95,9 @@ describe('Store', () => {
     version: number;
     entities?: Array<Partial<TestEntity>>;
   }): Promise<{ store: TestStore }> {
+    const messageBus = useMessageBus();
+    messageBus.reset();
+
     const store = new TestStore({
       version
     });

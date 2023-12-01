@@ -53,6 +53,10 @@ export class MessageBus {
     };
   }
 
+  public reset(): void {
+    this.messages.clear();
+  }
+
   private getOrCreateMessageInfo<TConfig extends MessageConfig<string, any>>(
     message: TConfig['message']
   ): MessageInfo<TConfig['payload'], TConfig['returnValue']> {
