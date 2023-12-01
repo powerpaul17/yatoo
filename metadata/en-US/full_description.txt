@@ -1,1 +1,1 @@
-Yatoo (yet another todo app) focuses in providing you with the todos you can actually get done at the moment.
+Never waste time thinking about what you could do next. Yatoo's filter system shows you only what is relevant at the moment. It lets you get things done efficiently. Your todo list will stop growing infinitely.
