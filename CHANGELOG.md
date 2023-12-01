@@ -4,6 +4,7 @@
 
 - change from daisyui to primevue
 - use webpack instead of parcel for bundling
+- add labels for todos
 
 ## [0.4.3] - 2023-11-17
 
