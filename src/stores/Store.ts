@@ -112,6 +112,21 @@ export class Store<
     return this._getRefForComputedQuery(computed(() => query));
   }
 
+  protected _count(query: Query<TEntity, 'id'>): Ref<number> {
+    return effectScope().run(() => {
+      const num = ref(0);
+
+      this._watchForComputedQuery(
+        computed(() => query),
+        (entities) => {
+          num.value = entities.length;
+        }
+      );
+
+      return num;
+    });
+  }
+
   protected async _getAll(): Promise<Array<TEntity>> {
     await this.initializePromise;
     return await many(this.table);
