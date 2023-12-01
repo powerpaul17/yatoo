@@ -2,6 +2,7 @@
   <span
     class="inline-flex h-5 items-center justify-center rounded-full border pl-0.5 pr-2"
     :class="{
+      '!px-0.5': compact,
       '!bg-transparent': !label.color
     }"
     :style="{
@@ -18,7 +19,10 @@
       v-else
       class="h-full w-full py-0.5"
     />
-    <span class="ml-1">
+    <span
+      v-if="!compact"
+      class="ml-1"
+    >
       {{ label.name }}
     </span>
   </span>
@@ -37,6 +41,10 @@
     label: {
       type: Object as PropType<Label>,
       required: true
+    },
+    compact: {
+      type: Boolean,
+      default: false
     }
   });
 </script>
