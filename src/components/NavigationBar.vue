@@ -26,6 +26,7 @@
 
         <NavigationItem
           :title="$t('components.NavigationBar.labels')"
+          :open="!!labels.length"
           @button-click="handleAddLabelClick()"
         >
           <template #icon>
