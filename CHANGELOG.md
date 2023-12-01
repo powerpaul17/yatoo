@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [0.5.0] - 2023-12-01
+
 - change from daisyui to primevue
 - use webpack instead of parcel for bundling
 
