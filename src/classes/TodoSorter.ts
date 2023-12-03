@@ -1,7 +1,6 @@
 import type { Todo } from '../stores/todoStore';
 
 export class TodoSorter {
-
   private readonly boundCompareFunction = this.compareFunction.bind(this);
 
   private functions: Array<CompareFunction> = [
@@ -27,7 +26,6 @@ export class TodoSorter {
 
     return 0;
   }
-
 }
 
 type CompareFunction = (a: Todo, b: Todo) => number;
