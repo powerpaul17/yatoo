@@ -10,6 +10,11 @@ export class TodoSorter {
       return aVal - bVal;
     },
     (a, b): number => {
+      const aVal = a.doneAt ?? Number.MAX_SAFE_INTEGER;
+      const bVal = b.doneAt ?? Number.MAX_SAFE_INTEGER;
+      return bVal - aVal;
+    },
+    (a, b): number => {
       return a.title.localeCompare(b.title);
     }
   ];
