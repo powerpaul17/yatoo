@@ -7,22 +7,25 @@
     }"
   >
     <div class="flex items-center gap-2 p-1">
-      <Button
-        text
-        plain
-        @click="handleToggleDoneClicked()"
-      >
-        <template #icon="{ class: cls }">
-          <Square
-            v-if="!todo.done"
-            :class="cls"
-          />
-          <CheckSquare
-            v-else
-            :class="cls"
-          />
-        </template>
-      </Button>
+      <div class="shrink-0">
+        <Button
+          text
+          plain
+          @click="handleToggleDoneClicked()"
+        >
+          <template #icon="{ class: cls }">
+            <Square
+              v-if="!todo.done"
+              :class="cls"
+            />
+            <CheckSquare
+              v-else
+              :class="cls"
+            />
+          </template>
+        </Button>
+      </div>
+
       <div class="flex-auto truncate">
         <span
           :class="{
