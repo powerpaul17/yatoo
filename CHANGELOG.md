@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [0.5.1] - 2023-12-05
+
 - fix todo creation overlay not opening
 
 ## [0.5.0] - 2023-12-01
