@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'bun:test';
+import { describe, expect, it } from 'vitest';
 
 import {
   MessageBus,
@@ -17,8 +17,8 @@ describe('MessageBus', () => {
           'new-message'
         );
 
-      expect(registerResult.notify).toBeFunction();
-      expect(registerResult.dispose).toBeFunction();
+      expect(registerResult.notify).toBeTypeOf('function');
+      expect(registerResult.dispose).toBeTypeOf('function');
     });
 
     it('should throw an exception if message is already registered', () => {
