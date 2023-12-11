@@ -3,7 +3,6 @@
   "version": "0.5.1",
   "description": "Organize your life!",
   "scripts": {
-    "postinstall": "patch-package",
     "build-dev": "COMMIT_HASH=`git rev-parse --short HEAD` webpack",
     "build-prod": "COMMIT_HASH=`git rev-parse --short HEAD` NODE_ENV=production webpack",
     "test": "BUN_TEST=true vitest",
@@ -64,7 +63,6 @@
     "eslint-plugin-vue": "^9.14.1",
     "html-webpack-plugin": "^5.5.3",
     "mini-css-extract-plugin": "^2.7.6",
-    "patch-package": "^8.0.0",
     "postcss": "^8.4.30",
     "postcss-loader": "^7.3.3",
     "prettier": "^3.0.3",
