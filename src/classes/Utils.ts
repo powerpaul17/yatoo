@@ -2,8 +2,8 @@ export class Utils {
   public static rateLimitFunction<
     F extends (...args: Array<any>) => void | Promise<void>
   >(func: F, rate = 200): RateLimitedFunction<F> {
-    const f: RateLimitedFunction<F> = function () {
-      f._lastArguments = arguments as unknown as Parameters<F>;
+    const f: RateLimitedFunction<F> = function (...fArgs) {
+      f._lastArguments = fArgs;
 
       if (!f._timeout) {
         const id = window.setTimeout(() => {
@@ -67,7 +67,7 @@ export class Utils {
 type RateLimitedFunction<
   F extends (...args: Array<any>) => void | Promise<void>
 > = {
-  (...args: Parameters<F>): ReturnType<F>;
+  (...args: Parameters<F>): void | Promise<void>;
   _timeout: number | null;
   _lastArguments: Parameters<F> | null;
 
