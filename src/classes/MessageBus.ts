@@ -20,7 +20,8 @@ export class MessageBus {
   } {
     const messageInfo = this.getOrCreateMessageInfo(message);
 
-    if (messageInfo.registered) throw new MessageAlreadyRegisteredError();
+    if (messageInfo.registered)
+      throw new MessageAlreadyRegisteredError(message);
 
     messageInfo.registered = true;
 
@@ -74,8 +75,8 @@ export class MessageBus {
 }
 
 export class MessageAlreadyRegisteredError extends Error {
-  constructor() {
-    super('message already registered');
+  constructor(message: string) {
+    super(`message already registered: ${message}`);
   }
 }
 
