@@ -28,6 +28,7 @@ export class MessageBus {
     return {
       dispose: (): void => {
         messageInfo.registered = false;
+        this.deleteMessageInfoIfNecessary(message);
       },
       notify: (payload): Promise<Array<TConfig['returnValue']>> => {
         if (!messageInfo.registered) throw new MessageNotRegisteredError();
@@ -50,6 +51,7 @@ export class MessageBus {
     return {
       dispose: (): void => {
         messageInfo.subscribers.delete(callback);
+        this.deleteMessageInfoIfNecessary(message);
       }
     };
   }
@@ -71,6 +73,12 @@ export class MessageBus {
     this.messages.set(message, messageInfo);
 
     return messageInfo;
+  }
+
+  private deleteMessageInfoIfNecessary(message: string): void {
+    const messageInfo = this.getOrCreateMessageInfo(message);
+    if (!messageInfo.subscribers.size && !messageInfo.registered)
+      this.messages.delete(message);
   }
 }
 
