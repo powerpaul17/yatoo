@@ -74,9 +74,11 @@
 
   import { PluginManager } from './plugins/PluginManager';
 
+  import { ImportExportPlugin } from './plugins/ImportExportPlugin';
+
   // instantiate plugins after everything else
 
-  const pluginManager = new PluginManager();
+  const pluginManager = new PluginManager(new ImportExportPlugin());
   await pluginManager.init();
 
   provide(PluginManagerKey, pluginManager);
