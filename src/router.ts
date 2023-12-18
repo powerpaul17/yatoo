@@ -3,6 +3,7 @@ import { createRouter, createWebHashHistory } from 'vue-router';
 import TodoView from './views/TodoView.vue';
 
 import TodoSidebar from './components/todos/TodoSidebar.vue';
+import LabelItem from './components/labels/LabelItem.vue';
 
 export default createRouter({
   history: createWebHashHistory(),
@@ -34,7 +35,8 @@ export default createRouter({
       name: 'label',
       components: {
         default: TodoView,
-        sidebar: TodoSidebar
+        sidebar: TodoSidebar,
+        topNavigation: LabelItem
       },
       meta: {
         titleTk: 'routes.label'
@@ -42,6 +44,9 @@ export default createRouter({
       props: {
         sidebar: (route): Record<string, any> => ({
           todoId: route.query.todoId
+        }),
+        topNavigation: (route): Record<string, any> => ({
+          labelId: route.params.labelId
         })
       }
     }
