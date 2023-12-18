@@ -11,10 +11,22 @@
       </IconButton>
     </div>
 
-    <div class="mx-2 min-w-0 flex-1 px-2">
-      <span class="overflow-hidden text-ellipsis">
+    <div class="mx-2 flex min-w-0 flex-1 items-center px-2">
+      <span class="mr-4 overflow-hidden text-ellipsis">
         {{ $t(route.meta.titleTk ?? '') }}
       </span>
+
+      <router-view
+        name="topNavigation"
+        v-slot="{ Component, route: r }"
+      >
+        <Suspense>
+          <component
+            :is="Component"
+            v-bind="r.params"
+          ></component>
+        </Suspense>
+      </router-view>
     </div>
 
     <div class="flex-none">
