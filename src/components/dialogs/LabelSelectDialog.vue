@@ -26,11 +26,11 @@
         }"
       >
         <template #chip="{ value: label }">
-          <LabelItem :label="label" />
+          <LabelItem :label-id="label.id" />
         </template>
 
         <template #option="{ option: label }">
-          <LabelItem :label="label" />
+          <LabelItem :label-id="label.id" />
         </template>
       </AutoComplete>
     </template>

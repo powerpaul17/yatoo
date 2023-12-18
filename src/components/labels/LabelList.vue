@@ -4,7 +4,7 @@
       v-for="label of labels"
       class="mb-1 mr-1 last:mr-0"
       :key="label.id"
-      :label="label"
+      :label-id="label.id"
     />
   </div>
 </template>

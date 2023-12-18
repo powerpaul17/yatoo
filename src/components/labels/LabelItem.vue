@@ -1,5 +1,6 @@
 <template>
   <span
+    v-if="label"
     class="inline-flex h-5 items-center justify-center rounded-full border pl-0.5 pr-2"
     :class="{
       '!px-0.5': compact,
@@ -29,17 +30,19 @@
 </template>
 
 <script setup lang="ts">
-  import type { PropType } from 'vue';
+  import { watch, ref, onMounted } from 'vue';
 
   import { Tag } from 'lucide-vue-next';
 
   import CustomIcon from '../CustomIcon.vue';
 
-  import type { Label } from '../../stores/labelStore';
+  import { useLabelStore, type Label } from '../../stores/labelStore';
 
-  defineProps({
-    label: {
-      type: Object as PropType<Label>,
+  const labelStore = useLabelStore();
+
+  const props = defineProps({
+    labelId: {
+      type: String,
       required: true
     },
     compact: {
@@ -47,4 +50,21 @@
       default: false
     }
   });
+
+  const label = ref<Label | null>(null);
+
+  watch(
+    () => props.labelId,
+    async () => {
+      await updateLabel();
+    }
+  );
+
+  onMounted(async () => {
+    await updateLabel();
+  });
+
+  async function updateLabel(): Promise<void> {
+    label.value = await labelStore.getById(props.labelId);
+  }
 </script>
