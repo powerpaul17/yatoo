@@ -4,11 +4,12 @@
     class="inline-flex h-5 items-center justify-center rounded-full border pl-0.5 pr-2"
     :class="{
       '!px-0.5': compact,
-      '!bg-transparent': !label.color
+      '!bg-transparent': hollow || !label.color
     }"
     :style="{
       'background-color': label.color,
       'border-color': label.color || 'black',
+      color: hollow ? label.color : undefined
     }"
   >
     <CustomIcon
@@ -46,6 +47,10 @@
       required: true
     },
     compact: {
+      type: Boolean,
+      default: false
+    },
+    hollow: {
       type: Boolean,
       default: false
     }
