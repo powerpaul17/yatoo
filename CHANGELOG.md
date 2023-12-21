@@ -1,5 +1,6 @@
 ## [Unreleased]
 
+- show label in top bar if selected
 - sort labels alphabetically
 
 ## [0.5.1] - 2023-12-05
