@@ -39,7 +39,7 @@
 
           <template #children>
             <LabelNavigationItem
-              v-for="label of labels"
+              v-for="label of sortedLabels"
               :key="label.id"
               :label="label"
               @delete="handleDeleteLabel(label.id)"
@@ -61,6 +61,8 @@
 </template>
 
 <script setup lang="ts">
+  import { computed } from 'vue';
+
   import { CheckCheck, Plus, Tags } from 'lucide-vue-next';
 
   import NavigationItem from './navigation/NavigationItem.vue';
@@ -72,6 +74,12 @@
   const labelStore = useLabelStore();
 
   const labels = labelStore.getRef({});
+
+  const sortedLabels = computed(() => {
+    return labels.value.slice().sort((l1, l2) => {
+      return l1.name.toUpperCase().localeCompare(l2.name.toUpperCase());
+    });
+  });
 
   defineProps({
     open: {
