@@ -10,9 +10,7 @@
     "test/**/*.ts"
   ],
   "compilerOptions": {
-    "types": [
-      "bun-types"
-    ],
+    "types": [],
     "noEmit": true,
     "lib": [
       "esnext",
