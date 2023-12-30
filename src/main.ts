@@ -4,7 +4,7 @@ import { createApp, h, Suspense } from 'vue';
 import { createI18n } from 'vue-i18n';
 
 import PrimeVue from 'primevue/config';
-import 'primevue/resources/themes/lara-light-blue/theme.css';
+import lara from './theme';
 
 import en from '../i18n/en.json';
 
@@ -24,7 +24,10 @@ const app = createApp({
   }
 });
 
-app.use(PrimeVue);
+app.use(PrimeVue, {
+  unstyled: true,
+  pt: lara
+});
 
 type MessageSchema = typeof en;
 
