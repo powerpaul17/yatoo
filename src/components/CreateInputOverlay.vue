@@ -11,7 +11,7 @@
           <InputText
             ref="creationStringInputElement"
             type="text"
-            class="text-neutral-content w-full"
+            class="w-full"
             v-model="creationString"
           />
           <Button

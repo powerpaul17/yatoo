@@ -1,9 +1,9 @@
 <template>
   <div
-    class="text-neutral-content rounded-md hover:bg-neutral focus:bg-neutral"
+    class="rounded-md focus-within:bg-surface-200 hover:bg-surface-200 dark:focus-within:bg-surface-800 dark:hover:bg-surface-800"
     :class="{
       'opacity-40': todo.done,
-      'bg-neutral': isOpen
+      'bg-surface-100 dark:bg-surface-900': isOpen
     }"
   >
     <div class="flex items-center gap-2 p-1">

@@ -9,7 +9,7 @@
 
     <!-- Sidebar -->
     <div
-      class="fixed right-0 top-0 h-full w-full overflow-y-scroll bg-base-200 p-2 shadow-md transition-all duration-300 sm:w-80 md:static"
+      class="fixed right-0 top-0 h-full w-full overflow-y-scroll bg-surface-300 p-2 shadow-md transition-all duration-300 dark:bg-surface-700 sm:w-80 md:static"
       :class="{ 'mr-[-100%] sm:-mr-80': !todoId }"
     >
       <div v-if="todo">

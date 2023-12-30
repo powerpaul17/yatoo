@@ -13,7 +13,9 @@
       '-ml-80': !open
     }"
   >
-    <div class="flex h-full flex-col overflow-y-scroll bg-base-200">
+    <div
+      class="flex h-full flex-col overflow-y-scroll bg-surface-300 dark:bg-surface-700"
+    >
       <ul class="grow p-2">
         <NavigationItem
           :title="$t('components.NavigationBar.todos')"
