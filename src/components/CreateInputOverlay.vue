@@ -37,6 +37,7 @@
 
 <script setup lang="ts">
   import { computed, ref, watch } from 'vue';
+  import { useRoute } from 'vue-router';
 
   import Sidebar from 'primevue/sidebar';
   import InputGroup from 'primevue/inputgroup';
@@ -44,10 +45,14 @@
   import Button from 'primevue/button';
 
   import { useTodoStore } from '../stores/todoStore';
+  import { useLabelToTodoStore } from '../stores/labelToTodoStore';
 
   import { Plus } from 'lucide-vue-next';
 
+  const route = useRoute();
+
   const todoStore = useTodoStore();
+  const labelToTodoStore = useLabelToTodoStore();
 
   const creationStringInputElement = ref(null);
 
@@ -82,12 +87,20 @@
   });
 
   async function handleCreateButtonClicked(): Promise<void> {
-    await todoStore.create({
+    const todoId = await todoStore.create({
       title: creationString.value,
       description: '',
       done: false,
       doneAt: null
     });
+
+    const labelId = route.params['labelId'];
+    if (typeof labelId === 'string') {
+      await labelToTodoStore.create({
+        labelId,
+        todoId
+      });
+    }
 
     creationString.value = '';
   }
