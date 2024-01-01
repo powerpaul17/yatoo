@@ -4,7 +4,7 @@ const colors = require('tailwindcss/colors');
 export default {
   content: [
     "./src/index.html",
-    "./src/**/*.{ts,vue}",
+    "./src/**/*.{ts,vue,js}",
   ],
   theme: {
     extend: {
