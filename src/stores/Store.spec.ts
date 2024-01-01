@@ -31,7 +31,7 @@ describe('Store', () => {
         version: 2
       });
 
-      expect(async () => await createTestStore({ version: 0 })).toThrow(
+      await expect(() => createTestStore({ version: 0 })).rejects.toThrow(
         DbVersionMismatchError
       );
     });
