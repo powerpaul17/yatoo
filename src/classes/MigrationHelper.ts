@@ -2,14 +2,14 @@ import { useSystemStore, type SystemStore } from '../stores/systemStore';
 
 export class MigrationHelper {
 
-  private systemStore: SystemStore | null = null;
+  private systemStore: SystemStore;
 
   constructor(private readonly tableName: string) {
     this.systemStore = useSystemStore();
   }
 
   public async getLastDbVersion(): Promise<number> {
-    const value = await this.systemStore!.getValue(`lastDbVersion_${this.tableName}`);
+    const value = await this.systemStore.getValue(`lastDbVersion_${this.tableName}`);
     if (value) {
       return Number(value);
     }
@@ -18,7 +18,7 @@ export class MigrationHelper {
   }
 
   public async setLastDbVersion(version: number): Promise<void> {
-    await this.systemStore!.setValue(`lastDbVersion_${this.tableName}`, version.toString());
+    await this.systemStore.setValue(`lastDbVersion_${this.tableName}`, version.toString());
   }
 
 }
