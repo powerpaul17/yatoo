@@ -4,7 +4,7 @@
     "*.ts",
     "src/**/*.ts",
     "src/**/*.vue",
-    "src/theme/*.js",
+    "src/theme/**/*.js",
     "scripts/*.ts",
     "scripts/*.mjs",
     "i18n/**/*.json",
