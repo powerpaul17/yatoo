@@ -17,18 +17,24 @@
           {{ $t('entities.label.color') }}
         </label>
         <InputGroup>
-          <InputGroupAddon class="basis-0 p-0">
+          <InputGroupAddon class="basis-0 !p-0">
             <ColorPicker
               class="rounded-[inherit]"
               v-model="color"
               :pt="{
+                root: {
+                  class: 'h-full'
+                },
                 input: {
                   class: 'w-full h-full rounded-[inherit] border-0'
                 }
               }"
             />
           </InputGroupAddon>
-          <InputText v-model="color" />
+          <InputText
+            v-model="color"
+            class="flex-auto"
+          />
         </InputGroup>
       </div>
 

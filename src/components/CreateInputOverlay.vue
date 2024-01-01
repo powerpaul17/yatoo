@@ -1,6 +1,13 @@
 <template>
   <Sidebar
-    class="h-auto max-w-5xl rounded-b-md"
+    :pt="{
+      root: {
+        class: 'h-auto max-w-5xl rounded-b-md'
+      }
+    }"
+    :pt-options="{
+      mergeProps: true
+    }"
     position="top"
     v-model:visible="visible"
     @update="emit('close')"

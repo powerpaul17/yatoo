@@ -1,7 +1,7 @@
 <template>
   <div>
     <Dropdown
-      class="w-full"
+      class="!w-full"
       v-model="selectedIcon"
       :options="Object.entries(icons)"
       :option-value="([key]) => key"

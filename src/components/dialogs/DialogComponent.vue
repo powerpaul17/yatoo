@@ -4,13 +4,16 @@
     :header="title"
     :modal="true"
     :position="smallScreen ? 'bottom' : 'center'"
-    :class="{
-      'm-0 w-full': smallScreen
-    }"
     :pt="{
+      root: {
+        class: smallScreen ? '!-m-5 flex-grow w-full' : ''
+      },
       footer: {
         class: smallScreen ? 'rounded-b-none' : ''
       }
+    }"
+    :pt-options="{
+      mergeProps: true
     }"
   >
     <form class="m-0">
