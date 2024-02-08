@@ -26,6 +26,7 @@ export class BaseStore<TTableName extends string, TEntity> {
   protected initializePromise;
 
   private notifyRemoved;
+  private notifyUpserted;
 
   protected constructor({
     tableName,
@@ -58,6 +59,11 @@ export class BaseStore<TTableName extends string, TEntity> {
       EntityRemovedMessage<TTableName>
     >(`store::entity-removed::${tableName}`);
     this.notifyRemoved = notifyRemoved;
+
+    const { notify: notifyUpserted } = messageBus.registerMessage<
+      EntityUpsertedMessage<TTableName, TEntity>
+    >(`store::entity-upserted::${tableName}`);
+    this.notifyUpserted = notifyUpserted;
   }
 
   protected async _upsert(entity: TEntity): Promise<void> {
@@ -68,6 +74,8 @@ export class BaseStore<TTableName extends string, TEntity> {
 
     await upsert(this.table, entity);
     await this.saveEntityToStorage(entity);
+
+    await this.notifyUpserted({ tableName: this.tableName, entity });
   }
 
   protected async _one(
@@ -111,6 +119,17 @@ export class BaseStore<TTableName extends string, TEntity> {
     return JSON.parse(JSON.stringify(entity)) as TEntity;
   }
 }
+
+export type EntityUpsertedMessage<
+  TTableName extends string,
+  TEntity
+> = MessageConfig<
+  `store::entity-upserted::${TTableName}`,
+  {
+    tableName: TTableName;
+    entity: TEntity;
+  }
+>;
 
 export type EntityRemovedMessage<TTableName extends string> = MessageConfig<
   `store::entity-removed::${TTableName}`,
