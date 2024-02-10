@@ -20,6 +20,7 @@
             type="text"
             class="w-full"
             v-model="creationString"
+            @keypress.enter="handleEnterPressed"
           />
           <Button
             :disabled="!isValidInput"
@@ -87,6 +88,14 @@
   });
 
   async function handleCreateButtonClicked(): Promise<void> {
+    await createTodo();
+  }
+
+  async function handleEnterPressed(): Promise<void> {
+    await createTodo();
+  }
+
+  async function createTodo(): Promise<void> {
     const todoId = await todoStore.create({
       title: creationString.value,
       description: '',
