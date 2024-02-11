@@ -50,10 +50,10 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, type PropType } from 'vue';
+  import { ref, type PropType, watch, computed } from 'vue';
 
   import { useLabelStore, type Label } from '../../stores/labelStore';
-  import { useLabelToTodoStore } from '../../stores/labelToTodoStore';
+  import { useTodoService } from '../../services/todoService';
 
   import { Pen, Tag } from 'lucide-vue-next';
 
@@ -62,8 +62,8 @@
   import LabelEditDialog from '../dialogs/LabelEditDialog.vue';
   import DeleteDialog from '../dialogs/DeleteDialog.vue';
 
-  const labelToTodoStore = useLabelToTodoStore();
   const labelStore = useLabelStore();
+  const todoService = useTodoService();
 
   const props = defineProps({
     label: {
@@ -76,7 +76,20 @@
     (event: 'delete'): void;
   }>();
 
-  const numberOfTodos = labelToTodoStore.countRefForLabelId(props.label.id);
+  const labelId = ref(props.label.id);
+
+  watch(
+    () => props.label.id,
+    () => {
+      labelId.value = props.label.id;
+    }
+  );
+
+  const todosOfLabel = todoService.getTodoRefForLabelId(labelId);
+
+  const numberOfTodos = computed(() => {
+    return todosOfLabel.value.filter((t) => !t.done).length;
+  });
 
   const labelEditDialogOpen = ref(false);
 
