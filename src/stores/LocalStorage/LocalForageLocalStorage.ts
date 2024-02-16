@@ -21,7 +21,9 @@ export class LocalForageLocalStorage<T> implements LocalStorage<T> {
   }
 
   public async setItem(key: string, value: T): Promise<void> {
-    await this.localForage.setItem(key, value);
+    const val = JSON.parse(JSON.stringify(value)) as T;
+
+    await this.localForage.setItem(key, val);
   }
 
   public async getItems(): Promise<Array<T>> {

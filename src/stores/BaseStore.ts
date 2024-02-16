@@ -1,27 +1,24 @@
 import {
-  createTable,
   isValidEntity,
   upsert,
   type Query,
   type PrimaryKeyOf,
   one,
-  insertMany,
   clear,
   remove
 } from 'blinkdb';
 
-import { useBlinkDB } from './blinkdb';
-import type { LocalStorage } from './LocalStorage/LocalStorage';
-import { useLocalStorage } from './LocalStorage/useLocalStorage';
+import { createTable } from './blinkdb';
 import { useMessageBus, type MessageConfig } from '../classes/MessageBus';
 
-export class BaseStore<TTableName extends string, TEntity> {
+export class BaseStore<
+  TTableName extends string,
+  TEntity extends Record<string, any>
+> {
   protected tableName;
   protected table;
 
   private primaryKey: keyof TEntity | 'id';
-
-  private localStorage: LocalStorage<TEntity> | null = null;
 
   protected initializePromise;
 
@@ -39,16 +36,9 @@ export class BaseStore<TTableName extends string, TEntity> {
   }) {
     this.tableName = tableName;
 
-    const db = useBlinkDB();
     this.primaryKey = primaryKey ?? 'id';
-    this.table = createTable<TEntity>(
-      db,
-      tableName
-    )({
-      primary: this.primaryKey
-    });
 
-    this.initializePromise = this.init().then(() => {
+    this.initializePromise = this.init(tableName).then(() => {
       if (init) return init();
       else return Promise.resolve();
     });
@@ -73,7 +63,6 @@ export class BaseStore<TTableName extends string, TEntity> {
       throw new Error('cannot upsert an invalid entity');
 
     await upsert(this.table, entity);
-    await this.saveEntityToStorage(entity);
 
     await this.notifyUpserted({ tableName: this.tableName, entity });
   }
@@ -87,36 +76,20 @@ export class BaseStore<TTableName extends string, TEntity> {
 
   protected async _remove(id: string): Promise<void> {
     await this.initializePromise;
-
     await remove(this.table, { id });
-    await this.localStorage!.removeItem(id);
-
     await this.notifyRemoved({ tableName: this.tableName, id });
   }
 
   protected async _clear(): Promise<void> {
     await this.initializePromise;
     await clear(this.table);
-    await this.localStorage!.clear();
   }
 
-  private async init(): Promise<void> {
-    this.localStorage = await useLocalStorage(this.tableName);
-    await this.loadFromStorage();
-  }
-
-  private async loadFromStorage(): Promise<void> {
-    const items = await this.localStorage!.getItems();
-    if (items.length) await insertMany(this.table, items);
-  }
-
-  private async saveEntityToStorage(entity: TEntity): Promise<void> {
-    const rawEntity = this.convertToRawEntity(entity);
-    await this.localStorage!.setItem(entity[this.primaryKey], rawEntity);
-  }
-
-  private convertToRawEntity(entity: TEntity): TEntity {
-    return JSON.parse(JSON.stringify(entity)) as TEntity;
+  private async init(tableName: string): Promise<void> {
+    this.table = await createTable<TEntity>({
+      tableName,
+      primaryKey: this.primaryKey
+    });
   }
 }
 

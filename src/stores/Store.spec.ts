@@ -9,7 +9,6 @@ import {
 } from './Store';
 import { useSystemStore } from './systemStore';
 
-import { clearLocalStorage } from './LocalStorage/useLocalStorage';
 import { useMessageBus } from '../classes/MessageBus';
 
 describe('Store', () => {
@@ -82,10 +81,6 @@ describe('Store', () => {
   afterEach(async () => {
     const systemStore = useSystemStore();
     await systemStore.clear();
-
-    await clearLocalStorage('test');
-
-    await window.happyDOM.whenAsyncComplete();
   });
 
   async function createTestStore({
@@ -104,8 +99,6 @@ describe('Store', () => {
     await store.awaitReady();
 
     if (entities) await store.upsertMany(entities);
-
-    await window.happyDOM.whenAsyncComplete();
 
     return {
       store
