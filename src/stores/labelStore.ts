@@ -73,7 +73,7 @@ class LabelStore extends Store<'labels', InternalLabel> {
   }
 }
 
-type InternalLabel = Entity & {
+export type InternalLabel = Entity & {
   name: string;
   color: string;
   icon: string;

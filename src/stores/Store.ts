@@ -50,6 +50,10 @@ export class Store<
     await this._clear();
   }
 
+  public getAll(): Promise<Array<TEntity>> {
+    return this._getAll();
+  }
+
   protected _watchForComputedQuery(
     computedQuery: ComputedRef<Query<TEntity, 'id'>>,
     callback: (entities: Array<TEntity>) => void

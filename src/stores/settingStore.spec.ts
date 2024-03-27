@@ -1,8 +1,29 @@
 import { afterEach, describe, expect, it } from 'vitest';
+import sinon from 'sinon';
 
-import { SettingType, useSettingStore } from './settingStore';
+import { SettingType, useSettingStore, type Setting } from './settingStore';
+import { useLocalStorage } from './LocalStorage/useLocalStorage';
 
-describe('SettingStore', () => {
+describe('settingStore', () => {
+  describe('migrations', () => {
+    it('should migrate to version 2', async () => {
+      sinon.useFakeTimers(100);
+
+      const storage = await useLocalStorage('settings');
+      await storage.setItem('1', {
+        id: '1',
+        name: 'setting1',
+        group: 'group1',
+        section: 'section1',
+        value: 'test value 1',
+        type: SettingType.STRING
+      });
+
+      const settingStore = useSettingStore();
+      expect(await settingStore.getAll()).toEqual([latestSettingItem]);
+    });
+  });
+
   describe('getValue', () => {
     it('should return null if the value does not exist', async () => {
       const settingStore = useSettingStore();
@@ -116,4 +137,15 @@ describe('SettingStore', () => {
     const settingStore = useSettingStore();
     await settingStore.clear();
   });
+
+  const latestSettingItem: Setting<SettingType.STRING> = {
+    id: '1',
+    name: 'setting1',
+    group: 'group1',
+    section: 'section1',
+    type: SettingType.STRING,
+    createdAt: 100,
+    updatedAt: 100,
+    value: 'test value 1'
+  };
 });

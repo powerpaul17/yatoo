@@ -16,10 +16,6 @@ class TodoStore extends Store<'todos', Todo> {
     });
   }
 
-  public getAll(): Promise<Array<Todo>> {
-    return this._getAll();
-  }
-
   public watchForComputedQuery(
     query: ComputedRef<Query<Todo, 'id'>>,
     callback: (todos: Array<Todo>) => void
