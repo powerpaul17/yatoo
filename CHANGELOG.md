@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- sort todos by creation time
+
 ## [0.6.0] - 2024-01-01
 
 - show label in top bar if selected

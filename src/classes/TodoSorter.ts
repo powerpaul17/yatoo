@@ -15,7 +15,7 @@ export class TodoSorter {
       return bVal - aVal;
     },
     (a, b): number => {
-      return a.title.localeCompare(b.title);
+      return b.createdAt - a.createdAt;
     }
   ];
 

@@ -8,15 +8,15 @@ describe('TodoSorter', () => {
     it('should sort todos correctly', () => {
       const todos: Array<Todo> = [
         createTodo({
-          title: 'next todo'
-        }),
-        createTodo({
-          title: 'first todo'
+          title: ''
         }),
         createTodo({
           title: '',
           done: true,
           doneAt: 123
+        }),
+        createTodo({
+          title: ''
         }),
         createTodo({
           title: '',
@@ -28,7 +28,7 @@ describe('TodoSorter', () => {
       const todoSorter = new TodoSorter();
 
       expect(todoSorter.sortTodos(todos).map((t) => Number(t.id))).toEqual([
-        1, 0, 3, 2
+        2, 0, 3, 1
       ]);
     });
   });
@@ -49,7 +49,9 @@ describe('TodoSorter', () => {
       title,
       description: '',
       done,
-      doneAt
+      doneAt,
+      createdAt: id,
+      updatedAt: id
     };
   }
 });
