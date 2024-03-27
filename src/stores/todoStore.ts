@@ -1,5 +1,5 @@
 import type { Query } from 'blinkdb';
-import type { Ref } from 'vue';
+import type { ComputedRef, Ref } from 'vue';
 
 import { Store, type Entity, type GeneratedFields } from './Store';
 import { useSingleInstance } from '../classes/useSingleInstance';
