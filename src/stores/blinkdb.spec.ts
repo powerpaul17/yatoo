@@ -53,6 +53,18 @@ describe('blinkdb', () => {
     expect(items).toEqual([{ id: 2 }]);
   });
 
+  it('should remove item from local storage with a different primary key name', async () => {
+    const { table, localStorage } = await setupEnvironment(
+      [{ name: 'a' }, { name: 'b' }],
+      'name'
+    );
+
+    await remove(table, { name: 'a' });
+
+    const items = await localStorage.getItems();
+    expect(items).toEqual([{ name: 'b' }]);
+  });
+
   it('should update an item in local storage', async () => {
     const { table, localStorage } = await setupEnvironment([
       { id: 1, name: 'old name' }
@@ -62,6 +74,18 @@ describe('blinkdb', () => {
 
     const items = await localStorage.getItems();
     expect(items).toEqual([{ id: 1, name: 'new name' }]);
+  });
+
+  it('should update an item in local storage with a different primary key name', async () => {
+    const { table, localStorage } = await setupEnvironment(
+      [{ key: 1, name: 'old name' }],
+      'key'
+    );
+
+    await upsert(table, { key: 1, name: 'new name' });
+
+    const items = await localStorage.getItems();
+    expect(items).toEqual([{ key: 1, name: 'new name' }]);
   });
 
   it('should update many items in local storage', async () => {
@@ -96,13 +120,16 @@ describe('blinkdb', () => {
     expect(numberOfItems).toEqual(2);
   });
 
-  async function setupEnvironment(entities?: Array<TestEntity>): Promise<{
+  async function setupEnvironment(
+    entities?: Array<TestEntity>,
+    primaryKeyName = 'id'
+  ): Promise<{
     table: Table<TestEntity, 'id'>;
     localStorage: LocalStorage<TestEntity>;
   }> {
     const table = await createTable<TestEntity>({
       tableName: 'testTable',
-      primaryKey: 'id'
+      primaryKey: primaryKeyName
     });
 
     const localStorage = await useLocalStorage<TestEntity>('testTable');
