@@ -58,6 +58,9 @@ export class Store<
     computedQuery: ComputedRef<Query<TEntity, 'id'>>,
     callback: (entities: Array<TEntity>) => void
   ): void {
+    const table = this.table;
+    this.assertTable(table);
+
     effectScope().run(() => {
       let dispose: (() => void) | null = null;
       let disposed = false;
@@ -67,7 +70,7 @@ export class Store<
         () => {
           void this.initializePromise.then(() => {
             dispose?.();
-            void watch(this.table, computedQuery.value, (entities) => {
+            void watch(table, computedQuery.value, (entities) => {
               callback(entities);
             }).then((d) => {
               dispose = d;
@@ -133,11 +136,15 @@ export class Store<
 
   protected async _getAll(): Promise<Array<TEntity>> {
     await this.initializePromise;
+    this.assertTable(this.table);
+
     return await many(this.table);
   }
 
   protected async _getById(id: string): Promise<TEntity> {
     await this.initializePromise;
+    this.assertTable(this.table);
+
     return await one(this.table, id);
   }
 
@@ -145,6 +152,8 @@ export class Store<
     query: Query<TEntity, 'id'>
   ): Promise<Array<TEntity>> {
     await this.initializePromise;
+    this.assertTable(this.table);
+
     return await many(this.table, query);
   }
 
@@ -173,6 +182,8 @@ export class Store<
   private async migrate(
     migrationConfig: MigrationConfig<TEntity, TRenamedProperties>
   ): Promise<void> {
+    this.assertTable(this.table);
+
     const migrationHelper = new MigrationHelper(this.tableName);
 
     const lastDbVersion = await migrationHelper.getLastDbVersion();

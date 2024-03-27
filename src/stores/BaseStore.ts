@@ -5,7 +5,8 @@ import {
   type PrimaryKeyOf,
   one,
   clear,
-  remove
+  remove,
+  type Table
 } from 'blinkdb';
 
 import { createTable } from './blinkdb';
@@ -16,7 +17,7 @@ export class BaseStore<
   TEntity extends Record<string, any>
 > {
   protected tableName;
-  protected table;
+  protected table: BaseTable<TEntity> | null = null;
 
   private primaryKey: keyof TEntity | 'id';
 
@@ -58,6 +59,7 @@ export class BaseStore<
 
   protected async _upsert(entity: TEntity): Promise<void> {
     await this.initializePromise;
+    this.assertTable(this.table);
 
     if (!isValidEntity(entity))
       throw new Error('cannot upsert an invalid entity');
@@ -71,17 +73,23 @@ export class BaseStore<
     query: Query<TEntity, PrimaryKeyOf<TEntity>>
   ): Promise<TEntity> {
     await this.initializePromise;
+    this.assertTable(this.table);
+
     return await one(this.table, query);
   }
 
   protected async _remove(id: string): Promise<void> {
     await this.initializePromise;
+    this.assertTable(this.table);
+
     await remove(this.table, { id });
     await this.notifyRemoved({ tableName: this.tableName, id });
   }
 
   protected async _clear(): Promise<void> {
     await this.initializePromise;
+    this.assertTable(this.table);
+
     await clear(this.table);
   }
 
@@ -90,6 +98,12 @@ export class BaseStore<
       tableName,
       primaryKey: this.primaryKey
     });
+  }
+
+  protected assertTable(
+    table: BaseTable<TEntity> | null
+  ): asserts table is BaseTable<TEntity> {
+    if (!table) throw new Error('table is not defined');
   }
 }
 
@@ -111,3 +125,5 @@ export type EntityRemovedMessage<TTableName extends string> = MessageConfig<
     id: string;
   }
 >;
+
+type BaseTable<TEntity> = Table<TEntity, PrimaryKeyOf<TEntity>>;
