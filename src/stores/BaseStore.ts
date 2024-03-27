@@ -6,7 +6,10 @@ import {
   one,
   clear,
   remove,
-  type Table
+  type Table,
+  upsertMany,
+  many,
+  watch
 } from 'blinkdb';
 
 import { createTable } from './blinkdb';
@@ -19,30 +22,25 @@ export class BaseStore<
   protected tableName;
   protected table: BaseTable<TEntity> | null = null;
 
-  private primaryKey: keyof TEntity | 'id';
+  private readonly primaryKey: keyof TEntity | 'id';
 
-  protected initializePromise;
+  private readonly initializePromise;
 
   private notifyRemoved;
   private notifyUpserted;
 
-  protected constructor({
+  constructor({
     tableName,
-    primaryKey,
-    init
+    primaryKey
   }: {
     tableName: TTableName;
     primaryKey?: keyof TEntity;
-    init?: () => Promise<void>;
   }) {
     this.tableName = tableName;
 
     this.primaryKey = primaryKey ?? 'id';
 
-    this.initializePromise = this.init(tableName).then(() => {
-      if (init) return init();
-      else return Promise.resolve();
-    });
+    this.initializePromise = this.init(tableName);
 
     const messageBus = useMessageBus();
 
@@ -57,7 +55,7 @@ export class BaseStore<
     this.notifyUpserted = notifyUpserted;
   }
 
-  protected async _upsert(entity: TEntity): Promise<void> {
+  public async upsert(entity: TEntity): Promise<void> {
     await this.initializePromise;
     this.assertTable(this.table);
 
@@ -69,7 +67,14 @@ export class BaseStore<
     await this.notifyUpserted({ tableName: this.tableName, entity });
   }
 
-  protected async _one(
+  public async upsertMany(entities: Array<TEntity>): Promise<void> {
+    await this.initializePromise;
+    this.assertTable(this.table);
+
+    await upsertMany(this.table, entities);
+  }
+
+  public async one(
     query: Query<TEntity, PrimaryKeyOf<TEntity>>
   ): Promise<TEntity> {
     await this.initializePromise;
@@ -78,7 +83,16 @@ export class BaseStore<
     return await one(this.table, query);
   }
 
-  protected async _remove(id: string): Promise<void> {
+  public async many(
+    query: Query<TEntity, PrimaryKeyOf<TEntity>>
+  ): Promise<Array<TEntity>> {
+    await this.initializePromise;
+    this.assertTable(this.table);
+
+    return many(this.table, query);
+  }
+
+  public async remove(id: string): Promise<void> {
     await this.initializePromise;
     this.assertTable(this.table);
 
@@ -86,11 +100,21 @@ export class BaseStore<
     await this.notifyRemoved({ tableName: this.tableName, id });
   }
 
-  protected async _clear(): Promise<void> {
+  public async clear(): Promise<void> {
     await this.initializePromise;
     this.assertTable(this.table);
 
     await clear(this.table);
+  }
+
+  public async watch(
+    query: Query<TEntity, PrimaryKeyOf<TEntity>>,
+    callback: (entities: Array<TEntity>) => void
+  ): Promise<() => void> {
+    await this.initializePromise;
+    this.assertTable(this.table);
+
+    return watch(this.table, query, callback);
   }
 
   private async init(tableName: string): Promise<void> {
@@ -100,7 +124,7 @@ export class BaseStore<
     });
   }
 
-  protected assertTable(
+  private assertTable(
     table: BaseTable<TEntity> | null
   ): asserts table is BaseTable<TEntity> {
     if (!table) throw new Error('table is not defined');

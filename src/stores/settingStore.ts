@@ -83,11 +83,11 @@ class SettingStore extends Store<'settings', Setting<any>> {
 
       setting.value = value;
 
-      await this._upsert(setting);
+      await super._update(setting);
     } catch (error) {
       if (!(error instanceof ItemNotFoundError)) throw error;
 
-      await this._upsert({
+      await super._update({
         id: uuid(),
         section,
         group,
@@ -109,7 +109,7 @@ class SettingStore extends Store<'settings', Setting<any>> {
     name: string;
     type: TSettingType;
   }): Promise<Setting<TSettingType>> {
-    return await this._one({
+    return await super._one({
       where: {
         section,
         group,

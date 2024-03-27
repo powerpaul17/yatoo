@@ -9,9 +9,11 @@ export const useSystemStore = (): SystemStore => {
   return useSingleInstance(createSystemStore);
 };
 
-class SystemStore extends BaseStore<'system', SystemData> {
+class SystemStore {
+  private readonly store: BaseStore<'system', SystemData>;
+
   constructor() {
-    super({
+    this.store = new BaseStore({
       tableName: 'system',
       primaryKey: 'name'
     });
@@ -19,7 +21,7 @@ class SystemStore extends BaseStore<'system', SystemData> {
 
   public async getValue(name: string): Promise<string | null> {
     try {
-      const dataItem = await this._one({
+      const dataItem = await this.store.one({
         where: {
           name
         }
@@ -33,16 +35,16 @@ class SystemStore extends BaseStore<'system', SystemData> {
 
   public async setValue(name: string, value: string): Promise<void> {
     try {
-      const dataItem = await this._one({
+      const dataItem = await this.store.one({
         where: {
           name
         }
       });
       dataItem.value = value;
-      await this._upsert(dataItem);
+      await this.store.upsert(dataItem);
     } catch (e) {
       if (!(e instanceof ItemNotFoundError)) throw e;
-      await this._upsert({
+      await this.store.upsert({
         name,
         value
       });
@@ -50,7 +52,7 @@ class SystemStore extends BaseStore<'system', SystemData> {
   }
 
   public async clear(): Promise<void> {
-    await this._clear();
+    await this.store.clear();
   }
 }
 

@@ -73,7 +73,7 @@ class LabelStore extends Store<'labels', InternalLabel> {
   }
 
   public async remove(id: string): Promise<void> {
-    return this._remove(id);
+    return await super._removeById(id);
   }
 
   public async upsert(label: Label): Promise<void> {
@@ -82,7 +82,7 @@ class LabelStore extends Store<'labels', InternalLabel> {
       _internalName: label.name.toLowerCase()
     };
 
-    return this._upsert(labelToSave);
+    return await super._update(labelToSave);
   }
 }
 

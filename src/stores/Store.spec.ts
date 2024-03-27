@@ -141,11 +141,7 @@ class TestStore extends Store<'test', TestEntity> {
   }
 
   public async upsert(item: TestEntity): Promise<void> {
-    await this._upsert(item);
-  }
-
-  public async getAll(): Promise<Array<TestEntity>> {
-    return await this._getAll();
+    await super._update(item);
   }
 }
 

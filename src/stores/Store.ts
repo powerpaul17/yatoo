@@ -1,13 +1,6 @@
 import { v4 as uuid } from 'uuid';
 
-import {
-  many,
-  one,
-  watch,
-  type Query,
-  upsertMany,
-  type ValidEntity
-} from 'blinkdb';
+import { type Query, type ValidEntity } from 'blinkdb';
 
 import {
   effectScope,
@@ -26,7 +19,12 @@ export class Store<
   TTableName extends string,
   TEntity extends Entity,
   TRenamedProperties = {}
-> extends BaseStore<TTableName, TEntity> {
+> {
+  private readonly tableName: string;
+  private readonly store: BaseStore<TTableName, TEntity>;
+
+  protected readonly initializePromise;
+
   protected constructor({
     tableName,
     migrationConfig
@@ -34,33 +32,28 @@ export class Store<
     tableName: TTableName;
     migrationConfig?: MigrationConfig<TEntity, TRenamedProperties>;
   }) {
-    super({
-      tableName,
-      init: () => {
-        if (!migrationConfig) {
-          return Promise.resolve();
-        }
+    this.tableName = tableName;
+    this.store = new BaseStore({ tableName });
 
-        return this.migrate(migrationConfig);
-      }
-    });
+    this.initializePromise = migrationConfig
+      ? this.migrate(migrationConfig)
+      : Promise.resolve();
   }
 
   public async clear(): Promise<void> {
-    await this._clear();
+    await this.initializePromise;
+    await this.store.clear();
   }
 
-  public getAll(): Promise<Array<TEntity>> {
-    return this._getAll();
+  public async getAll(): Promise<Array<TEntity>> {
+    await this.initializePromise;
+    return this.store.many({});
   }
 
   protected _watchForComputedQuery(
     computedQuery: ComputedRef<Query<TEntity, 'id'>>,
     callback: (entities: Array<TEntity>) => void
   ): void {
-    const table = this.table;
-    this.assertTable(table);
-
     effectScope().run(() => {
       let dispose: (() => void) | null = null;
       let disposed = false;
@@ -70,12 +63,14 @@ export class Store<
         () => {
           void this.initializePromise.then(() => {
             dispose?.();
-            void watch(table, computedQuery.value, (entities) => {
-              callback(entities);
-            }).then((d) => {
-              dispose = d;
-              if (disposed) dispose();
-            });
+            void this.store
+              .watch(computedQuery.value, (entities) => {
+                callback(entities);
+              })
+              .then((d) => {
+                dispose = d;
+                if (disposed) dispose();
+              });
           });
         },
         {
@@ -134,27 +129,36 @@ export class Store<
     });
   }
 
-  protected async _getAll(): Promise<Array<TEntity>> {
+  protected async _one(query: Query<TEntity, 'id'>): Promise<TEntity> {
     await this.initializePromise;
-    this.assertTable(this.table);
-
-    return await many(this.table);
+    return await this.store.one(query);
   }
 
-  protected async _getById(id: string): Promise<TEntity> {
+  protected async _getById(id: TEntity['id']): Promise<TEntity> {
     await this.initializePromise;
-    this.assertTable(this.table);
+    return await this.store.one({
+      where: {
+        id
+      }
+    });
+  }
 
-    return await one(this.table, id);
+  protected async _getByIds(ids: Array<string>): Promise<Array<TEntity>> {
+    await this.initializePromise;
+    return await this.store.many({
+      where: {
+        id: {
+          in: ids
+        }
+      }
+    });
   }
 
   protected async _getByQuery(
     query: Query<TEntity, 'id'>
   ): Promise<Array<TEntity>> {
     await this.initializePromise;
-    this.assertTable(this.table);
-
-    return await many(this.table, query);
+    return await this.store.many(query);
   }
 
   protected async _create(
@@ -168,22 +172,32 @@ export class Store<
       id
     };
 
-    await this._upsert(validEntity);
+    await this.store.upsert(validEntity);
 
     return id;
   }
 
+  protected async _update(entity: TEntity): Promise<void> {
+    await this.initializePromise;
+    await this.store.upsert(entity);
+  }
+
+  protected async _removeById(id: string): Promise<void> {
+    await this.initializePromise;
+    await this.store.remove(id);
+  }
+
   protected async _removeByIds(ids: Array<string>): Promise<void> {
+    await this.initializePromise;
+
     for (const id of ids) {
-      await this._remove(id);
+      await this.store.remove(id);
     }
   }
 
   private async migrate(
     migrationConfig: MigrationConfig<TEntity, TRenamedProperties>
   ): Promise<void> {
-    this.assertTable(this.table);
-
     const migrationHelper = new MigrationHelper(this.tableName);
 
     const lastDbVersion = await migrationHelper.getLastDbVersion();
@@ -193,10 +207,10 @@ export class Store<
       throw new DbVersionMismatchError();
     } else if (newDbVersion === lastDbVersion) return;
 
-    const entities = await many(this.table);
+    const entities = await this.store.many({});
 
     const migratedEntities = migrationConfig.migrationFunction(entities);
-    await upsertMany(this.table, migratedEntities);
+    await this.store.upsertMany(migratedEntities);
 
     await migrationHelper.setLastDbVersion(migrationConfig.version);
   }
