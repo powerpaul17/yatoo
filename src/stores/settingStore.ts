@@ -13,7 +13,21 @@ export const useSettingStore = (): SettingStore => {
 class SettingStore extends Store<'settings', Setting<any>> {
   constructor() {
     super({
-      tableName: 'settings'
+      tableName: 'settings',
+      migrationConfig: {
+        version: 2,
+        migrationFunction: (settings) =>
+          settings.map((s) => ({
+            id: s.id,
+            name: s.name ?? '',
+            group: s.group ?? '',
+            section: s.section ?? '',
+            type: s.type ?? SettingType.STRING,
+            value: s.value ?? '',
+            createdAt: s.createdAt ?? Date.now(),
+            updatedAt: s.updatedAt ?? Date.now()
+          }))
+      }
     });
   }
 

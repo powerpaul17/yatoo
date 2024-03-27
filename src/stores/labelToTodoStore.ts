@@ -13,7 +13,18 @@ export const useLabelToTodoStore = (): LabelToTodoStore =>
 class LabelToTodoStore extends Store<'label_to_todos', LabelToTodo> {
   constructor() {
     super({
-      tableName: 'label_to_todos'
+      tableName: 'label_to_todos',
+      migrationConfig: {
+        version: 2,
+        migrationFunction: (entities) =>
+          entities.map((e) => ({
+            id: e.id,
+            createdAt: e.createdAt ?? Date.now(),
+            updatedAt: e.updatedAt ?? Date.now(),
+            labelId: e.labelId ?? '',
+            todoId: e.todoId ?? ''
+          }))
+      }
     });
 
     const messageBus = useMessageBus();

@@ -12,7 +12,20 @@ export const useTodoStore = (): TodoStore => {
 class TodoStore extends Store<'todos', Todo> {
   constructor() {
     super({
-      tableName: 'todos'
+      tableName: 'todos',
+      migrationConfig: {
+        version: 2,
+        migrationFunction: (todos) =>
+          todos.map((t) => ({
+            id: t.id,
+            title: t.title ?? '',
+            description: t.description ?? '',
+            done: t.done ?? false,
+            doneAt: t.doneAt ?? null,
+            createdAt: t.createdAt ?? Date.now(),
+            updatedAt: t.updatedAt ?? Date.now()
+          }))
+      }
     });
   }
 

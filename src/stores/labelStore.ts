@@ -12,7 +12,20 @@ export const useLabelStore = (): LabelStore =>
 class LabelStore extends Store<'labels', InternalLabel> {
   constructor() {
     super({
-      tableName: 'labels'
+      tableName: 'labels',
+      migrationConfig: {
+        version: 2,
+        migrationFunction: (labels) =>
+          labels.map((l) => ({
+            id: l.id,
+            name: l.name ?? '',
+            color: l.color ?? '',
+            icon: l.icon ?? '',
+            _internalName: l._internalName ?? l.name?.toLowerCase() ?? '',
+            createdAt: l.createdAt ?? Date.now(),
+            updatedAt: l.updatedAt ?? Date.now()
+          }))
+      }
     });
   }
 
