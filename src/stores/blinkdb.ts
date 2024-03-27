@@ -25,6 +25,10 @@ const createBlinkDb = (): Database => {
 
     const localStorage = await useLocalStorage(ctx.table);
 
+    const primaryKeyName =
+      ctx.params[0][Object.getOwnPropertySymbols(ctx.params[0])[0]].options
+        .primary;
+
     switch (ctx.action) {
       case 'clear':
         if (!isAction(ctx, 'clear')) break;
@@ -39,7 +43,7 @@ const createBlinkDb = (): Database => {
 
         Logger.debug('blinkDb', 'remove hook', ctx, result);
 
-        await localStorage.removeItem(ctx.params[1].id);
+        await localStorage.removeItem(ctx.params[1][primaryKeyName]);
         break;
 
       case 'upsert':
@@ -47,10 +51,10 @@ const createBlinkDb = (): Database => {
 
         Logger.debug('blinkDb', 'upsert hook', ctx, result);
 
-        const id = ctx.params[1].id;
-        const item = ctx.params[1];
-
-        await localStorage.setItem(id, item);
+        await localStorage.setItem(
+          ctx.params[1][primaryKeyName],
+          ctx.params[1]
+        );
 
         break;
 
@@ -60,7 +64,9 @@ const createBlinkDb = (): Database => {
         Logger.debug('blinkDb', 'upsert many hook', ctx, result);
 
         await Promise.all(
-          ctx.params[1].map((item) => localStorage.setItem(item.id, item))
+          ctx.params[1].map((item) =>
+            localStorage.setItem(item[primaryKeyName], item)
+          )
         );
 
         break;
