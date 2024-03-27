@@ -1,7 +1,7 @@
 import type { Query } from 'blinkdb';
 import type { Ref } from 'vue';
 
-import { Store, type Entity } from './Store';
+import { Store, type Entity, type GeneratedFields } from './Store';
 import { useSingleInstance } from '../classes/useSingleInstance';
 
 const createTodoStore = (): TodoStore => new TodoStore();
@@ -35,7 +35,7 @@ class TodoStore extends Store<'todos', Todo> {
     return this._getById(id);
   }
 
-  public create(todo: Omit<Todo, 'id'>): Promise<string> {
+  public create(todo: Omit<Todo, GeneratedFields>): Promise<string> {
     return this._create(todo);
   }
 

@@ -144,7 +144,9 @@ export class Store<
     return await many(this.table, query);
   }
 
-  protected async _create(entity: Omit<TEntity, 'id'>): Promise<string> {
+  protected async _create(
+    entity: Omit<TEntity, GeneratedFields>
+  ): Promise<string> {
     await this.initializePromise;
 
     const id = uuid();
@@ -189,8 +191,12 @@ export class DbVersionMismatchError extends Error {}
 
 export type Entity = {
   id: string;
+  createdAt: number;
+  updatedAt: number;
   pluginId?: string;
 };
+
+export type GeneratedFields = 'id' | 'createdAt' | 'updatedAt';
 
 export type MigrationConfig<TEntity extends Entity, TRenamedProperties = {}> = {
   version: number;
@@ -201,4 +207,5 @@ export type Migration<TEntity extends Entity, TRenamedProperties = {}> = (
   entities: Array<PartialEntity<TEntity & TRenamedProperties>>
 ) => Array<TEntity>;
 
-type PartialEntity<T extends Entity> = Partial<Omit<T, 'id'>> & Entity;
+type PartialEntity<T extends Entity> = Partial<Omit<T, GeneratedFields>> &
+  Entity;

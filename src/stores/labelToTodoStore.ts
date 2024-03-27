@@ -1,7 +1,7 @@
 import { computed, type Ref } from 'vue';
 
 import { useSingleInstance } from '../classes/useSingleInstance';
-import { Store, type Entity } from './Store';
+import { Store, type Entity, type GeneratedFields } from './Store';
 import { useMessageBus } from '../classes/MessageBus';
 import type { EntityRemovedMessage } from './BaseStore';
 
@@ -63,7 +63,9 @@ class LabelToTodoStore extends Store<'label_to_todos', LabelToTodo> {
     });
   }
 
-  public async create(labelToTodo: Omit<LabelToTodo, 'id'>): Promise<void> {
+  public async create(
+    labelToTodo: Omit<LabelToTodo, GeneratedFields>
+  ): Promise<void> {
     await this._create(labelToTodo);
   }
 

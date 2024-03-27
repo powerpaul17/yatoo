@@ -1,7 +1,7 @@
 import { computed, type ComputedRef, type Ref } from 'vue';
 import type { Query } from 'blinkdb';
 
-import { Store, type Entity } from './Store';
+import { Store, type Entity, type GeneratedFields } from './Store';
 import { useSingleInstance } from '../classes/useSingleInstance';
 
 const createLabelStore = (): LabelStore => new LabelStore();
@@ -30,6 +30,8 @@ class LabelStore extends Store<'labels', InternalLabel> {
       callback(
         internalLabels.map((l) => ({
           id: l.id,
+          createdAt: l.createdAt,
+          updatedAt: l.updatedAt,
           name: l.name,
           color: l.color,
           icon: l.icon
@@ -42,8 +44,10 @@ class LabelStore extends Store<'labels', InternalLabel> {
     return this._getRef(query);
   }
 
-  public async create(creationLabel: Omit<Label, 'id'>): Promise<string> {
-    const label: Omit<InternalLabel, 'id'> = {
+  public async create(
+    creationLabel: Omit<Label, GeneratedFields>
+  ): Promise<string> {
+    const label: Omit<InternalLabel, GeneratedFields> = {
       ...creationLabel,
       _internalName: creationLabel.name.toLowerCase()
     };
