@@ -105,7 +105,11 @@ export async function createTable<T extends Record<string, any>>({
   const localStorage = await useLocalStorage(tableName);
 
   const items = await localStorage.getItems();
-  if (items.length) await upsertMany(table, items);
+  if (items.length)
+    await upsertMany(
+      table,
+      items.map((i) => i.value)
+    );
 
   return table;
 }

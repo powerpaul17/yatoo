@@ -50,7 +50,7 @@ describe('blinkdb', () => {
     await remove(table, { id: 1 });
 
     const items = await localStorage.getItems();
-    expect(items).toEqual([{ id: 2 }]);
+    expect(items).toEqual([{ key: 2, value: { id: 2 } }]);
   });
 
   it('should remove item from local storage with a different primary key name', async () => {
@@ -62,7 +62,7 @@ describe('blinkdb', () => {
     await remove(table, { name: 'a' });
 
     const items = await localStorage.getItems();
-    expect(items).toEqual([{ name: 'b' }]);
+    expect(items).toEqual([{ key: 'b', value: { name: 'b' } }]);
   });
 
   it('should update an item in local storage', async () => {
@@ -73,7 +73,7 @@ describe('blinkdb', () => {
     await upsert(table, { id: 1, name: 'new name' });
 
     const items = await localStorage.getItems();
-    expect(items).toEqual([{ id: 1, name: 'new name' }]);
+    expect(items).toEqual([{ key: 1, value: { id: 1, name: 'new name' } }]);
   });
 
   it('should update an item in local storage with a different primary key name', async () => {
@@ -85,7 +85,7 @@ describe('blinkdb', () => {
     await upsert(table, { key: 1, name: 'new name' });
 
     const items = await localStorage.getItems();
-    expect(items).toEqual([{ key: 1, name: 'new name' }]);
+    expect(items).toEqual([{ key: 1, value: { key: 1, name: 'new name' } }]);
   });
 
   it('should update many items in local storage', async () => {
@@ -102,8 +102,8 @@ describe('blinkdb', () => {
     const items = await localStorage.getItems();
 
     expect(items).toEqual([
-      { id: 1, name: 'new name 1' },
-      { id: 2, name: 'new name 2' }
+      { key: 1, value: { id: 1, name: 'new name 1' } },
+      { key: 2, value: { id: 2, name: 'new name 2' } }
     ]);
   });
 

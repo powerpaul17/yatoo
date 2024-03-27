@@ -1,7 +1,7 @@
 export abstract class LocalStorage<T> {
   public abstract getTableName(): string;
 
-  public abstract getItems(): Promise<Array<T>>;
+  public abstract getItems(): Promise<Array<{ key: string; value: T }>>;
 
   public abstract clear(): Promise<void>;
 

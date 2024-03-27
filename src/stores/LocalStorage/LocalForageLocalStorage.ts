@@ -26,10 +26,10 @@ export class LocalForageLocalStorage<T> implements LocalStorage<T> {
     await this.localForage.setItem(key, val);
   }
 
-  public async getItems(): Promise<Array<T>> {
-    const items: Array<T> = [];
-    await this.localForage.iterate<T, void>((value) => {
-      items.push(value);
+  public async getItems(): Promise<Array<{ key: string; value: T }>> {
+    const items: Array<{ key: string; value: T }> = [];
+    await this.localForage.iterate<T, void>((value, key) => {
+      items.push({ key, value });
     });
     return items;
   }
