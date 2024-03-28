@@ -17,12 +17,13 @@ import { useMessageBus, type MessageConfig } from '../classes/MessageBus';
 
 export class BaseStore<
   TTableName extends string,
-  TEntity extends Record<string, any>
+  TEntity extends Record<string, any>,
+  TPrimaryKey extends keyof TEntity
 > {
   protected tableName;
   protected table: BaseTable<TEntity> | null = null;
 
-  private readonly primaryKey: keyof TEntity | 'id';
+  private readonly primaryKey: TPrimaryKey;
 
   private readonly initializePromise;
 
@@ -34,11 +35,11 @@ export class BaseStore<
     primaryKey
   }: {
     tableName: TTableName;
-    primaryKey?: keyof TEntity;
+    primaryKey: TPrimaryKey;
   }) {
     this.tableName = tableName;
 
-    this.primaryKey = primaryKey ?? 'id';
+    this.primaryKey = primaryKey;
 
     this.initializePromise = this.init(tableName);
 

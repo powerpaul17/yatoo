@@ -21,7 +21,7 @@ export class Store<
   TRenamedProperties = {}
 > {
   private readonly tableName: string;
-  private readonly store: BaseStore<TTableName, TEntity>;
+  private readonly store: BaseStore<TTableName, TEntity, 'id'>;
 
   protected readonly initializePromise;
 
@@ -33,7 +33,7 @@ export class Store<
     migrationConfig?: MigrationConfig<TEntity, TRenamedProperties>;
   }) {
     this.tableName = tableName;
-    this.store = new BaseStore({ tableName });
+    this.store = new BaseStore({ tableName, primaryKey: 'id' });
 
     this.initializePromise = migrationConfig
       ? this.migrate(migrationConfig)

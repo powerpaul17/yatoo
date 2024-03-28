@@ -10,7 +10,7 @@ export const useSystemStore = (): SystemStore => {
 };
 
 class SystemStore {
-  private readonly store: BaseStore<'system', SystemData>;
+  private readonly store: BaseStore<'system', SystemData, 'name'>;
 
   constructor() {
     this.store = new BaseStore({
