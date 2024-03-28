@@ -67,7 +67,7 @@ class LabelToTodoStore extends Store<'label_to_todos', LabelToTodo> {
   }
 
   public countRefForLabelId(labelId: string): Ref<number> {
-    return this._count({
+    return this._countRef({
       where: {
         labelId
       }

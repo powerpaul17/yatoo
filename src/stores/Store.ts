@@ -114,7 +114,7 @@ export class Store<
     return this._getRefForComputedQuery(computed(() => query));
   }
 
-  protected _count(query: Query<TEntity, 'id'>): Ref<number> {
+  protected _countRef(query: Query<TEntity, 'id'>): Ref<number> {
     return effectScope().run(() => {
       const num = ref(0);
 
