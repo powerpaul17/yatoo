@@ -150,7 +150,7 @@
 
   async function handleDeleteTodo(): Promise<void> {
     if (!todo.value) throw new Error('cannot delete todo');
-    await todoStore.remove(todo.value.id);
+    await todoStore.removeById(todo.value.id);
     await handleClose();
   }
 

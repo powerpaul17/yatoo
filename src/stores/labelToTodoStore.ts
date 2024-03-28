@@ -96,7 +96,7 @@ class LabelToTodoStore extends Store<'label_to_todos', LabelToTodo> {
         ]
       }
     });
-    await this._removeByIds(labelToTodos.map((l) => l.id));
+    await this.removeByIds(labelToTodos.map((l) => l.id));
   }
 
   private async deleteByTodoId(todoId: string): Promise<void> {
@@ -106,7 +106,7 @@ class LabelToTodoStore extends Store<'label_to_todos', LabelToTodo> {
       }
     });
 
-    await this._removeByIds(items.map((i) => i.id));
+    await this.removeByIds(items.map((i) => i.id));
   }
 
   private async deleteByLabelId(labelId: string): Promise<void> {
@@ -116,7 +116,7 @@ class LabelToTodoStore extends Store<'label_to_todos', LabelToTodo> {
       }
     });
 
-    await this._removeByIds(items.map((i) => i.id));
+    await this.removeByIds(items.map((i) => i.id));
   }
 }
 

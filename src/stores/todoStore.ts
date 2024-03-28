@@ -52,10 +52,6 @@ class TodoStore extends Store<'todos', Todo> {
     return this._upsert(todo);
   }
 
-  public remove(todoId: string): Promise<void> {
-    return this._remove(todoId);
-  }
-
   public async setDone(todo: Todo, done = true): Promise<void> {
     todo.done = done;
     todo.doneAt = done ? Date.now() : null;

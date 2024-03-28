@@ -182,12 +182,12 @@ export class Store<
     await this.store.upsert(entity);
   }
 
-  protected async _removeById(id: string): Promise<void> {
+  public async removeById(id: string): Promise<void> {
     await this.initializePromise;
     await this.store.remove(id);
   }
 
-  protected async _removeByIds(ids: Array<string>): Promise<void> {
+  public async removeByIds(ids: Array<string>): Promise<void> {
     await this.initializePromise;
 
     for (const id of ids) {

@@ -103,6 +103,6 @@
   }
 
   async function handleDeleteLabel(labelId: string): Promise<void> {
-    await labelStore.remove(labelId);
+    await labelStore.removeById(labelId);
   }
 </script>
