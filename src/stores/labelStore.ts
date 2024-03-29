@@ -1,7 +1,12 @@
 import { computed, type ComputedRef, type Ref } from 'vue';
 import type { Query } from 'blinkdb';
 
-import { Store, type Entity, type GeneratedFields } from './Store';
+import {
+  Store,
+  type CreationEntity,
+  type Entity,
+  type UpdateEntity
+} from './Store';
 import { useSingleInstance } from '../classes/useSingleInstance';
 
 const createLabelStore = (): LabelStore => new LabelStore();
@@ -57,10 +62,8 @@ class LabelStore extends Store<'labels', InternalLabel> {
     return this._getRef(query);
   }
 
-  public async create(
-    creationLabel: Omit<Label, GeneratedFields>
-  ): Promise<string> {
-    const label: Omit<InternalLabel, GeneratedFields> = {
+  public async create(creationLabel: CreationEntity<Label>): Promise<string> {
+    const label: CreationEntity<InternalLabel> = {
       ...creationLabel,
       _internalName: creationLabel.name.toLowerCase()
     };
@@ -72,8 +75,8 @@ class LabelStore extends Store<'labels', InternalLabel> {
     return this._getById(labelId);
   }
 
-  public async upsert(label: Label): Promise<void> {
-    const labelToSave: InternalLabel = {
+  public async update(label: UpdateEntity<Label>): Promise<void> {
+    const labelToSave: UpdateEntity<InternalLabel> = {
       ...label,
       _internalName: label.name.toLowerCase()
     };

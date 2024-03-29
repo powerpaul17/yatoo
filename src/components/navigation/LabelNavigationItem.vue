@@ -104,7 +104,7 @@
   }): Promise<void> {
     labelEditDialogOpen.value = false;
 
-    await labelStore.upsert({
+    await labelStore.update({
       id: props.label.id,
       name: newProperties.name,
       color: newProperties.color,

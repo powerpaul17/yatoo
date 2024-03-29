@@ -1,7 +1,12 @@
 import type { Query } from 'blinkdb';
 import type { ComputedRef, Ref } from 'vue';
 
-import { Store, type Entity, type GeneratedFields } from './Store';
+import {
+  Store,
+  type CreationEntity,
+  type Entity,
+  type UpdateEntity
+} from './Store';
 import { useSingleInstance } from '../classes/useSingleInstance';
 
 const createTodoStore = (): TodoStore => new TodoStore();
@@ -44,19 +49,19 @@ class TodoStore extends Store<'todos', Todo> {
     return this._getById(id);
   }
 
-  public create(todo: Omit<Todo, GeneratedFields>): Promise<string> {
+  public create(todo: CreationEntity<Todo>): Promise<string> {
     return this._create(todo);
   }
 
-  public upsert(todo: Todo): Promise<void> {
-    return this._upsert(todo);
+  public update(todo: UpdateEntity<Todo>): Promise<void> {
+    return this._update(todo);
   }
 
   public async setDone(todo: Todo, done = true): Promise<void> {
     todo.done = done;
     todo.doneAt = done ? Date.now() : null;
 
-    await this._upsert(todo);
+    await this.update(todo);
   }
 }
 

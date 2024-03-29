@@ -156,7 +156,7 @@
 
   async function handleTodoChanged(): Promise<void> {
     if (!todo.value) return;
-    await todoStore.upsert(todo.value);
+    await todoStore.update(todo.value);
   }
 
   const labelSelectDialogOpen = ref(false);
