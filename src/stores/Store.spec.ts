@@ -1,5 +1,5 @@
-import { afterEach, describe, expect, it } from 'vitest';
-import sinon from 'sinon';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import sinon, { type SinonFakeTimers } from 'sinon';
 
 import {
   Store,
@@ -69,14 +69,24 @@ describe('Store', () => {
       expect(await store.getAll()).toEqual([
         {
           id: '1',
-          testValue: 'test'
+          testValue: 'test',
+          createdAt: 100,
+          updatedAt: 100
         },
         {
           id: '2',
-          testValue: 'foo'
+          testValue: 'foo',
+          createdAt: 100,
+          updatedAt: 100
         }
       ]);
     });
+  });
+
+  let clock: SinonFakeTimers | null = null;
+
+  beforeEach(() => {
+    clock = sinon.useFakeTimers(100);
   });
 
   afterEach(async () => {
@@ -85,6 +95,8 @@ describe('Store', () => {
 
     const localStorage = await useLocalStorage('test');
     await localStorage.clear();
+
+    clock?.restore();
   });
 
   async function createTestStore({
@@ -123,7 +135,9 @@ class TestStore extends Store<'test', TestEntity> {
       return entities.map((entity) => {
         return {
           id: entity.id,
-          testValue: entity.testValue ?? 'test'
+          testValue: entity.testValue ?? 'test',
+          createdAt: entity.createdAt ?? Date.now(),
+          updatedAt: entity.updatedAt ?? Date.now()
         };
       });
     });
