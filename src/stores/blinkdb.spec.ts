@@ -26,13 +26,13 @@ describe('blinkdb', () => {
 
     // await upsert(table, { id: 1 });
 
-    await expect(() => updateMany(table, [{ id: 1 }])).rejects.toThrow();
+    await expect(() => updateMany(table, [{ id: '1' }])).rejects.toThrow();
   });
 
   it('should clear local storage if table is cleared', async () => {
     const { table, localStorage } = await setupEnvironment([
-      { id: 1 },
-      { id: 2 }
+      { id: '1' },
+      { id: '2' }
     ]);
 
     await clear(table);
@@ -43,14 +43,14 @@ describe('blinkdb', () => {
 
   it('should remove item from local storage', async () => {
     const { table, localStorage } = await setupEnvironment([
-      { id: 1 },
-      { id: 2 }
+      { id: '1' },
+      { id: '2' }
     ]);
 
-    await remove(table, { id: 1 });
+    await remove(table, { id: '1' });
 
     const items = await localStorage.getItems();
-    expect(items).toEqual([{ key: 2, value: { id: 2 } }]);
+    expect(items).toEqual([{ key: '2', value: { id: '2' } }]);
   });
 
   it('should remove item from local storage with a different primary key name', async () => {
@@ -67,54 +67,56 @@ describe('blinkdb', () => {
 
   it('should update an item in local storage', async () => {
     const { table, localStorage } = await setupEnvironment([
-      { id: 1, name: 'old name' }
+      { id: '1', name: 'old name' }
     ]);
 
-    await upsert(table, { id: 1, name: 'new name' });
+    await upsert(table, { id: '1', name: 'new name' });
 
     const items = await localStorage.getItems();
-    expect(items).toEqual([{ key: 1, value: { id: 1, name: 'new name' } }]);
+    expect(items).toEqual([{ key: '1', value: { id: '1', name: 'new name' } }]);
   });
 
   it('should update an item in local storage with a different primary key name', async () => {
     const { table, localStorage } = await setupEnvironment(
-      [{ key: 1, name: 'old name' }],
+      [{ key: '1', name: 'old name' }],
       'key'
     );
 
-    await upsert(table, { key: 1, name: 'new name' });
+    await upsert(table, { key: '1', name: 'new name' });
 
     const items = await localStorage.getItems();
-    expect(items).toEqual([{ key: 1, value: { key: 1, name: 'new name' } }]);
+    expect(items).toEqual([
+      { key: '1', value: { key: '1', name: 'new name' } }
+    ]);
   });
 
   it('should update many items in local storage', async () => {
     const { table, localStorage } = await setupEnvironment([
-      { id: 1, name: 'old name 1' },
-      { id: 2, name: 'old name 2' }
+      { id: '1', name: 'old name 1' },
+      { id: '2', name: 'old name 2' }
     ]);
 
     await upsertMany(table, [
-      { id: 1, name: 'new name 1' },
-      { id: 2, name: 'new name 2' }
+      { id: '1', name: 'new name 1' },
+      { id: '2', name: 'new name 2' }
     ]);
 
     const items = await localStorage.getItems();
 
     expect(items).toEqual([
-      { key: 1, value: { id: 1, name: 'new name 1' } },
-      { key: 2, value: { id: 2, name: 'new name 2' } }
+      { key: '1', value: { id: '1', name: 'new name 1' } },
+      { key: '2', value: { id: '2', name: 'new name 2' } }
     ]);
   });
 
   it('should allow simple queries', async () => {
-    const { table } = await setupEnvironment([{ id: 1 }, { id: 2 }]);
+    const { table } = await setupEnvironment([{ id: '1' }, { id: '2' }]);
 
-    const item = await one(table, { where: { id: 1 } });
-    expect(item).toEqual({ id: 1 });
+    const item = await one(table, { where: { id: '1' } });
+    expect(item).toEqual({ id: '1' });
 
     const items = await many(table, {});
-    expect(items).toEqual([{ id: 1 }, { id: 2 }]);
+    expect(items).toEqual([{ id: '1' }, { id: '2' }]);
 
     const numberOfItems = await count(table);
     expect(numberOfItems).toEqual(2);
@@ -146,6 +148,6 @@ describe('blinkdb', () => {
 });
 
 type TestEntity = {
-  id: number;
+  id: string;
   name?: string;
 };

@@ -29,6 +29,8 @@ const createBlinkDb = (): Database => {
       ctx.params[0][Object.getOwnPropertySymbols(ctx.params[0])[0]].options
         .primary;
 
+    const primaryKey = ctx.params[1][primaryKeyName];
+
     switch (ctx.action) {
       case 'clear':
         if (!isAction(ctx, 'clear')) break;
@@ -43,7 +45,9 @@ const createBlinkDb = (): Database => {
 
         Logger.debug('blinkDb', 'remove hook', ctx, result);
 
-        await localStorage.removeItem(ctx.params[1][primaryKeyName]);
+        assertString(primaryKey, 'wrong primary key type');
+
+        await localStorage.removeItem(primaryKey);
         break;
 
       case 'upsert':
@@ -51,10 +55,9 @@ const createBlinkDb = (): Database => {
 
         Logger.debug('blinkDb', 'upsert hook', ctx, result);
 
-        await localStorage.setItem(
-          ctx.params[1][primaryKeyName],
-          ctx.params[1]
-        );
+        assertString(primaryKey, 'wrong primary key type');
+
+        await localStorage.setItem(primaryKey, ctx.params[1]);
 
         break;
 
@@ -64,9 +67,12 @@ const createBlinkDb = (): Database => {
         Logger.debug('blinkDb', 'upsert many hook', ctx, result);
 
         await Promise.all(
-          ctx.params[1].map((item) =>
-            localStorage.setItem(item[primaryKeyName], item)
-          )
+          ctx.params[1].map((item) => {
+            const key = item[primaryKeyName];
+            assertString(key, 'wrong primary key type');
+
+            void localStorage.setItem(key, item);
+          })
         );
 
         break;
@@ -118,4 +124,12 @@ export async function createTable<T extends Record<string, any>>({
     );
 
   return table;
+}
+
+function assertString(key: unknown, message: string): asserts key is string {
+  const typeOfKey = typeof key;
+
+  if (typeOfKey === 'string') return;
+
+  throw new Error(message);
 }
