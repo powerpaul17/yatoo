@@ -82,6 +82,9 @@ describe('Store', () => {
   afterEach(async () => {
     const systemStore = useSystemStore();
     await systemStore.clear();
+
+    const localStorage = await useLocalStorage('test');
+    await localStorage.clear();
   });
 
   async function createTestStore({
