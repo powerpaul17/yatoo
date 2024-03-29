@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [0.7.0] - 2024-03-29
+
 - do not count finished todos in sidebar badges
 - sort todos by creation time
 
