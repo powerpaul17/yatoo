@@ -5,7 +5,7 @@
   "scripts": {
     "build-dev": "COMMIT_HASH=`git rev-parse --short HEAD` webpack",
     "build-prod": "COMMIT_HASH=`git rev-parse --short HEAD` NODE_ENV=production webpack",
-    "test": "BUN_TEST=true vitest",
+    "test": "TEST=true vitest",
     "lint": "eslint ./src",
     "check": "vue-tsc --noEmit",
     "dev": "COMMIT_HASH=`git rev-parse --short HEAD` webpack serve --port 3000",
