@@ -10,6 +10,7 @@ import {
 import { useSystemStore } from './systemStore';
 
 import { useMessageBus } from '../classes/MessageBus';
+import { useLocalStorage } from './LocalStorage/useLocalStorage';
 
 describe('Store', () => {
   describe('Migration', () => {
@@ -93,12 +94,17 @@ describe('Store', () => {
     const messageBus = useMessageBus();
     messageBus.reset();
 
+    if (entities) {
+      const localStorage = await useLocalStorage('test');
+      for (const entity of entities) {
+        await localStorage.setItem(entity.id, entity);
+      }
+    }
+
     const store = new TestStore({
       version
     });
     await store.awaitReady();
-
-    if (entities) await store.upsertMany(entities);
 
     return {
       store
@@ -132,12 +138,6 @@ class TestStore extends Store<'test', TestEntity> {
 
   public async awaitReady(): Promise<void> {
     return this.initializePromise;
-  }
-
-  public async upsertMany(items: Array<TestEntity>): Promise<void> {
-    for (const item of items) {
-      await this.upsert(item);
-    }
   }
 
   public async upsert(item: TestEntity): Promise<void> {
