@@ -29,7 +29,7 @@ const createBlinkDb = (): Database => {
       ctx.params[0][Object.getOwnPropertySymbols(ctx.params[0])[0]].options
         .primary;
 
-    const primaryKey = ctx.params[1][primaryKeyName];
+    const primaryKey = ctx.params[1]?.[primaryKeyName];
 
     switch (ctx.action) {
       case 'clear':
