@@ -161,13 +161,12 @@ export class Store<
     return await this.store.many(query);
   }
 
-  protected async _create(
-    entity: Omit<TEntity, GeneratedFields>
-  ): Promise<string> {
+  protected async _create(entity: CreationEntity<TEntity>): Promise<string> {
     await this.initializePromise;
 
     const id = uuid();
-    const validEntity: ValidEntity<TEntity> = {
+
+    const validEntity: UpdateEntity<TEntity> = {
       ...entity,
       id
     };
@@ -177,7 +176,7 @@ export class Store<
     return id;
   }
 
-  protected async _update(entity: TEntity): Promise<void> {
+  protected async _update(entity: UpdateEntity<TEntity>): Promise<void> {
     await this.initializePromise;
     await this.store.upsert(entity);
   }
@@ -238,3 +237,16 @@ export type Migration<TEntity extends Entity, TRenamedProperties = {}> = (
 
 type PartialEntity<T extends Entity> = Partial<Omit<T, GeneratedFields>> &
   Entity;
+
+export type CreationEntity<TEntity> = Omit<TEntity, GeneratedFields>;
+
+export type UpdateEntity<TEntity extends Entity> = Optional<
+  TEntity,
+  'createdAt' | 'updatedAt'
+>;
+
+type Optional<TEntity, OptionalKeys extends keyof TEntity> = Omit<
+  TEntity,
+  OptionalKeys
+> &
+  Partial<Pick<TEntity, OptionalKeys>>;
