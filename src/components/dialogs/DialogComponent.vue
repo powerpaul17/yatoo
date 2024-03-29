@@ -23,7 +23,7 @@
     </form>
 
     <template #footer>
-      <div>
+      <div class="flex gap-2">
         <slot name="actions" />
       </div>
     </template>
