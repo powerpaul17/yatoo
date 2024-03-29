@@ -5,7 +5,9 @@ import {
   Store,
   type Entity,
   DbVersionMismatchError,
-  type Migration
+  type Migration,
+  type UpdateEntity,
+  type CreationEntity
 } from './Store';
 import { useSystemStore } from './systemStore';
 
@@ -78,6 +80,54 @@ describe('Store', () => {
           testValue: 'foo',
           createdAt: 100,
           updatedAt: 100
+        }
+      ]);
+    });
+  });
+
+  describe('createdAt & changedAt', () => {
+    it('should add the createdAt timestamp for new entities', async () => {
+      const { store } = await createTestStore({ version: 0 });
+
+      const id = await store.create({
+        testValue: 'foo'
+      });
+
+      expect(await store.getAll()).toEqual([
+        {
+          id,
+          testValue: 'foo',
+          createdAt: 100,
+          updatedAt: 100
+        }
+      ]);
+    });
+
+    it('should update the changedAt timestamp if an entity is updated', async () => {
+      const { store } = await createTestStore({
+        version: 0,
+        entities: [
+          {
+            id: '1',
+            testValue: 'foo',
+            createdAt: 100
+          }
+        ]
+      });
+
+      await clock?.tickAsync(100);
+
+      await store.update({
+        id: '1',
+        testValue: 'bar'
+      });
+
+      expect(await store.getAll()).toEqual([
+        {
+          id: '1',
+          testValue: 'bar',
+          createdAt: 100,
+          updatedAt: 200
         }
       ]);
     });
@@ -157,8 +207,12 @@ class TestStore extends Store<'test', TestEntity> {
     return this.initializePromise;
   }
 
-  public async upsert(item: TestEntity): Promise<void> {
-    await super._update(item);
+  public async create(item: CreationEntity<TestEntity>): Promise<string> {
+    return await this._create(item);
+  }
+
+  public async update(item: UpdateEntity<TestEntity>): Promise<void> {
+    await this._update(item);
   }
 }
 

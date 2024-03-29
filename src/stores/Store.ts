@@ -168,17 +168,22 @@ export class Store<
 
     const validEntity: UpdateEntity<TEntity> = {
       ...entity,
-      id
+      id,
+      createdAt: Date.now()
     };
 
-    await this.store.upsert(validEntity);
+    await this._update(validEntity);
 
     return id;
   }
 
   protected async _update(entity: UpdateEntity<TEntity>): Promise<void> {
     await this.initializePromise;
-    await this.store.upsert(entity);
+
+    await this.store.upsert({
+      ...entity,
+      updatedAt: Date.now()
+    });
   }
 
   public async removeById(id: string): Promise<void> {
