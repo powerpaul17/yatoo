@@ -1,6 +1,6 @@
 {
   "hooks": {
-    "before:init": "npm run test",
+    "before:init": "npm run ci:test",
     "after:bump": [
       "npm i",
       "cd electron && npm i"
