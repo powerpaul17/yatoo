@@ -12,4 +12,10 @@ export class PluginManager {
       await plugin.init();
     }
   }
+
+  public getPlugin<T extends Plugin>(
+    pluginClass: new (...args: Array<any>) => T
+  ): T | null {
+    return this.plugins.find((p) => p.constructor === pluginClass) ?? null;
+  }
 }
