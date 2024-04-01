@@ -6,6 +6,7 @@
     "build-dev": "webpack",
     "build-prod": "NODE_ENV=production webpack",
     "test": "TEST=true vitest",
+    "ci:test": "npm run test -- --run",
     "lint": "eslint ./src",
     "check": "vue-tsc --noEmit",
     "dev": "webpack serve --port 3000",
