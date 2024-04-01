@@ -46,7 +46,7 @@ jobs:
           mkdir -p "${TMP_KEYSTORE_PATH}"
           echo $ANDROID_KEYSTORE_BASE64 | base64 -di > "${TMP_KEYSTORE_PATH}"/yatoo.jks
 
-      - run: npm i
+      - run: npm ci
 
       - run: npx release-it ${{ inputs.increment }}
         id: release-it
