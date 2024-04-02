@@ -10,6 +10,7 @@ import {
 import { useSingleInstance } from '../classes/useSingleInstance';
 
 const createTodoStore = (): TodoStore => new TodoStore();
+
 export const useTodoStore = (): TodoStore => {
   return useSingleInstance(createTodoStore);
 };
@@ -43,6 +44,10 @@ class TodoStore extends Store<'todos', Todo> {
 
   public getRef(query: Query<Todo, 'id'>): Ref<Array<Todo>> {
     return this._getRef(query);
+  }
+
+  public countRef(query: Query<Todo, 'id'>): Ref<number> {
+    return this._countRef(query);
   }
 
   public getById(id: string): Promise<Todo> {

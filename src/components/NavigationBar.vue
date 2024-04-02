@@ -20,6 +20,7 @@
         <NavigationItem
           :title="$t('components.NavigationBar.todos')"
           :route="{ name: 'todos' }"
+          :badge-value="numberOfTodos"
         >
           <template #icon>
             <CheckCheck />
@@ -71,9 +72,13 @@
   import LabelNavigationItem from './navigation/LabelNavigationItem.vue';
   import DarkModeSwitcher from './DarkModeSwitcher.vue';
 
+  import { useTodoStore } from '../stores/todoStore';
   import { useLabelStore } from '../stores/labelStore';
 
+  const todoStore = useTodoStore();
   const labelStore = useLabelStore();
+
+  const numberOfTodos = todoStore.countRef({ where: { done: false } });
 
   const labels = labelStore.getRef({});
 
