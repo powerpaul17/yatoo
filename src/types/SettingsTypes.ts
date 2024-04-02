@@ -8,7 +8,8 @@ export enum SettingInputType {
   CHECKBOX = 'checkbox',
   DROPDOWN = 'dropdown',
   RADIOBUTTON = 'radiobutton',
-  BUTTON = 'button'
+  BUTTON = 'button',
+  BUTTON_GROUP = 'button_group'
 }
 
 export type SettingsConfig = {
@@ -20,7 +21,8 @@ export type SettingDefinition =
   | InputDefinition
   | SelectDefinition
   | CheckboxDefinition
-  | ButtonDefinition;
+  | ButtonDefinition
+  | ButtonGroupDefinition;
 
 type InputDefinition = CommonDefinition & {
   type:
@@ -44,6 +46,11 @@ type CheckboxDefinition = CommonDefinition & {
 type ButtonDefinition = CommonDefinition & {
   type: SettingInputType.BUTTON;
   handler: () => Promise<void>;
+};
+
+type ButtonGroupDefinition = CommonDefinition & {
+  type: SettingInputType.BUTTON_GROUP;
+  buttons: Array<ButtonDefinition>;
 };
 
 type CommonDefinition = {
