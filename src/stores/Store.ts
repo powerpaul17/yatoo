@@ -14,6 +14,7 @@ import {
 
 import { MigrationHelper } from '../classes/MigrationHelper';
 import { BaseStore } from './BaseStore';
+import { useStorageManager } from './StorageManager';
 
 export class Store<
   TTableName extends string,
@@ -22,6 +23,9 @@ export class Store<
 > {
   private readonly tableName: string;
   private readonly store: BaseStore<TTableName, TEntity, 'id'>;
+
+  private notifyRemoved;
+  private notifyUpserted;
 
   protected readonly initializePromise;
 
@@ -34,6 +38,14 @@ export class Store<
   }) {
     this.tableName = tableName;
     this.store = new BaseStore({ tableName, primaryKey: 'id' });
+
+    const storageManager = useStorageManager();
+
+    const { notifyEntityRemoved, notifyEntityUpserted } =
+      storageManager.registerStore(tableName, this);
+
+    this.notifyRemoved = notifyEntityRemoved;
+    this.notifyUpserted = notifyEntityUpserted;
 
     this.initializePromise = migrationConfig
       ? this.migrate(migrationConfig)
@@ -180,15 +192,18 @@ export class Store<
   protected async _update(entity: UpdateEntity<TEntity>): Promise<void> {
     await this.initializePromise;
 
-    await this.store.upsert({
+    const updatedEntity = await this.store.upsert({
       ...entity,
       updatedAt: Date.now()
     });
+
+    this.notifyUpserted(updatedEntity);
   }
 
   public async removeById(id: string): Promise<void> {
     await this.initializePromise;
     await this.store.remove(id);
+    this.notifyRemoved(id);
   }
 
   public async removeByIds(ids: Array<string>): Promise<void> {

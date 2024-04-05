@@ -2,8 +2,7 @@ import { computed, type Ref } from 'vue';
 
 import { useSingleInstance } from '../classes/useSingleInstance';
 import { Store, type CreationEntity, type Entity } from './Store';
-import { useMessageBus } from '../classes/MessageBus';
-import type { EntityRemovedMessage } from './BaseStore';
+import { useStorageManager } from './StorageManager';
 
 const createLabelToTodoStore = (): LabelToTodoStore => new LabelToTodoStore();
 
@@ -27,21 +26,15 @@ class LabelToTodoStore extends Store<'label_to_todos', LabelToTodo> {
       }
     });
 
-    const messageBus = useMessageBus();
+    const storageManager = useStorageManager();
 
-    messageBus.subscribe<EntityRemovedMessage<'todos'>>(
-      'store::entity-removed::todos',
-      async ({ id }) => {
-        await this.deleteByTodoId(id);
+    storageManager.subscribeEntityRemoved((tableName, entityId) => {
+      if (tableName === 'labels') {
+        void this.deleteByLabelId(entityId);
+      } else if (tableName === 'todos') {
+        void this.deleteByTodoId(entityId);
       }
-    );
-
-    messageBus.subscribe<EntityRemovedMessage<'labels'>>(
-      'store::entity-removed::labels',
-      async ({ id }) => {
-        await this.deleteByLabelId(id);
-      }
-    );
+    });
   }
 
   public getRefForComputedTodoId(todoId: Ref<string>): Ref<Array<LabelToTodo>> {

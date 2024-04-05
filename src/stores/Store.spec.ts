@@ -1,25 +1,23 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import sinon, { type SinonFakeTimers } from 'sinon';
 
-import {
-  Store,
-  type Entity,
-  DbVersionMismatchError,
-  type Migration,
-  type UpdateEntity,
-  type CreationEntity
-} from './Store';
+import { DbVersionMismatchError } from './Store';
 import { useSystemStore } from './systemStore';
+import { type TestEntity, TestStore } from './TestStore';
 
-import { useMessageBus } from '../classes/MessageBus';
 import { useLocalStorage } from './LocalStorage/useLocalStorage';
+import { StorageManager, useStorageManager } from './StorageManager';
 
 describe('Store', () => {
   describe('Migration', () => {
     it('should not migrate if store has the latest db version', async () => {
+      const { createTestStore, storageManager } = setupEnvironment();
+
       await createTestStore({
         version: 2
       });
+
+      storageManager.clear();
 
       const { store } = await createTestStore({
         version: 2
@@ -29,9 +27,13 @@ describe('Store', () => {
     });
 
     it('should throw an error if store has an older version', async () => {
+      const { createTestStore, storageManager } = setupEnvironment();
+
       await createTestStore({
         version: 2
       });
+
+      storageManager.clear();
 
       await expect(() => createTestStore({ version: 0 })).rejects.toThrow(
         DbVersionMismatchError
@@ -39,9 +41,13 @@ describe('Store', () => {
     });
 
     it('should migrate if store has a newer version', async () => {
+      const { createTestStore, storageManager } = setupEnvironment();
+
       await createTestStore({
         version: 0
       });
+
+      storageManager.clear();
 
       const { store } = await createTestStore({
         version: 2
@@ -51,6 +57,8 @@ describe('Store', () => {
     });
 
     it('should migrate the entities', async () => {
+      const { createTestStore, storageManager } = setupEnvironment();
+
       await createTestStore({
         version: 0,
         entities: [
@@ -63,6 +71,8 @@ describe('Store', () => {
           }
         ]
       });
+
+      storageManager.clear();
 
       const { store } = await createTestStore({
         version: 1
@@ -87,6 +97,8 @@ describe('Store', () => {
 
   describe('createdAt & changedAt', () => {
     it('should add the createdAt timestamp for new entities', async () => {
+      const { createTestStore } = setupEnvironment();
+
       const { store } = await createTestStore({ version: 0 });
 
       const id = await store.create({
@@ -104,6 +116,8 @@ describe('Store', () => {
     });
 
     it('should update the changedAt timestamp if an entity is updated', async () => {
+      const { createTestStore } = setupEnvironment();
+
       const { store } = await createTestStore({
         version: 0,
         entities: [
@@ -146,76 +160,41 @@ describe('Store', () => {
     const localStorage = await useLocalStorage('test');
     await localStorage.clear();
 
+    const storageManager = useStorageManager();
+    storageManager.clear();
+
     clock?.restore();
   });
 
-  async function createTestStore({
-    version,
-    entities
-  }: {
-    version: number;
-    entities?: Array<Partial<TestEntity>>;
-  }): Promise<{ store: TestStore }> {
-    const messageBus = useMessageBus();
-    messageBus.reset();
-
-    if (entities) {
-      const localStorage = await useLocalStorage('test');
-      for (const entity of entities) {
-        await localStorage.setItem(entity.id, entity);
-      }
-    }
-
-    const store = new TestStore({
-      version
-    });
-    await store.awaitReady();
-
+  function setupEnvironment(): {
+    createTestStore: (options: {
+      version: number;
+      entities?: Array<Partial<Omit<TestEntity, 'id'>> & { id: string }>;
+    }) => Promise<{ store: TestStore }>;
+    storageManager: StorageManager;
+  } {
     return {
-      store
+      createTestStore: async ({
+        version = 0,
+        entities
+      }): Promise<{ store: TestStore }> => {
+        if (entities) {
+          const localStorage = await useLocalStorage('test');
+          for (const entity of entities) {
+            await localStorage.setItem(entity.id, entity);
+          }
+        }
+
+        const store = new TestStore({
+          version
+        });
+        await store.awaitReady();
+
+        return {
+          store
+        };
+      },
+      storageManager: useStorageManager()
     };
   }
 });
-
-class TestStore extends Store<'test', TestEntity> {
-  public migrationSpy;
-
-  constructor(options: { version: number }) {
-    const migrationSpy = sinon.spy<Migration<TestEntity>>((entities) => {
-      return entities.map((entity) => {
-        return {
-          id: entity.id,
-          testValue: entity.testValue ?? 'test',
-          createdAt: entity.createdAt ?? Date.now(),
-          updatedAt: entity.updatedAt ?? Date.now()
-        };
-      });
-    });
-
-    super({
-      tableName: 'test',
-      migrationConfig: {
-        version: options.version,
-        migrationFunction: migrationSpy
-      }
-    });
-
-    this.migrationSpy = migrationSpy;
-  }
-
-  public async awaitReady(): Promise<void> {
-    return this.initializePromise;
-  }
-
-  public async create(item: CreationEntity<TestEntity>): Promise<string> {
-    return await this._create(item);
-  }
-
-  public async update(item: UpdateEntity<TestEntity>): Promise<void> {
-    await this._update(item);
-  }
-}
-
-type TestEntity = Entity & {
-  testValue: string;
-};
