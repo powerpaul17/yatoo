@@ -5,6 +5,7 @@
       class="mb-1 mr-1 last:mr-0"
       :key="label.id"
       :label-id="label.id"
+      :compact="compact"
     />
   </div>
 </template>
@@ -20,6 +21,10 @@
     labels: {
       type: Array as PropType<Array<Label>>,
       required: true
+    },
+    compact: {
+      type: Boolean,
+      default: false
     }
   });
 </script>
