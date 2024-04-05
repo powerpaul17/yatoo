@@ -37,9 +37,18 @@
 
         <div
           v-if="!!labels.length"
-          class="mt-1"
+          class="mt-1 flex"
         >
-          <LabelList :labels="labels" />
+          <LabelList
+            class="mr-1 last:mr-0"
+            :labels="labels.filter((l) => l.id === route.params.labelId)"
+            :compact="true"
+          />
+          <LabelList
+            class="mr-1 last:mr-0"
+            :labels="labels.filter((l) => l.id !== route.params.labelId)"
+            :compact="false"
+          />
         </div>
       </div>
       <div class="shrink-0">
