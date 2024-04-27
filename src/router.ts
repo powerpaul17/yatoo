@@ -3,7 +3,7 @@ import { createRouter, createWebHashHistory } from 'vue-router';
 import TodoView from './views/TodoView.vue';
 
 import TodoSidebar from './components/todos/TodoSidebar.vue';
-import LabelItem from './components/labels/LabelItem.vue';
+import FilterBar from './components/FilterBar.vue';
 
 export default createRouter({
   history: createWebHashHistory(),
@@ -19,34 +19,15 @@ export default createRouter({
       name: 'todos',
       components: {
         default: TodoView,
-        sidebar: TodoSidebar
+        sidebar: TodoSidebar,
+        topNavigation: FilterBar
       },
       meta: {
         titleTk: 'routes.todos'
       },
       props: {
-        sidebar: (route) => ({
-          todoId: route.query.todoId
-        })
-      }
-    },
-    {
-      path: '/label/:labelId',
-      name: 'label',
-      components: {
-        default: TodoView,
-        sidebar: TodoSidebar,
-        topNavigation: LabelItem
-      },
-      meta: {
-        titleTk: 'routes.label'
-      },
-      props: {
         sidebar: (route): Record<string, any> => ({
           todoId: route.query.todoId
-        }),
-        topNavigation: (route): Record<string, any> => ({
-          labelId: route.params.labelId
         })
       }
     }
@@ -68,9 +49,7 @@ export default createRouter({
 });
 
 declare module 'vue-router' {
-
   interface RouteMeta {
     titleTk: string;
   }
-
 }
