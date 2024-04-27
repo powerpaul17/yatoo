@@ -16,6 +16,12 @@
         "title": "Select labels"
       }
     },
+    "FilterBar": {
+      "labelFilter": "Label",
+      "noAvailableFilters": "No available filters...",
+      "placeholder": "Add filters...",
+      "textFilter": "Text"
+    },
     "navigation": {
       "LabelNavigationItem": {
         "deleteLabel": "Delete label \"{labelName}\"",
