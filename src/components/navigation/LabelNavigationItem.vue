@@ -5,9 +5,9 @@
       `(${$t('components.navigation.LabelNavigationItem.noLabelName')})`
     "
     :route="{
-      name: 'label',
-      params: {
-        labelId: label.id
+      name: 'todos',
+      query: {
+        filter_label: label.id
       }
     }"
     :badge-value="numberOfTodos"
