@@ -149,7 +149,7 @@
   async function handleItemSelected(event: ListboxChangeEvent): Promise<void> {
     selectedFilters.value.push(event.value);
     await updateRouteQuery();
-    inputValueDebounced.value = '';
+    inputValue.value = '';
     suggestionsOverlayPanel.value?.hide();
   }
 
