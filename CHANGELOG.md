@@ -2,6 +2,7 @@
 
 - show total number of unfinished todos in navigation badge
 - add github workflows for pull requests
+- add todo filter
 
 ## [0.7.0] - 2024-03-29
 
