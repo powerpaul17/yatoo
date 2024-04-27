@@ -21,12 +21,13 @@
       }
     }
   ],
+  "ignorePatterns": [
+    "src/theme/**/*.js"
+  ],
   "parser": "vue-eslint-parser",
   "parserOptions": {
-    "project": true,
-    "parser": {
-      "ts": "@typescript-eslint/parser"
-    },
+    "parser": "@typescript-eslint/parser",
+    "project": "./tsconfig.json",
     "ecmaVersion": "latest",
     "sourceType": "module",
     "extraFileExtensions": [
