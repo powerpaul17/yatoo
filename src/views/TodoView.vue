@@ -5,38 +5,55 @@
 </template>
 
 <script setup lang="ts">
-  import { computed } from 'vue';
+  import { computed, onMounted, watch } from 'vue';
+  import { useRoute } from 'vue-router';
 
   import { TodoSorter } from '../classes/TodoSorter';
 
-  import { useTodoStore } from '../stores/todoStore';
-  import { useTodoService } from '../services/todoService';
+  import { TodoFilterer, type TodoFilter } from '../classes/TodoFilterer';
+  import { LabelFilter } from '../classes/todoFilters/LabelFilter';
+  import { TextFilter } from '../classes/todoFilters/TextFilter';
 
   import TodoList from '../components/TodoList.vue';
 
-  const todoStore = useTodoStore();
-  const todoService = useTodoService();
+  const todoFilterer = new TodoFilterer();
 
   const todoSorter = new TodoSorter();
 
-  const props = defineProps({
-    labelId: {
-      type: String,
-      default: null
-    }
-  });
+  const route = useRoute();
 
-  const todosOfLabelId = todoService.getTodoRefForLabelId(
-    computed(() => props.labelId)
+  watch(
+    () => route.query,
+    () => {
+      updateFiltersFromRoute();
+    }
   );
 
-  const allTodos = todoStore.getRef({});
-
-  const todos = computed(() => {
-    return props.labelId ? todosOfLabelId.value : allTodos.value;
+  onMounted(() => {
+    updateFiltersFromRoute();
   });
 
+  function updateFiltersFromRoute(): void {
+    const filters: Array<TodoFilter> = [];
+
+    const labelIdQueryParam = route.query.filter_label;
+
+    if (Array.isArray(labelIdQueryParam)) {
+      filters.push(...labelIdQueryParam.map((l) => new LabelFilter(l)));
+    } else if (labelIdQueryParam) {
+      filters.push(new LabelFilter(labelIdQueryParam));
+    }
+
+    const text = route.query.filter_text;
+
+    if (text && !Array.isArray(text)) {
+      filters.push(new TextFilter(text));
+    }
+
+    todoFilterer.setFilters(filters);
+  }
+
   const sortedTodos = computed(() => {
-    return todoSorter.sortTodos(todos.value);
+    return todoSorter.sortTodos(todoFilterer.filteredTodos.value);
   });
 </script>
