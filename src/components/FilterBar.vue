@@ -32,7 +32,7 @@
 
     <input
       class="min-w-0 grow outline-none"
-      v-model="inputValue"
+      v-model.trim="inputValue"
       :placeholder="$t('components.FilterBar.placeholder')"
       @focus="suggestionsOverlayPanel?.show"
     />
@@ -93,6 +93,7 @@
 <script setup lang="ts">
   import { computed, onMounted, ref, watch, type ComputedRef } from 'vue';
   import { useRouter, useRoute } from 'vue-router';
+  import { refDebounced } from '@vueuse/core';
 
   import { ListFilter, X } from 'lucide-vue-next';
 
@@ -117,13 +118,16 @@
   const selectedFilters = ref<Array<Filter>>([]);
 
   const inputValue = ref('');
+  const inputValueDebounced = refDebounced(inputValue);
 
   const suggestedFilters: ComputedRef<Array<Filter>> = computed(() => {
     return [
       ...labels.value
         .filter(
           (l) =>
-            l.name.toLowerCase().includes(inputValue.value.toLowerCase()) &&
+            l.name
+              .toLowerCase()
+              .includes(inputValueDebounced.value.toLowerCase()) &&
             !selectedFilters.value.find(
               (f) => f.type === FilterType.LABEL && f.value === l.id
             )
@@ -152,7 +156,7 @@
   async function handleItemSelected(event: ListboxChangeEvent): Promise<void> {
     selectedFilters.value.push(event.value);
     await updateRouteQuery();
-    inputValue.value = '';
+    inputValueDebounced.value = '';
     suggestionsOverlayPanel.value?.hide();
   }
 
@@ -190,7 +194,7 @@
     });
   }
 
-  watch(inputValue, async () => {
+  watch(inputValueDebounced, async () => {
     await updateTextFilterQuery();
   });
 
@@ -198,7 +202,10 @@
     await router.push({
       query: {
         ...route.query,
-        filter_text: inputValue.value !== '' ? inputValue.value : undefined
+        filter_text:
+          inputValueDebounced.value !== ''
+            ? inputValueDebounced.value
+            : undefined
       }
     });
   }
@@ -243,7 +250,7 @@
     const text = route.query.filter_text;
 
     if (text && !Array.isArray(text)) {
-      inputValue.value = text;
+      inputValueDebounced.value = text;
     }
   }
 </script>
