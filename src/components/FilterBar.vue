@@ -1,11 +1,11 @@
 <template>
   <div
-    class="flex grow rounded-md border border-surface-300 p-2 transition-colors duration-200 focus-within:outline-none focus-within:outline-offset-0 focus-within:ring focus-within:ring-primary-500/50 hover:border-primary-500 dark:border-surface-600 dark:focus-within:ring-primary-400/50 dark:hover:border-primary-400"
+    class="flex min-w-0 grow rounded-md border border-surface-300 p-2 transition-colors duration-200 focus-within:outline-none focus-within:outline-offset-0 focus-within:ring focus-within:ring-primary-500/50 hover:border-primary-500 dark:border-surface-600 dark:focus-within:ring-primary-400/50 dark:hover:border-primary-400"
   >
     <div
       v-for="(filter, index) of selectedFilters"
       :key="index"
-      class="mr-2 flex items-center"
+      class="mr-2 flex shrink-0 items-center"
     >
       <LabelItem
         v-if="filter.type === FilterType.LABEL"
@@ -24,14 +24,14 @@
 
       <X
         v-if="filter.type !== FilterType.TEXT"
-        class="ml-1 cursor-pointer"
+        class="ml-1 shrink-0 cursor-pointer"
         @click="handleItemRemoved(index)"
         :size="18"
       ></X>
     </div>
 
     <input
-      class="grow outline-none"
+      class="min-w-0 grow outline-none"
       v-model="inputValue"
       :placeholder="$t('components.FilterBar.placeholder')"
       @focus="suggestionsOverlayPanel?.show"
