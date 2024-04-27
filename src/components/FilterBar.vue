@@ -68,12 +68,6 @@
       </template>
     </Listbox>
   </OverlayPanel>
-
-  <IconButton>
-    <template #icon>
-      <ListFilter />
-    </template>
-  </IconButton>
 </template>
 
 <script lang="ts">
@@ -95,12 +89,11 @@
   import { useRouter, useRoute } from 'vue-router';
   import { refDebounced } from '@vueuse/core';
 
-  import { ListFilter, X } from 'lucide-vue-next';
+  import { X } from 'lucide-vue-next';
 
   import OverlayPanel from 'primevue/overlaypanel';
   import Listbox, { type ListboxChangeEvent } from 'primevue/listbox';
 
-  import IconButton from './IconButton.vue';
   import LabelItem from './labels/LabelItem.vue';
 
   import { useLabelStore } from '../stores/labelStore';
