@@ -70,23 +70,8 @@
   </OverlayPanel>
 </template>
 
-<script lang="ts">
-  export enum FilterType {
-    LABEL = 'label',
-    TEXT = 'text'
-  }
-
-  type Filter = {
-    type: FilterType;
-    labelTk: string;
-    value: string;
-    valueLabel?: string;
-  };
-</script>
-
 <script setup lang="ts">
-  import { computed, onMounted, ref, watch, type ComputedRef } from 'vue';
-  import { useRouter, useRoute } from 'vue-router';
+  import { computed, ref, watch, type ComputedRef, type PropType } from 'vue';
   import { refDebounced } from '@vueuse/core';
 
   import { X } from 'lucide-vue-next';
@@ -98,20 +83,47 @@
 
   import { useLabelStore } from '../stores/labelStore';
 
-  import type { LocationQueryValue } from 'vue-router';
-
-  const router = useRouter();
-  const route = useRoute();
+  import { FilterType, type Filter } from '../classes/TodoFilterer';
 
   const labelStore = useLabelStore();
   const labels = labelStore.getRef({});
 
   const suggestionsOverlayPanel = ref<OverlayPanel>();
 
+  const props = defineProps({
+    text: {
+      type: String,
+      default: ''
+    },
+    filters: {
+      type: Array as PropType<Array<Filter>>,
+      required: true
+    }
+  });
+
+  watch(
+    () => props.filters,
+    () => {
+      selectedFilters.value = props.filters;
+    }
+  );
+
+  watch(
+    () => props.text,
+    () => {
+      inputValue.value = props.text;
+    }
+  );
+
   const selectedFilters = ref<Array<Filter>>([]);
 
   const inputValue = ref('');
   const inputValueDebounced = refDebounced(inputValue);
+
+  const emit = defineEmits<{
+    (evnet: 'textChanged', text: string): void;
+    (event: 'filterChanged', filter: Array<Filter>): void;
+  }>();
 
   const suggestedFilters: ComputedRef<Array<Filter>> = computed(() => {
     return [
@@ -146,104 +158,25 @@
     }
   };
 
-  async function handleItemSelected(event: ListboxChangeEvent): Promise<void> {
+  function handleItemSelected(event: ListboxChangeEvent): void {
     selectedFilters.value.push(event.value);
-    await updateRouteQuery();
+
+    emit('filterChanged', selectedFilters.value);
+
     inputValue.value = '';
     suggestionsOverlayPanel.value?.hide();
   }
 
-  async function handleItemRemoved(index: number): Promise<void> {
+  function handleItemRemoved(index: number): void {
     selectedFilters.value.splice(index, 1);
-
-    // TODO make this more performant
-    await updateRouteQuery();
-    await updateTextFilterQuery();
+    emitFilterChanged();
   }
 
-  async function updateRouteQuery(): Promise<void> {
-    const queryParams: Record<
-      string,
-      LocationQueryValue | Array<LocationQueryValue>
-    > = {};
-
-    for (const [key, value] of Object.entries(route.query)) {
-      if (key.startsWith('filter_')) continue;
-      queryParams[key] = value;
-    }
-
-    for (const filter of selectedFilters.value) {
-      const key = `filter_${filter.type}`;
-
-      if (queryParams[key]) {
-        queryParams[key] = [queryParams[key], filter.value];
-      } else {
-        queryParams[key] = filter.value;
-      }
-    }
-
-    await router.push({
-      query: queryParams
-    });
-  }
-
-  watch(inputValueDebounced, async () => {
-    await updateTextFilterQuery();
+  watch(inputValueDebounced, () => {
+    emit('textChanged', inputValueDebounced.value);
   });
 
-  async function updateTextFilterQuery(): Promise<void> {
-    await router.push({
-      query: {
-        ...route.query,
-        filter_text:
-          inputValueDebounced.value !== ''
-            ? inputValueDebounced.value
-            : undefined
-      }
-    });
-  }
-
-  watch(
-    () => route.query,
-    () => {
-      void updateFiltersFromRoute();
-    }
-  );
-
-  onMounted(() => {
-    void updateFiltersFromRoute();
-  });
-
-  async function updateFiltersFromRoute(): Promise<void> {
-    selectedFilters.value = [];
-
-    const labelIdQueryParam = route.query.filter_label;
-
-    const labelFilters = [];
-
-    if (Array.isArray(labelIdQueryParam)) {
-      labelFilters.push(...labelIdQueryParam);
-    } else if (labelIdQueryParam) {
-      labelFilters.push(labelIdQueryParam);
-    }
-
-    for (const labelFilterId of labelFilters) {
-      if (!labelFilterId) continue;
-
-      const label = await labelStore.getById(labelFilterId);
-      if (!label) throw new Error('label not found!');
-
-      selectedFilters.value.push({
-        ...availableFilters.label,
-        value: label.id,
-        valueLabel: label.name
-      });
-    }
-
-    const text = route.query.filter_text;
-
-    if (text && !Array.isArray(text)) {
-      inputValueDebounced.value = text;
-    }
+  function emitFilterChanged(): void {
+    emit('filterChanged', selectedFilters.value);
   }
 </script>
