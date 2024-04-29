@@ -18,13 +18,13 @@
   import { TodoSorter } from '../classes/TodoSorter';
 
   import { useLabelStore } from '../stores/labelStore';
-
   import {
     FilterType,
-    TodoFilterer,
-    type Filter,
-    type TodoFilter
-  } from '../classes/TodoFilterer';
+    useTodoFilterStore,
+    type Filter
+  } from '../stores/todoFilterStore';
+
+  import { TodoFilterer, type TodoFilter } from '../classes/TodoFilterer';
   import { LabelFilter } from '../classes/todoFilters/LabelFilter';
   import { TextFilter } from '../classes/todoFilters/TextFilter';
 
@@ -123,9 +123,7 @@
 
       selectedFilters.value.push({
         type: FilterType.LABEL,
-        labelTk: '',
-        value: label.id,
-        valueLabel: label.name
+        value: label.id
       });
     }
 

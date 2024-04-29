@@ -12,16 +12,6 @@
         :label-id="filter.value"
       ></LabelItem>
 
-      <div
-        v-else-if="filter.type !== FilterType.TEXT"
-        class="border-1 flex rounded-md border"
-      >
-        <div class="border-r bg-slate-100 p-1">{{ $t(filter.labelTk) }}</div>
-        <div class="p-1">{{ filter.valueLabel ?? filter.value }}</div>
-      </div>
-
-      <!-- <span v-else>{{ filter.value }}</span> -->
-
       <X
         v-if="filter.type !== FilterType.TEXT"
         class="ml-1 shrink-0 cursor-pointer"
@@ -82,8 +72,7 @@
   import LabelItem from './labels/LabelItem.vue';
 
   import { useLabelStore } from '../stores/labelStore';
-
-  import { FilterType, type Filter } from '../classes/TodoFilterer';
+  import { FilterType, type Filter } from '../stores/todoFilterStore';
 
   const labelStore = useLabelStore();
   const labels = labelStore.getRef({});
@@ -145,7 +134,7 @@
     ];
   });
 
-  const availableFilters: Record<FilterType, Filter> = {
+  const availableFilters: Record<FilterType, Filter & { labelTk: string }> = {
     label: {
       type: FilterType.LABEL,
       labelTk: 'components.FilterBar.labelFilter',

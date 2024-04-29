@@ -45,15 +45,3 @@ export interface TodoFilter {
   adaptQuery(query: Query<Todo, 'id'>): void;
   filterResults(todos: Array<Todo>): Array<Todo>;
 }
-
-export enum FilterType {
-  LABEL = 'label',
-  TEXT = 'text'
-}
-
-export type Filter = {
-  type: FilterType;
-  labelTk: string;
-  value: string;
-  valueLabel?: string;
-};
