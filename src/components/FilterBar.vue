@@ -73,6 +73,7 @@
 
   import { useLabelStore } from '../stores/labelStore';
   import { FilterType, type Filter } from '../stores/todoFilterStore';
+  import { onMounted } from 'vue';
 
   const labelStore = useLabelStore();
   const labels = labelStore.getRef({});
@@ -80,10 +81,6 @@
   const suggestionsOverlayPanel = ref<OverlayPanel>();
 
   const props = defineProps({
-    text: {
-      type: String,
-      default: ''
-    },
     filters: {
       type: Array as PropType<Array<Filter>>,
       required: true
@@ -93,24 +90,32 @@
   watch(
     () => props.filters,
     () => {
-      selectedFilters.value = props.filters;
+      updateValuesFromProps();
     }
   );
 
-  watch(
-    () => props.text,
-    () => {
-      inputValue.value = props.text;
-    }
-  );
+  onMounted(() => {
+    updateValuesFromProps();
+  });
+
+  function updateValuesFromProps(): void {
+    selectedFilters.value = props.filters;
+  }
 
   const selectedFilters = ref<Array<Filter>>([]);
+
+  const selectedTextFilter = computed(() => {
+    return selectedFilters.value.find((f) => f.type === FilterType.TEXT);
+  });
+
+  watch(selectedTextFilter, () => {
+    inputValue.value = selectedTextFilter.value?.value ?? '';
+  });
 
   const inputValue = ref('');
   const inputValueDebounced = refDebounced(inputValue);
 
   const emit = defineEmits<{
-    (evnet: 'textChanged', text: string): void;
     (event: 'filterChanged', filter: Array<Filter>): void;
   }>();
 
@@ -162,7 +167,15 @@
   }
 
   watch(inputValueDebounced, () => {
-    emit('textChanged', inputValueDebounced.value);
+    if (selectedTextFilter.value) {
+      selectedTextFilter.value.value = inputValueDebounced.value;
+    } else {
+      selectedFilters.value.push({
+        type: FilterType.TEXT,
+        value: inputValueDebounced.value
+      });
+    }
+    emitFilterChanged();
   });
 
   function emitFilterChanged(): void {

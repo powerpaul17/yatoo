@@ -1,9 +1,7 @@
 <template>
   <div class="my-2">
     <FilterBar
-      :text="filterText"
       :filters="selectedFilters"
-      @text-changed="handleTextChanged"
       @filter-changed="handleFilterChanged"
     ></FilterBar>
 
@@ -40,7 +38,6 @@
 
   const labelStore = useLabelStore();
 
-  const filterText = ref('');
   const selectedFilters = ref<Array<Filter>>([]);
 
   watch(
@@ -75,10 +72,6 @@
       }
     }
 
-    if (filterText.value !== '') {
-      queryParams['filter_text'] = filterText.value;
-    }
-
     await router.push({
       query: queryParams
     });
@@ -90,14 +83,13 @@
         case FilterType.LABEL:
           return new LabelFilter(filter.value);
 
+        case FilterType.TEXT:
+          return new TextFilter(filter.value);
+
         default:
           throw new Error('unknown filter type');
       }
     });
-
-    if (filterText.value !== '') {
-      filters.push(new TextFilter(filterText.value));
-    }
 
     todoFilterer.setFilters(filters);
   }
@@ -130,16 +122,13 @@
     const text = route.query.filter_text;
 
     if (text && !Array.isArray(text)) {
-      filterText.value = text;
+      selectedFilters.value.push({
+        type: FilterType.TEXT,
+        value: text
+      });
     }
 
     updateTodoFiltererFilters();
-  }
-
-  async function handleTextChanged(text: string): Promise<void> {
-    filterText.value = text;
-    updateTodoFiltererFilters();
-    await updateRouteQuery();
   }
 
   async function handleFilterChanged(filters: Array<Filter>): Promise<void> {
