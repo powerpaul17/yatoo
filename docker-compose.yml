@@ -1,0 +1,4 @@
+services:
+  yatoo:
+    build: .
+    pull_policy: build
