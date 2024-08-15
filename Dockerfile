@@ -1,7 +1,5 @@
 FROM node:20-alpine AS build
 
-ARG COMMIT_HASH
-
 WORKDIR /build
 COPY . .
 RUN npm ci && \

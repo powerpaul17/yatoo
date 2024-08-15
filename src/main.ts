@@ -47,4 +47,7 @@ app.use(router);
 declare const COMMIT_HASH: string;
 app.provide('COMMIT_HASH', COMMIT_HASH);
 
+declare const VERSION: string;
+app.provide('VERSION', VERSION);
+
 app.mount('#app');

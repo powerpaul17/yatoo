@@ -1,9 +1,9 @@
 const path = require('path');
 
-const {VueLoaderPlugin} = require('vue-loader')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
+const { VueLoaderPlugin } = require('vue-loader');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const DefinePlugin = require('webpack').DefinePlugin
+const DefinePlugin = require('webpack').DefinePlugin;
 
 const devMode = process.env.NODE_ENV !== 'production';
 
@@ -37,12 +37,12 @@ module.exports = {
           devMode ? 'style-loader' : MiniCssExtractPlugin.loader,
           'css-loader',
           'postcss-loader'
-        ],
+        ]
       }
     ]
   },
   resolve: {
-    extensions: [ '.ts', '.js']
+    extensions: ['.ts', '.js']
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -56,9 +56,10 @@ module.exports = {
     ...(devMode ? [] : [new MiniCssExtractPlugin()]),
     new DefinePlugin({
       COMMIT_HASH: JSON.stringify(process.env.COMMIT_HASH),
+      VERSION: JSON.stringify(process.env.VERSION),
       'process.env.TEST': JSON.stringify(process.env.TEST),
       __VUE_OPTIONS_API__: true,
       __VUE_PROD_DEVTOOLS__: false
     })
   ]
-}
+};
