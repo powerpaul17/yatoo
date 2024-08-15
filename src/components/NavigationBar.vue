@@ -59,12 +59,14 @@
       <div class="p-2">
         <DarkModeSwitcher />
       </div>
+
+      <div class="text-center text-xs">{{ VERSION }} - {{ COMMIT_HASH }}</div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-  import { computed } from 'vue';
+  import { computed, inject } from 'vue';
 
   import { CheckCheck, Plus, Tags } from 'lucide-vue-next';
 
@@ -110,4 +112,7 @@
   async function handleDeleteLabel(labelId: string): Promise<void> {
     await labelStore.removeById(labelId);
   }
+
+  const VERSION = inject('VERSION');
+  const COMMIT_HASH = inject('COMMIT_HASH');
 </script>
