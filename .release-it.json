@@ -6,7 +6,7 @@
       "cd electron && npm i"
     ],
     "before:github:release": [
-      "COMMIT_HASH=`git rev-parse --short HEAD` npm run build-prod",
+      "npm run build-prod",
       "npm run capacitor-sync",
       "npm run build-android",
       "git push --follow-tags"

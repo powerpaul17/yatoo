@@ -3,8 +3,9 @@
   "version": "0.8.0",
   "description": "Organize your life!",
   "scripts": {
-    "build-dev": "webpack",
-    "build-prod": "NODE_ENV=production webpack",
+    "build": "COMMIT_HASH=`git rev-parse --short HEAD` webpack",
+    "build-dev": "npm run build",
+    "build-prod": "NODE_ENV=production npm run build",
     "test": "TEST=true vitest",
     "ci:test": "npm run test -- --run",
     "lint": "eslint ./src",
