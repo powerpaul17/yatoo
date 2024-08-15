@@ -1,6 +1,6 @@
 /dist
 
-/.git
+# /.git
 /node_modules
 
 /android
