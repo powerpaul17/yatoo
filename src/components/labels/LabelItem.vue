@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-  import { watch, ref, onMounted } from 'vue';
+  import { ref, computed } from 'vue';
 
   import { Tag } from 'lucide-vue-next';
 
@@ -56,20 +56,17 @@
     }
   });
 
-  const label = ref<Label | null>(null);
-
-  watch(
-    () => props.labelId,
-    async () => {
-      await updateLabel();
-    }
-  );
-
-  onMounted(async () => {
-    await updateLabel();
+  const labelQuery = computed(() => {
+    return {
+      where: {
+        id: props.labelId
+      }
+    };
   });
 
-  async function updateLabel(): Promise<void> {
-    label.value = await labelStore.getById(props.labelId);
-  }
+  const label = ref<Label | null>(null);
+
+  labelStore.watchForComputedQuery(labelQuery, (labels) => {
+    label.value = labels[0] ?? null;
+  });
 </script>
