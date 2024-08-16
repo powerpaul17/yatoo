@@ -30,6 +30,7 @@
   },
   "license": "AGPL-3.0-or-later",
   "dependencies": {
+    "@primevue/themes": "^4.0.4",
     "@vueuse/components": "^10.2.1",
     "@vueuse/core": "^10.2.1",
     "blinkdb": "^0.14.0",
