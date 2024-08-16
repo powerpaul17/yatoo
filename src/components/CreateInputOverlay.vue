@@ -16,11 +16,11 @@
       <div class="m-3">
         <InputGroup class="w-full">
           <InputText
-            ref="creationStringInputElement"
             type="text"
             class="w-full"
             v-model="creationString"
             @keypress.enter="handleEnterPressed"
+            autofocus
           />
           <Button
             :disabled="!isValidInput"
@@ -54,8 +54,6 @@
 
   const todoStore = useTodoStore();
   const labelToTodoStore = useLabelToTodoStore();
-
-  const creationStringInputElement = ref(null);
 
   const props = defineProps({
     open: {
