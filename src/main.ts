@@ -4,7 +4,9 @@ import { createApp, h, Suspense } from 'vue';
 import { createI18n } from 'vue-i18n';
 
 import PrimeVue from 'primevue/config';
-import lara from './theme';
+
+import { definePreset } from '@primevue/themes';
+import Lara from '@primevue/themes/lara';
 
 import en from '../i18n/en.json';
 
@@ -24,9 +26,36 @@ const app = createApp({
   }
 });
 
+const yatooThemePreset = definePreset(Lara, {
+  semantic: {
+    primary: {
+      50: '{sky.50}',
+      100: '{sky.100}',
+      200: '{sky.200}',
+      300: '{sky.300}',
+      400: '{sky.400}',
+      500: '{sky.500}',
+      600: '{sky.600}',
+      700: '{sky.700}',
+      800: '{sky.800}',
+      900: '{sky.900}',
+      950: '{sky.950}'
+    }
+  }
+});
+
 app.use(PrimeVue, {
-  unstyled: true,
-  pt: lara
+  theme: {
+    preset: yatooThemePreset,
+    options: {
+      prefix: 'p',
+      darkModeSelector: 'system',
+      cssLayer: {
+        name: 'primevue',
+        order: 'tailwind-base, primevue, tailwind-utilities'
+      }
+    }
+  }
 });
 
 type MessageSchema = typeof en;
