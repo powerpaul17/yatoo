@@ -48,7 +48,7 @@
 
     <template #actions>
       <Button
-        severity="warning"
+        severity="warn"
         :label="$t('components.dialogs.LabelEditDialog.delete')"
         @click="emit('delete')"
       >

@@ -23,7 +23,7 @@
           <div class="grow" />
 
           <IconButton
-            severity="warning"
+            severity="warn"
             @click="handleDelete()"
           >
             <template #icon>

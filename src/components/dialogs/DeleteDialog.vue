@@ -10,7 +10,7 @@
 
     <template #actions>
       <Button
-        severity="warning"
+        severity="warn"
         :label="$t('delete')"
         @click="
           () => {
