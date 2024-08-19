@@ -11,7 +11,7 @@
     <template #actions>
       <Button
         severity="warn"
-        :label="$t('delete')"
+        :label="$t('components.dialogs.DeleteDialog.delete')"
         @click="
           () => {
             emit('delete');
@@ -25,7 +25,7 @@
       </Button>
 
       <Button
-        :label="$t('cancel')"
+        :label="$t('components.dialogs.DeleteDialog.cancel')"
         @click="emit('close')"
       >
         <template #icon="{ class: cls }">
