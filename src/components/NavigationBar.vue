@@ -60,7 +60,9 @@
         <DarkModeSwitcher />
       </div>
 
-      <div class="text-center text-xs">{{ VERSION }} - {{ COMMIT_HASH }}</div>
+      <div class="absolute bottom-0 w-full text-center text-xs">
+        {{ VERSION }} - {{ COMMIT_HASH }}
+      </div>
     </div>
   </div>
 </template>
