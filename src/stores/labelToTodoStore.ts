@@ -1,4 +1,4 @@
-import { computed, type Ref } from 'vue';
+import { computed, type ComputedRef, type Ref } from 'vue';
 
 import { useSingleInstance } from '../classes/useSingleInstance';
 import { Store, type CreationEntity, type Entity } from './Store';
@@ -37,7 +37,9 @@ class LabelToTodoStore extends Store<'label_to_todos', LabelToTodo> {
     });
   }
 
-  public getRefForComputedTodoId(todoId: Ref<string>): Ref<Array<LabelToTodo>> {
+  public getRefForComputedTodoId(
+    todoId: Ref<string>
+  ): ComputedRef<Array<LabelToTodo>> {
     return this._getRefForComputedQuery(
       computed(() => ({
         where: {
@@ -49,7 +51,7 @@ class LabelToTodoStore extends Store<'label_to_todos', LabelToTodo> {
 
   public getRefForComputedLabelId(
     labelId: Ref<string>
-  ): Ref<Array<LabelToTodo>> {
+  ): ComputedRef<Array<LabelToTodo>> {
     return this._getRefForComputedQuery(
       computed(() => ({
         where: {
@@ -59,7 +61,7 @@ class LabelToTodoStore extends Store<'label_to_todos', LabelToTodo> {
     );
   }
 
-  public countRefForLabelId(labelId: string): Ref<number> {
+  public countRefForLabelId(labelId: string): ComputedRef<number> {
     return this._countRef({
       where: {
         labelId

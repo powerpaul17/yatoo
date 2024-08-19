@@ -44,15 +44,15 @@ class TodoStore extends Store<'todos', Todo> {
 
   public getRefForComputedQuery(
     computedQuery: ComputedRef<Query<Todo, 'id'>>
-  ): Ref<Array<Todo>> {
+  ): ComputedRef<Array<Todo>> {
     return this._getRefForComputedQuery(computedQuery);
   }
 
-  public getRef(query: Query<Todo, 'id'>): Ref<Array<Todo>> {
+  public getRef(query: Query<Todo, 'id'>): ComputedRef<Array<Todo>> {
     return this._getRef(query);
   }
 
-  public countRef(query: Query<Todo, 'id'>): Ref<number> {
+  public countRef(query: Query<Todo, 'id'>): ComputedRef<number> {
     return this._countRef(query);
   }
 

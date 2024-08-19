@@ -8,7 +8,6 @@ import {
   ref,
   watch as vueWatch,
   type ComputedRef,
-  type Ref,
   computed
 } from 'vue';
 
@@ -110,24 +109,28 @@ export class Store<
 
   protected _getRefForComputedQuery(
     computedQuery: ComputedRef<Query<TEntity, 'id'>>
-  ): Ref<Array<TEntity>> {
-    return effectScope().run(() => {
+  ): ComputedRef<Array<TEntity>> {
+    const returnValue = effectScope().run(() => {
       const reference = ref<Array<TEntity>>([]);
 
       this._watchForComputedQuery(computedQuery, (entities) => {
         reference.value = entities;
       });
 
-      return reference;
+      return computed(() => reference.value);
     });
+
+    if (!returnValue) throw new Error('no value to return');
+
+    return returnValue;
   }
 
-  protected _getRef(query: Query<TEntity, 'id'>): Ref<Array<TEntity>> {
+  protected _getRef(query: Query<TEntity, 'id'>): ComputedRef<Array<TEntity>> {
     return this._getRefForComputedQuery(computed(() => query));
   }
 
-  protected _countRef(query: Query<TEntity, 'id'>): Ref<number> {
-    return effectScope().run(() => {
+  protected _countRef(query: Query<TEntity, 'id'>): ComputedRef<number> {
+    const returnValue = effectScope().run(() => {
       const num = ref(0);
 
       this._watchForComputedQuery(
@@ -137,8 +140,12 @@ export class Store<
         }
       );
 
-      return num;
+      return computed(() => num.value);
     });
+
+    if (!returnValue) throw new Error('no value to return');
+
+    return returnValue;
   }
 
   protected async _one(query: Query<TEntity, 'id'>): Promise<TEntity> {

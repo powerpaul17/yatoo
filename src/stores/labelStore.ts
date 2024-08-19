@@ -58,7 +58,7 @@ class LabelStore extends Store<'labels', InternalLabel> {
     });
   }
 
-  public getRef(query: Query<Label, 'id'>): Ref<Array<Label>> {
+  public getRef(query: Query<Label, 'id'>): ComputedRef<Array<Label>> {
     return this._getRef(query);
   }
 

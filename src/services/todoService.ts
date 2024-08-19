@@ -1,4 +1,4 @@
-import { type Ref, effectScope, ref, computed } from 'vue';
+import { type Ref, effectScope, ref, computed, type ComputedRef } from 'vue';
 
 import { useSingleInstance } from '../classes/useSingleInstance';
 import { useLabelToTodoStore } from '../stores/labelToTodoStore';
@@ -13,8 +13,8 @@ class TodoService {
   private labelToTodoStore = useLabelToTodoStore();
   private todoStore = useTodoStore();
 
-  public getTodoRefForLabelId(labelId: Ref<string>): Ref<Array<Todo>> {
-    return effectScope().run(() => {
+  public getTodoRefForLabelId(labelId: Ref<string>): ComputedRef<Array<Todo>> {
+    const returnValue = effectScope().run(() => {
       const todos = ref<Array<Todo>>([]);
 
       const labelToTodos =
@@ -33,7 +33,11 @@ class TodoService {
         }
       );
 
-      return todos;
+      return computed(() => todos.value);
     });
+
+    if (!returnValue) throw new Error('no value to return');
+
+    return returnValue;
   }
 }
