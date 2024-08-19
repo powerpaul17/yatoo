@@ -1,5 +1,7 @@
 FROM node:20-alpine AS build
 
+ARG COMMIT_HASH
+
 RUN apk add git
 
 WORKDIR /build
