@@ -40,11 +40,7 @@
 
   <OverlayPanel
     ref="suggestionsOverlayPanel"
-    :pt="{
-      content: {
-        class: '!p-0'
-      }
-    }"
+    pt:content="!p-0"
     :pt-options="{ mergeProps: true }"
   >
     <Listbox

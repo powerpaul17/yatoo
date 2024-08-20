@@ -19,16 +19,9 @@
         <InputGroup>
           <InputGroupAddon class="basis-0 !p-0">
             <ColorPicker
-              class="rounded-[inherit]"
               v-model="color"
-              :pt="{
-                root: {
-                  class: 'h-full'
-                },
-                input: {
-                  class: 'w-full h-full rounded-[inherit] border-0'
-                }
-              }"
+              pt:root="h-full rounded-[inherit]"
+              pt:preview="w-full h-full rounded-[inherit] border-0"
             />
           </InputGroupAddon>
           <InputText

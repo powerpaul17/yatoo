@@ -1,10 +1,6 @@
 <template>
   <Sidebar
-    :pt="{
-      root: {
-        class: 'h-auto max-w-5xl rounded-b-md'
-      }
-    }"
+    pt:root="h-auto max-w-5xl rounded-b-md"
     :pt-options="{
       mergeProps: true
     }"
