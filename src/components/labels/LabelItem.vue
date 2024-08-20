@@ -23,7 +23,7 @@
     />
     <span
       v-if="!compact"
-      class="ml-1"
+      class="ml-1 whitespace-nowrap"
     >
       {{ label.name }}
     </span>
