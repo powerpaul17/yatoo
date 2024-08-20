@@ -1,13 +1,13 @@
 <template>
   <div>
-    <Dropdown
-      class="!w-full"
+    <Select
       v-model="selectedIcon"
       :options="Object.entries(icons)"
       :option-value="([key]) => key"
       :option-label="([key]) => key"
       show-clear
       @change="emit('update:modelValue', selectedIcon)"
+      pt:root="flex w-full"
     >
       <template #value="{ value }">
         <div class="flex">
@@ -28,14 +28,14 @@
           <div>{{ key }}</div>
         </div>
       </template>
-    </Dropdown>
+    </Select>
   </div>
 </template>
 
 <script setup lang="ts">
   import { ref, type PropType, watch } from 'vue';
 
-  import Dropdown from 'primevue/dropdown';
+  import Select from 'primevue/select';
 
   import {
     Archive,
