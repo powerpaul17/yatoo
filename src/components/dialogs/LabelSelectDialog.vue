@@ -33,6 +33,15 @@
         <template #option="{ option: label }">
           <LabelItem :label-id="label.id" />
         </template>
+
+        <template #empty>
+          <div
+            class="cursor-pointer"
+            @click="handleCreateLabel()"
+          >
+            Create label: {{ query }}
+          </div>
+        </template>
       </AutoComplete>
     </template>
 
@@ -139,5 +148,18 @@
         labelId: l.id
       });
     });
+  }
+
+  async function handleCreateLabel(): Promise<void> {
+    const labelId = await labelStore.create({
+      name: query.value,
+      color: '',
+      icon: ''
+    });
+
+    const label = await labelStore.getById(labelId);
+    if (!label) throw new Error('label was not created');
+
+    selectedLabels.value.push(label);
   }
 </script>

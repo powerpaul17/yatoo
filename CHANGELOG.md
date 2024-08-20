@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- allow creation of labels in selection dialog
+
 ## [0.8.0] - 2024-04-27
 
 - show total number of unfinished todos in navigation badge
