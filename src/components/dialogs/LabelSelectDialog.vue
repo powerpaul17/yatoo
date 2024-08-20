@@ -13,6 +13,7 @@
         data-key="id"
         dropdown
         multiple
+        :force-selection="true"
         dropdown-mode="current"
         @dropdown-click="suggestions = suggestions.slice()"
         @complete="(event) => (query = event.query)"
