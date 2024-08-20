@@ -6,7 +6,6 @@
   >
     <template #default>
       <AutoComplete
-        class="w-full"
         v-model="selectedLabels"
         :suggestions="suggestions"
         option-label="name"
@@ -17,14 +16,6 @@
         dropdown-mode="current"
         @dropdown-click="suggestions = suggestions.slice()"
         @complete="(event) => (query = event.query)"
-        :pt="{
-          token: {
-            class: 'bg-transparent p-1'
-          },
-          container: {
-            class: 'w-full'
-          }
-        }"
       >
         <template #chip="{ value: label }">
           <LabelItem :label-id="label.id" />
