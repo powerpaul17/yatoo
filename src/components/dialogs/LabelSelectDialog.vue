@@ -97,7 +97,7 @@
   const selectedLabels = ref<Array<Label>>([]);
 
   watch(savedLabels, () => {
-    selectedLabels.value = savedLabels.value;
+    selectedLabels.value = savedLabels.value.slice();
   });
 
   const availableLabels = labelStore.getRef({});
