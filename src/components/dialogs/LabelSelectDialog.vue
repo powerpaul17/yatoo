@@ -17,8 +17,16 @@
         @dropdown-click="suggestions = suggestions.slice()"
         @complete="(event) => (query = event.query)"
       >
-        <template #chip="{ value: label }">
-          <LabelItem :label-id="label.id" />
+        <template #chip="{ value: label, removeCallback }">
+          <div class="ml-2 flex flex-nowrap items-center">
+            <LabelItem :label-id="label.id" />
+            <XCircleIcon
+              :stroke-width="1.5"
+              :size="20"
+              class="ml-1 cursor-pointer"
+              @click="removeCallback"
+            />
+          </div>
         </template>
 
         <template #option="{ option: label }">
@@ -60,6 +68,8 @@
 
   import Button from 'primevue/button';
   import AutoComplete from 'primevue/autocomplete';
+
+  import { XCircleIcon } from 'lucide-vue-next';
 
   import DialogComponent from './DialogComponent.vue';
   import LabelItem from '../labels/LabelItem.vue';
