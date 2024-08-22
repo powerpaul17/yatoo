@@ -7,18 +7,7 @@
       :key="index"
       class="mr-2 flex shrink-0 items-center"
     >
-      <LabelItem
-        v-if="filter.type === FilterType.LABEL"
-        :label-id="filter.value"
-      ></LabelItem>
-
-      <div
-        v-else-if="filter.type !== FilterType.TEXT"
-        class="border-1 flex rounded-md border"
-      >
-        <div class="border-r bg-slate-100 p-1">{{ $t(filter.labelTk) }}</div>
-        <div class="p-1">{{ filter.valueLabel ?? filter.value }}</div>
-      </div>
+      <component :is="getComponentForFilter(filter)" />
 
       <!-- <span v-else>{{ filter.value }}</span> -->
 
@@ -49,18 +38,7 @@
       @change="handleItemSelected"
     >
       <template #option="{ option }">
-        <LabelItem
-          v-if="option.type === FilterType.LABEL"
-          :label-id="option.value"
-        ></LabelItem>
-
-        <div
-          v-else-if="option.type !== FilterType.TEXT"
-          class="border-1 flex rounded-md border"
-        >
-          <div class="border-r bg-slate-100 p-1">{{ $t(option.labelTk) }}</div>
-          <div class="p-1">{{ option.valueLabel ?? option.value }}</div>
-        </div>
+        <component :is="getComponentForFilter(option)" />
       </template>
     </Listbox>
   </OverlayPanel>
@@ -81,9 +59,18 @@
 </script>
 
 <script setup lang="ts">
-  import { computed, onMounted, ref, watch, type ComputedRef } from 'vue';
+  import {
+    computed,
+    h,
+    onMounted,
+    ref,
+    watch,
+    type Component,
+    type ComputedRef
+  } from 'vue';
   import { useRouter, useRoute } from 'vue-router';
   import { refDebounced } from '@vueuse/core';
+  import { useI18n } from 'vue-i18n';
 
   import { X } from 'lucide-vue-next';
 
@@ -98,6 +85,8 @@
 
   const router = useRouter();
   const route = useRoute();
+
+  const { t } = useI18n();
 
   const labelStore = useLabelStore();
   const labels = labelStore.getRef({});
@@ -240,6 +229,21 @@
 
     if (text && !Array.isArray(text)) {
       inputValueDebounced.value = text;
+    }
+  }
+
+  function getComponentForFilter(filter: Filter): Component {
+    switch (filter.type) {
+      case FilterType.LABEL:
+        return h(LabelItem, { labelId: filter.value });
+
+      case FilterType.TEXT:
+
+      default:
+        return h('div', { class: 'border-1 flex rounded-md border' }, [
+          h('div', { class: 'border-r bg-slate-100 p-1' }, [t(filter.labelTk)]),
+          h('div', { class: 'p-1' }, [filter.valueLabel ?? filter.value])
+        ]);
     }
   }
 </script>
