@@ -1,12 +1,12 @@
-import { computed, ref, type ComputedRef, type Ref } from 'vue';
+import { computed, ref, type Component, type ComputedRef, type Ref } from 'vue';
 
 import { useTodoStore, type Todo } from '../stores/todoStore';
 import type { Query } from 'blinkdb';
 
 export class TodoFilterer {
-  private readonly filterRef: Ref<Array<TodoFilter>> = ref([]);
+  private readonly filterRef: Ref<Array<TodoFilter<any>>> = ref([]);
 
-  public setFilters(filters: Array<TodoFilter>): void {
+  public setFilters(filters: Array<TodoFilter<any>>): void {
     this.filterRef.value = filters;
   }
 
@@ -41,7 +41,14 @@ export class TodoFilterer {
   });
 }
 
-export interface TodoFilter {
+export interface TodoFilter<T> {
+  get type(): string;
+
+  get value(): T;
+  setValue(value: T): void;
+
   adaptQuery(query: Query<Todo, 'id'>): void;
   filterResults(todos: Array<Todo>): Array<Todo>;
+
+  getFilterBarComponent(): Component | null;
 }

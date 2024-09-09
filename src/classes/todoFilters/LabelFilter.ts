@@ -1,19 +1,32 @@
-import { effectScope, markRaw, ref } from 'vue';
+import { effectScope, h, markRaw, ref, type Component } from 'vue';
 import type { And, Query } from 'blinkdb';
 
 import type { TodoFilter } from '../TodoFilterer';
 import { useLabelToTodoStore } from '../../stores/labelToTodoStore';
 import type { Todo } from '../../stores/todoStore';
 
-export class LabelFilter implements TodoFilter {
+import LabelItem from '../../components/labels/LabelItem.vue';
+
+export class LabelFilter implements TodoFilter<string> {
   private readonly data;
 
   constructor(labelId: string) {
+    const labelIdRef = ref(labelId);
+
     this.data = markRaw({
-      labelToTodoRef: useLabelToTodoStore().getRefForComputedLabelId(
-        ref(labelId)
-      )
+      labelIdRef,
+      labelToTodoRef: useLabelToTodoStore().getRefForComputedLabelId(labelIdRef)
     });
+  }
+
+  public type = 'label';
+
+  public get value(): string {
+    return this.data.labelIdRef.value;
+  }
+
+  public setValue(labelId: string): void {
+    this.data.labelIdRef.value = labelId;
   }
 
   public adaptQuery(query: Query<Todo, 'id'>): void {
@@ -36,5 +49,9 @@ export class LabelFilter implements TodoFilter {
 
   public filterResults(todos: Array<Todo>): Array<Todo> {
     return todos;
+  }
+
+  public getFilterBarComponent(): Component {
+    return h(LabelItem, { labelId: this.data.labelIdRef.value });
   }
 }
