@@ -7,7 +7,7 @@
       :key="index"
       class="mr-2 flex shrink-0 items-center"
     >
-      <component :is="getComponentForFilter(filter)" />
+      <component :is="filter.getFilterBarComponent()" />
 
       <!-- <span v-else>{{ filter.value }}</span> -->
 
@@ -38,7 +38,7 @@
       @change="handleItemSelected"
     >
       <template #option="{ option }">
-        <component :is="getComponentForFilter(option)" />
+        <component :is="option.getFilterBarComponent()" />
       </template>
     </Listbox>
   </OverlayPanel>
@@ -49,56 +49,38 @@
     LABEL = 'label',
     TEXT = 'text'
   }
-
-  type Filter = {
-    type: FilterType;
-    labelTk: string;
-    value: string;
-    valueLabel?: string;
-  };
 </script>
 
 <script setup lang="ts">
-  import {
-    computed,
-    h,
-    onMounted,
-    ref,
-    watch,
-    type Component,
-    type ComputedRef
-  } from 'vue';
-  import { useRouter, useRoute } from 'vue-router';
+  import { computed, ref, watch, type ComputedRef } from 'vue';
+  import { useRouter, useRoute, type LocationQueryValue } from 'vue-router';
   import { refDebounced } from '@vueuse/core';
-  import { useI18n } from 'vue-i18n';
 
   import { X } from 'lucide-vue-next';
 
   import OverlayPanel from 'primevue/overlaypanel';
   import Listbox, { type ListboxChangeEvent } from 'primevue/listbox';
 
-  import LabelItem from './labels/LabelItem.vue';
-
   import { useLabelStore } from '../stores/labelStore';
 
-  import type { LocationQueryValue } from 'vue-router';
+  import type { TodoFilter } from '../classes/TodoFilterer';
+  import { LabelFilter } from '../classes/todoFilters/LabelFilter';
+  import { useFilter } from '../classes/todoFilters/useFilters';
 
   const router = useRouter();
   const route = useRoute();
-
-  const { t } = useI18n();
 
   const labelStore = useLabelStore();
   const labels = labelStore.getRef({});
 
   const suggestionsOverlayPanel = ref<OverlayPanel>();
 
-  const selectedFilters = ref<Array<Filter>>([]);
+  const { filters: selectedFilters } = useFilter();
 
   const inputValue = ref('');
   const inputValueDebounced = refDebounced(inputValue);
 
-  const suggestedFilters: ComputedRef<Array<Filter>> = computed(() => {
+  const suggestedFilters: ComputedRef<Array<TodoFilter<any>>> = computed(() => {
     return [
       ...labels.value
         .filter(
@@ -110,26 +92,16 @@
               (f) => f.type === FilterType.LABEL && f.value === l.id
             )
         )
-        .map((l) => ({
-          ...availableFilters.label,
-          value: l.id,
-          valueLabel: l.name
-        }))
+        .map((l) => new LabelFilter(l.id))
     ];
   });
 
-  const availableFilters: Record<FilterType, Filter> = {
-    label: {
-      type: FilterType.LABEL,
-      labelTk: 'components.FilterBar.labelFilter',
-      value: ''
-    },
-    text: {
-      type: FilterType.TEXT,
-      labelTk: 'components.FilterBar.textFilter',
-      value: ''
-    }
-  };
+  watch(selectedFilters, () => {
+    const textFilter = selectedFilters.value.find(
+      (f) => f.type === FilterType.TEXT
+    );
+    if (textFilter) inputValue.value = textFilter.value;
+  });
 
   async function handleItemSelected(event: ListboxChangeEvent): Promise<void> {
     selectedFilters.value.push(event.value);
@@ -186,64 +158,5 @@
             : undefined
       }
     });
-  }
-
-  watch(
-    () => route.query,
-    () => {
-      void updateFiltersFromRoute();
-    }
-  );
-
-  onMounted(() => {
-    void updateFiltersFromRoute();
-  });
-
-  async function updateFiltersFromRoute(): Promise<void> {
-    selectedFilters.value = [];
-
-    const labelIdQueryParam = route.query.filter_label;
-
-    const labelFilters = [];
-
-    if (Array.isArray(labelIdQueryParam)) {
-      labelFilters.push(...labelIdQueryParam);
-    } else if (labelIdQueryParam) {
-      labelFilters.push(labelIdQueryParam);
-    }
-
-    for (const labelFilterId of labelFilters) {
-      if (!labelFilterId) continue;
-
-      const label = await labelStore.getById(labelFilterId);
-      if (!label) throw new Error('label not found!');
-
-      selectedFilters.value.push({
-        ...availableFilters.label,
-        value: label.id,
-        valueLabel: label.name
-      });
-    }
-
-    const text = route.query.filter_text;
-
-    if (text && !Array.isArray(text)) {
-      inputValueDebounced.value = text;
-    }
-  }
-
-  function getComponentForFilter(filter: Filter): Component {
-    switch (filter.type) {
-      case FilterType.LABEL:
-        return h(LabelItem, { labelId: filter.value });
-
-      case FilterType.TEXT:
-
-      default:
-        return h('div', { class: 'border-1 flex rounded-md border' }, [
-          h('div', { class: 'border-r bg-slate-100 p-1' }, [t(filter.labelTk)]),
-          h('div', { class: 'p-1' }, [filter.valueLabel ?? filter.value])
-        ]);
-    }
   }
 </script>

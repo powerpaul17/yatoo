@@ -17,10 +17,8 @@
       }
     },
     "FilterBar": {
-      "labelFilter": "Label",
       "noAvailableFilters": "No available filters...",
-      "placeholder": "Add filters...",
-      "textFilter": "Text"
+      "placeholder": "Add filters..."
     },
     "navigation": {
       "LabelNavigationItem": {
