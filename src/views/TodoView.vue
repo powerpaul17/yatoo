@@ -1,5 +1,7 @@
 <template>
-  <div>
+  <div class="my-2">
+    <FilterBar></FilterBar>
+
     <TodoList :todos="sortedTodos" />
   </div>
 </template>
@@ -9,6 +11,7 @@
 
   import { TodoSorter } from '../classes/TodoSorter';
 
+  import FilterBar from '../components/FilterBar.vue';
   import TodoList from '../components/TodoList.vue';
   import { useFilter } from '../classes/todoFilters/useFilters';
 

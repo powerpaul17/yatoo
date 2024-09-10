@@ -3,7 +3,6 @@ import { createRouter, createWebHashHistory } from 'vue-router';
 import TodoView from './views/TodoView.vue';
 
 import TodoSidebar from './components/todos/TodoSidebar.vue';
-import FilterBar from './components/FilterBar.vue';
 
 export default createRouter({
   history: createWebHashHistory(),
@@ -19,8 +18,7 @@ export default createRouter({
       name: 'todos',
       components: {
         default: TodoView,
-        sidebar: TodoSidebar,
-        topNavigation: FilterBar
+        sidebar: TodoSidebar
       },
       meta: {
         titleTk: 'routes.todos'
