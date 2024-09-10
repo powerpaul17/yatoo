@@ -44,13 +44,6 @@
   </OverlayPanel>
 </template>
 
-<script lang="ts">
-  export enum FilterType {
-    LABEL = 'label',
-    TEXT = 'text'
-  }
-</script>
-
 <script setup lang="ts">
   import { computed, ref, watch, type ComputedRef } from 'vue';
   import { useRouter, useRoute, type LocationQueryValue } from 'vue-router';
@@ -66,6 +59,8 @@
   import type { TodoFilter } from '../classes/TodoFilterer';
   import { LabelFilter } from '../classes/todoFilters/LabelFilter';
   import { useFilter } from '../classes/todoFilters/useFilters';
+
+  import { FilterType } from '../stores/todoFilterStore';
 
   const router = useRouter();
   const route = useRoute();
