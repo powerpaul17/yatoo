@@ -3,11 +3,11 @@
     class="flex min-w-0 grow rounded-md border border-surface-300 p-2 transition-colors duration-200 focus-within:outline-none focus-within:outline-offset-0 focus-within:ring focus-within:ring-primary-500/50 hover:border-primary-500 dark:border-surface-600 dark:focus-within:ring-primary-400/50 dark:hover:border-primary-400"
   >
     <div
-      v-for="(filter, index) of selectedFilters"
+      v-for="(filter, index) of filters"
       :key="index"
       class="mr-2 flex shrink-0 items-center"
     >
-      <component :is="filter.getFilterBarComponent()" />
+      <component :is="getFilterBarComponent(filter)" />
 
       <!-- <span v-else>{{ filter.value }}</span> -->
 
@@ -38,15 +38,14 @@
       @change="handleItemSelected"
     >
       <template #option="{ option }">
-        <component :is="option.getFilterBarComponent()" />
+        <component :is="getFilterBarComponent(option)" />
       </template>
     </Listbox>
   </OverlayPanel>
 </template>
 
 <script setup lang="ts">
-  import { computed, ref, watch, type ComputedRef } from 'vue';
-  import { useRouter, useRoute, type LocationQueryValue } from 'vue-router';
+  import { computed, ref, watch, type ComputedRef, type PropType } from 'vue';
   import { refDebounced } from '@vueuse/core';
 
   import { X } from 'lucide-vue-next';
@@ -56,26 +55,35 @@
 
   import { useLabelStore } from '../stores/labelStore';
 
-  import type { TodoFilter } from '../classes/TodoFilterer';
-  import { LabelFilter } from '../classes/todoFilters/LabelFilter';
-  import { useFilter } from '../classes/todoFilters/useFilters';
+  import {
+    FilterType,
+    getFilterBarComponent,
+    type Filter
+  } from '../stores/todoFilterStore';
 
-  import { FilterType } from '../stores/todoFilterStore';
+  const props = defineProps({
+    filters: {
+      type: Array as PropType<Array<Filter>>,
+      required: true
+    }
+  });
 
-  const router = useRouter();
-  const route = useRoute();
+  const emit = defineEmits<{
+    (event: 'current-todo-filter-deselected'): void;
+    (event: 'text-filter-changed', textFilterValue: string): void;
+    (event: 'filter-added', filter: Filter): void;
+    (event: 'filter-removed', index: number): void;
+  }>();
 
   const labelStore = useLabelStore();
   const labels = labelStore.getRef({});
 
   const suggestionsOverlayPanel = ref<OverlayPanel>();
 
-  const { filters: selectedFilters } = useFilter();
-
   const inputValue = ref('');
   const inputValueDebounced = refDebounced(inputValue);
 
-  const suggestedFilters: ComputedRef<Array<TodoFilter<any>>> = computed(() => {
+  const suggestedFilters: ComputedRef<Array<Filter>> = computed(() => {
     return [
       ...labels.value
         .filter(
@@ -83,75 +91,38 @@
             l.name
               .toLowerCase()
               .includes(inputValueDebounced.value.toLowerCase()) &&
-            !selectedFilters.value.find(
+            !props.filters.find(
               (f) => f.type === FilterType.LABEL && f.value === l.id
             )
         )
-        .map((l) => new LabelFilter(l.id))
+        .map((l) => ({ type: FilterType.LABEL, value: l.id }))
     ];
   });
 
-  watch(selectedFilters, () => {
-    const textFilter = selectedFilters.value.find(
-      (f) => f.type === FilterType.TEXT
-    );
-    if (textFilter) inputValue.value = textFilter.value;
-  });
+  watch(
+    () => props.filters,
+    () => {
+      const textFilter = props.filters.find((f) => f.type === FilterType.TEXT);
+      if (textFilter) inputValue.value = textFilter.value;
+    }
+  );
 
-  async function handleItemSelected(event: ListboxChangeEvent): Promise<void> {
-    selectedFilters.value.push(event.value);
-    await updateRouteQuery();
+  function handleItemSelected(event: ListboxChangeEvent): void {
+    emit('filter-added', event.value);
+
     inputValue.value = '';
     suggestionsOverlayPanel.value?.hide();
   }
 
-  async function handleItemRemoved(index: number): Promise<void> {
-    selectedFilters.value.splice(index, 1);
-
-    // TODO make this more performant
-    await updateRouteQuery();
-    await updateTextFilterQuery();
+  function handleItemRemoved(index: number): void {
+    emit('filter-removed', index);
   }
 
-  async function updateRouteQuery(): Promise<void> {
-    const queryParams: Record<
-      string,
-      LocationQueryValue | Array<LocationQueryValue>
-    > = {};
-
-    for (const [key, value] of Object.entries(route.query)) {
-      if (key.startsWith('filter_')) continue;
-      queryParams[key] = value;
-    }
-
-    for (const filter of selectedFilters.value) {
-      const key = `filter_${filter.type}`;
-
-      if (queryParams[key]) {
-        queryParams[key] = [queryParams[key], filter.value];
-      } else {
-        queryParams[key] = filter.value;
-      }
-    }
-
-    await router.push({
-      query: queryParams
-    });
-  }
-
-  watch(inputValueDebounced, async () => {
-    await updateTextFilterQuery();
+  watch(inputValueDebounced, () => {
+    updateTextFilterQuery();
   });
 
-  async function updateTextFilterQuery(): Promise<void> {
-    await router.push({
-      query: {
-        ...route.query,
-        filter_text:
-          inputValueDebounced.value !== ''
-            ? inputValueDebounced.value
-            : undefined
-      }
-    });
+  function updateTextFilterQuery(): void {
+    emit('text-filter-changed', inputValueDebounced.value);
   }
 </script>
