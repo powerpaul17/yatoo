@@ -5,6 +5,8 @@ import type { TodoFilter } from '../TodoFilterer';
 import { useLabelToTodoStore } from '../../stores/labelToTodoStore';
 import type { Todo } from '../../stores/todoStore';
 
+import { FilterType } from '../../stores/todoFilterStore';
+
 export class LabelFilter implements TodoFilter<string> {
   private readonly data;
 
@@ -17,7 +19,7 @@ export class LabelFilter implements TodoFilter<string> {
     });
   }
 
-  public type = 'label';
+  public type = FilterType.LABEL;
 
   public get value(): string {
     return this.data.labelIdRef.value;

@@ -2,6 +2,7 @@ import { markRaw, ref } from 'vue';
 
 import type { TodoFilter } from '../TodoFilterer';
 import type { Todo } from '../../stores/todoStore';
+import { FilterType } from '../../stores/todoFilterStore';
 
 export class TextFilter implements TodoFilter<string> {
   public readonly data;
@@ -12,7 +13,7 @@ export class TextFilter implements TodoFilter<string> {
     });
   }
 
-  public type = 'text';
+  public type = FilterType.TEXT;
 
   public get value(): string {
     return this.data.textRef.value;

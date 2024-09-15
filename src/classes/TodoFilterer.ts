@@ -1,7 +1,8 @@
 import { computed, ref, type ComputedRef, type Ref } from 'vue';
+import type { Query } from 'blinkdb';
 
 import { useTodoStore, type Todo } from '../stores/todoStore';
-import type { Query } from 'blinkdb';
+import type { FilterType } from '../stores/todoFilterStore';
 
 export class TodoFilterer {
   private readonly filterRef: Ref<Array<TodoFilter<any>>> = ref([]);
@@ -42,7 +43,7 @@ export class TodoFilterer {
 }
 
 export interface TodoFilter<T> {
-  get type(): string;
+  get type(): FilterType;
 
   get value(): T;
   setValue(value: T): void;
