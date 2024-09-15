@@ -27,6 +27,10 @@ class TodoFilterStore extends Store<'todo_filters', TodoFilter> {
   public update(todoFilter: UpdateEntity<TodoFilter>): Promise<void> {
     return this._update(todoFilter);
   }
+
+  public getRef(query: Query<TodoFilter, 'id'>): Ref<Array<TodoFilter>> {
+    return this._getRef(query);
+  }
 }
 
 export type TodoFilter = Entity & {

@@ -54,6 +54,34 @@
             />
           </template>
         </NavigationItem>
+
+        <NavigationItem
+          :title="$t('components.NavigationBar.filters')"
+          :open="!!filters.length"
+          @button-click="handleAddFilterClick()"
+        >
+          <template #icon>
+            <Filter />
+          </template>
+
+          <template #buttonIcon>
+            <Plus />
+          </template>
+
+          <template #children>
+            <FilterNavigationItem
+              v-for="filter of filters"
+              :key="filter.id"
+              :filter="filter"
+              @delete="handleDeleteFilter(filter.id)"
+            />
+
+            <NavigationItem
+              v-if="!labels.length"
+              :title="$t('components.NavigationBar.noFilters')"
+            />
+          </template>
+        </NavigationItem>
       </ul>
 
       <div class="p-2">
@@ -70,21 +98,25 @@
 <script setup lang="ts">
   import { computed, inject } from 'vue';
 
-  import { CheckCheck, Plus, Tags } from 'lucide-vue-next';
+  import { CheckCheck, Filter, Plus, Tags } from 'lucide-vue-next';
 
   import NavigationItem from './navigation/NavigationItem.vue';
   import LabelNavigationItem from './navigation/LabelNavigationItem.vue';
+  import FilterNavigationItem from './navigation/FilterNavigationItem.vue';
   import DarkModeSwitcher from './DarkModeSwitcher.vue';
 
   import { useTodoStore } from '../stores/todoStore';
   import { useLabelStore } from '../stores/labelStore';
+  import { useTodoFilterStore } from '../stores/todoFilterStore';
 
   const todoStore = useTodoStore();
   const labelStore = useLabelStore();
+  const filterStore = useTodoFilterStore();
 
   const numberOfTodos = todoStore.countRef({ where: { done: false } });
 
   const labels = labelStore.getRef({});
+  const filters = filterStore.getRef({});
 
   const sortedLabels = computed(() => {
     return labels.value.slice().sort((l1, l2) => {
@@ -113,6 +145,17 @@
 
   async function handleDeleteLabel(labelId: string): Promise<void> {
     await labelStore.removeById(labelId);
+  }
+
+  async function handleAddFilterClick(): Promise<void> {
+    await filterStore.create({
+      name: '',
+      filter: []
+    });
+  }
+
+  async function handleDeleteFilter(filterId: string): Promise<void> {
+    await filterStore.removeById(filterId);
   }
 
   const VERSION = inject('VERSION');

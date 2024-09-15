@@ -36,7 +36,9 @@
       }
     },
     "NavigationBar": {
+      "filters": "Filters",
       "labels": "Labels",
+      "noFilters": "no filters",
       "noLabels": "no labels",
       "todos": "Todos"
     },
