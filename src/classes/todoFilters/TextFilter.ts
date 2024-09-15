@@ -1,4 +1,4 @@
-import { h, markRaw, ref, type Component } from 'vue';
+import { markRaw, ref } from 'vue';
 
 import type { TodoFilter } from '../TodoFilterer';
 import type { Todo } from '../../stores/todoStore';
@@ -34,9 +34,5 @@ export class TextFilter implements TodoFilter<string> {
           .toLowerCase()
           .indexOf(this.data.textRef.value.toLowerCase()) >= 0
     );
-  }
-
-  public getFilterBarComponent(): Component {
-    return h('span');
   }
 }

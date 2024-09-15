@@ -1,4 +1,4 @@
-import { computed, ref, type Component, type ComputedRef, type Ref } from 'vue';
+import { computed, ref, type ComputedRef, type Ref } from 'vue';
 
 import { useTodoStore, type Todo } from '../stores/todoStore';
 import type { Query } from 'blinkdb';
@@ -49,6 +49,4 @@ export interface TodoFilter<T> {
 
   adaptQuery(query: Query<Todo, 'id'>): void;
   filterResults(todos: Array<Todo>): Array<Todo>;
-
-  getFilterBarComponent(): Component | null;
 }

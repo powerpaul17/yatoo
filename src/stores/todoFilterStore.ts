@@ -1,3 +1,4 @@
+import { h, type Component, type Ref } from 'vue';
 import {
   Store,
   type Entity,
@@ -5,6 +6,8 @@ import {
   type UpdateEntity
 } from './Store';
 import { useSingleInstance } from '../classes/useSingleInstance';
+
+import LabelItem from '../components/labels/LabelItem.vue';
 
 const createTodoFilterStore = (): TodoFilterStore => new TodoFilterStore();
 
@@ -40,3 +43,16 @@ export type Filter = {
   type: FilterType;
   value: string;
 };
+
+export function getFilterBarComponent(filter: Filter): Component {
+  switch (filter.type) {
+    case FilterType.LABEL:
+      return h(LabelItem, { labelId: filter.value });
+
+    case FilterType.TEXT:
+      return h('span');
+
+    default:
+      throw new Error('component for filter bar is not defined');
+  }
+}
