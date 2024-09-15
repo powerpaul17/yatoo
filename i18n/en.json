@@ -26,6 +26,10 @@
       "placeholder": "Add filters..."
     },
     "navigation": {
+      "FilterNavigationItem": {
+        "deleteFilter": "Delete filter \"{filterName}\"",
+        "noFilterName": "no name"
+      },
       "LabelNavigationItem": {
         "deleteLabel": "Delete label \"{labelName}\"",
         "noLabelName": "no name"
