@@ -1,4 +1,11 @@
-import { onMounted, ref, watch, type Ref } from 'vue';
+import {
+  computed,
+  onMounted,
+  ref,
+  watch,
+  type ComputedRef,
+  type Ref
+} from 'vue';
 import { useRoute } from 'vue-router';
 
 import { TodoFilterer, type TodoFilter } from '../TodoFilterer';
@@ -6,12 +13,13 @@ import { LabelFilter } from './LabelFilter';
 import { TextFilter } from './TextFilter';
 import type { Todo } from '../../stores/todoStore';
 import { useSingleInstance } from '../useSingleInstance';
+import { type Filter } from '../../stores/todoFilterStore';
 
 const createTodoFilterer = (): TodoFilterer => new TodoFilterer();
 
 export function useFilter(): {
   filteredTodos: Ref<Array<Todo>>;
-  filters: Ref<Array<TodoFilter<any>>>;
+  filters: ComputedRef<Array<Filter>>;
 } {
   const currentFilters: Ref<Array<TodoFilter<any>>> = ref([]);
 
@@ -56,6 +64,8 @@ export function useFilter(): {
 
   return {
     filteredTodos: todoFilterer.filteredTodos,
-    filters: currentFilters
+    filters: computed(() =>
+      currentFilters.value.map((f) => ({ type: f.type, value: f.value }))
+    )
   };
 }
