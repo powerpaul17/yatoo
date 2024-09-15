@@ -5,6 +5,11 @@
         "cancel": "Cancel",
         "delete": "Delete"
       },
+      "FilterEditDialog": {
+        "delete": "Delete filter",
+        "save": "Save filter",
+        "title": "Todo filter"
+      },
       "LabelEditDialog": {
         "delete": "Delete label",
         "save": "Save label",
