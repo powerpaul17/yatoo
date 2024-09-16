@@ -20,7 +20,14 @@
             </template>
           </IconButton>
 
-          <div class="grow" />
+          <div class="grow text-center">
+            <IconButton @click="handleToggleDone()">
+              <template #icon>
+                <Square v-if="!todo.done" />
+                <CheckSquare v-else />
+              </template>
+            </IconButton>
+          </div>
 
           <IconButton
             severity="warn"
@@ -85,7 +92,7 @@
   import InputText from 'primevue/inputtext';
   import TextArea from 'primevue/textarea';
 
-  import { Pen, Plus, Trash, X } from 'lucide-vue-next';
+  import { CheckSquare, Pen, Plus, Square, Trash, X } from 'lucide-vue-next';
 
   import TodoSidebarSection from './TodoSidebarSection.vue';
   import DeleteDialog from '../dialogs/DeleteDialog.vue';
@@ -157,6 +164,11 @@
   async function handleTodoChanged(): Promise<void> {
     if (!todo.value) return;
     await todoStore.update(todo.value);
+  }
+
+  async function handleToggleDone(): Promise<void> {
+    if (!todo.value) return;
+    await todoStore.setDone(todo.value, !todo.value.done);
   }
 
   const labelSelectDialogOpen = ref(false);
