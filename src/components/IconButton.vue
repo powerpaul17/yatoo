@@ -3,7 +3,7 @@
     text
     rounded
     :severity="severity"
-    @click="emit('click')"
+    @click="emit('click', $event)"
   >
     <template #icon="{ class: cls }">
       <slot
@@ -25,6 +25,6 @@
   });
 
   const emit = defineEmits<{
-    (event: 'click'): void;
+    (eventName: 'click', event: Event): void;
   }>();
 </script>
