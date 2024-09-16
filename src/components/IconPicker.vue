@@ -94,11 +94,4 @@
   }>();
 
   const selectedIcon = ref(props.modelValue);
-
-  watch(
-    () => props.modelValue,
-    () => {
-      selectedIcon.value = props.modelValue;
-    }
-  );
 </script>
