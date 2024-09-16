@@ -51,9 +51,11 @@
     Mail,
     Moon,
     PcCase,
+    Phone,
     Server,
     ShoppingBag,
     ShoppingCart,
+    Smartphone,
     Sun,
     Tag
   } from 'lucide-vue-next';
@@ -72,9 +74,11 @@
     Mail,
     Moon,
     PcCase,
+    Phone,
     Server,
     ShoppingBag,
     ShoppingCart,
+    Smartphone,
     Sun
   };
 
