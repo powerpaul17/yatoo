@@ -10,7 +10,7 @@
           :to="route ? route : undefined"
           class="group/link flex w-full rounded-lg p-2 hover:bg-surface-200 dark:hover:bg-surface-800"
           :class="{
-            'after:border-black after:h-2 after:w-2 after:-translate-x-full after:translate-y-full after:-rotate-45 after:border-b-2 after:border-r-2 after:content-[\'\'] group-[[open]]/details:after:rotate-45':
+            'after:h-2 after:w-2 after:-translate-x-full after:translate-y-full after:-rotate-45 after:border-b-2 after:border-r-2 after:border-black after:content-[\'\'] group-[[open]]/details:after:rotate-45':
               !!$slots.children,
             'after:!rotate-45': open,
             'hover:after:content-none': !!$slots.buttonIcon
@@ -32,7 +32,7 @@
             <IconButton
               v-if="$slots.buttonIcon"
               class="-my-2 ml-2 hidden h-8 w-8 shrink-0 group-hover/summary:flex group-[.active]/link:flex"
-              @click="emit('button-click')"
+              @click.prevent="emit('button-click')"
             >
               <template #icon>
                 <slot name="buttonIcon" />
