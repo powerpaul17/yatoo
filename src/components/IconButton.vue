@@ -1,7 +1,6 @@
 <template>
   <Button
     text
-    plain
     rounded
     :severity="severity"
     @click="emit('click')"
@@ -21,7 +20,7 @@
   defineProps({
     severity: {
       type: String,
-      default: null
+      default: 'secondary'
     }
   });
 
