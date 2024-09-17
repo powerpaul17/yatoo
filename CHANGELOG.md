@@ -1,6 +1,7 @@
 ## [Unreleased]
 
 - allow creation of labels in selection dialog
+- enable setting done status of todo in sidebar
 
 ## [0.8.0] - 2024-04-27
 
