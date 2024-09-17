@@ -11,11 +11,11 @@
         @toggle-menu="menuOpen = !menuOpen"
       />
 
-      <div
-        class="flex h-full overflow-hidden"
-        v-scroll="onScroll"
-      >
-        <div class="w-full grow overflow-y-scroll px-3">
+      <div class="flex h-full overflow-hidden">
+        <div
+          class="w-full grow overflow-y-scroll px-3"
+          v-scroll="onScroll"
+        >
           <router-view v-slot="{ Component, route }">
             <Transition
               name="fade"
