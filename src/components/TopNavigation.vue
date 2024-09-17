@@ -1,21 +1,26 @@
 <template>
-  <div
-    class="relative flex w-full items-center p-2 transition-shadow"
-    :class="{ 'shadow-md': scrolled }"
+  <Toolbar
+    :pt:root:class="[
+      'p-2 transition-shadow rounded-none',
+      { 'shadow-md': scrolled }
+    ]"
+    pt:center:class="flex-1 min-w-0"
   >
-    <div class="flex-none lg:hidden">
-      <IconButton @click="emit('toggle-menu')">
-        <template #icon>
-          <Menu />
-        </template>
-      </IconButton>
-    </div>
+    <template #start>
+      <div class="lg:hidden">
+        <IconButton @click="emit('toggle-menu')">
+          <template #icon>
+            <Menu />
+          </template>
+        </IconButton>
+      </div>
 
-    <div class="mx-2 flex min-w-0 flex-1 items-center px-2">
-      <span class="mr-4 shrink-0 overflow-hidden text-ellipsis">
+      <span class="shrink-0 overflow-hidden text-ellipsis">
         {{ $t(route.meta.titleTk ?? '') }}
       </span>
+    </template>
 
+    <template #center>
       <router-view
         name="topNavigation"
         v-slot="{ Component, route: r }"
@@ -27,16 +32,16 @@
           ></component>
         </Suspense>
       </router-view>
-    </div>
+    </template>
 
-    <div class="flex-none">
+    <template #end>
       <IconButton @click="createInputOverlayOpen = true">
         <template #icon>
           <Plus />
         </template>
       </IconButton>
-    </div>
-  </div>
+    </template>
+  </Toolbar>
 
   <CreateInputOverlay
     :open="createInputOverlayOpen"
@@ -47,6 +52,8 @@
 <script setup lang="ts">
   import { ref } from 'vue';
   import { useRoute } from 'vue-router';
+
+  import Toolbar from 'primevue/toolbar';
 
   import { Menu, Plus } from 'lucide-vue-next';
 
