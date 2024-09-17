@@ -2,6 +2,7 @@
 
 - allow creation of labels in selection dialog
 - enable setting done status of todo in sidebar
+- add parser for faster todo creation
 
 ## [0.8.0] - 2024-04-27
 
