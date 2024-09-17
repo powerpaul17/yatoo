@@ -12,7 +12,7 @@ class CreationStringParser {
   ): Promise<TodoCreationData | null> {
     this.state = State.TITLE;
 
-    const parts = creationString.split(' ').filter((p) => !!p.length);
+    const parts = creationString.split(' ');
     if (!parts.length) return null;
 
     const titleParts = [];
