@@ -1,5 +1,5 @@
 import { computed, type ComputedRef, type Ref } from 'vue';
-import type { Query } from 'blinkdb';
+import { ItemNotFoundError, type Query } from 'blinkdb';
 
 import {
   Store,
