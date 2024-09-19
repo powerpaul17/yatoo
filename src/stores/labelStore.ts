@@ -75,6 +75,19 @@ class LabelStore extends Store<'labels', InternalLabel> {
     return this._getById(labelId);
   }
 
+  public async getByName(name: string): Promise<Label | null> {
+    try {
+      return await super._one({
+        where: {
+          _internalName: name.toLowerCase()
+        }
+      });
+    } catch (e) {
+      if (e instanceof ItemNotFoundError) return null;
+      throw e;
+    }
+  }
+
   public async update(label: UpdateEntity<Label>): Promise<void> {
     const labelToSave: UpdateEntity<InternalLabel> = {
       ...label,
