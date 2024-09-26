@@ -28,7 +28,7 @@
           </Button>
         </InputGroup>
 
-        <div class="mt-2 flex items-baseline">
+        <div class="mt-2 flex items-baseline gap-2">
           <span
             v-if="!parseResult"
             class="text-sm text-gray-400"
