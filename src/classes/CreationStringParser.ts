@@ -22,7 +22,7 @@ class CreationStringParser {
     const currentLabelNameParts = [];
 
     for (const part of parts) {
-      if (part.startsWith('#')) {
+      if (part.startsWith('#') && part.length > 1) {
         if (!titleParts.length) return null;
 
         if (currentLabelNameParts.length) {
