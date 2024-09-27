@@ -42,7 +42,7 @@ class CreationStringParser {
     }
 
     if (currentLabelNameParts.length) {
-      labelNames.push(currentLabelNameParts.join(' '));
+      labelNames.push(currentLabelNameParts.join(' ').trim());
     }
 
     const labelStore = useLabelStore();
