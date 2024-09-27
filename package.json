@@ -1,6 +1,6 @@
 {
   "name": "yatoo",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "description": "Organize your life!",
   "scripts": {
     "build": "COMMIT_HASH=\"${COMMIT_HASH:-`git rev-parse --short HEAD`}\" VERSION=$(node -pe 'require(\"./package.json\").version') webpack",

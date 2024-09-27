@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [0.9.0] - 2024-09-27
+
 - allow creation of labels in selection dialog
 - enable setting done status of todo in sidebar
 - add parser for faster todo creation
