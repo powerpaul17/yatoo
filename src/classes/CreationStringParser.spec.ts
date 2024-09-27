@@ -43,6 +43,20 @@ describe('CreationStringParser', () => {
     });
 
     describe('labels', () => {
+      it('should not recognize as a label if there is a space between # and text', async () => {
+        const creationStringParser = useCreationStringParser();
+
+        const result = await creationStringParser.parseCreationString(
+          'This is a task with a # and some more text.'
+        );
+
+        expect(result).to.toEqual({
+          title: 'This is a task with a # and some more text.',
+          labelIds: [],
+          newLabels: []
+        });
+      });
+
       it('should return non-existing labels as new labels', async () => {
         const creationStringParser = useCreationStringParser();
 
