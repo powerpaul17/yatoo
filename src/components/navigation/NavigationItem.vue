@@ -26,7 +26,7 @@
             <Badge
               v-if="badgeValue"
               :value="badgeValue"
-              class="ml-2"
+              class="ml-2 rounded-full"
             />
 
             <IconButton
