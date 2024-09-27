@@ -13,7 +13,7 @@ class CreationStringParser {
     this.state = State.TITLE;
 
     const parts = creationString.split(' ');
-    if (!parts.length) return null;
+    if (!creationString || !parts.length) return null;
 
     const titleParts = [];
 
