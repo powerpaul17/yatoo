@@ -20,7 +20,7 @@
     </div>
 
     <input
-      class="min-w-0 grow outline-none"
+      class="min-w-0 grow bg-transparent outline-none"
       v-model.trim="inputValue"
       :placeholder="$t('components.FilterBar.placeholder')"
       @focus="suggestionsOverlayPanel?.show"
