@@ -49,7 +49,7 @@ app.use(PrimeVue, {
     preset: yatooThemePreset,
     options: {
       prefix: 'p',
-      darkModeSelector: 'system',
+      darkModeSelector: '[data-theme=dark]',
       cssLayer: {
         name: 'primevue',
         order: 'tailwind-base, primevue, tailwind-utilities'
