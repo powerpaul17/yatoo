@@ -4,6 +4,7 @@ const { VueLoaderPlugin } = require('vue-loader');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const DefinePlugin = require('webpack').DefinePlugin;
+const WorkboxPlugin = require('workbox-webpack-plugin');
 
 const devMode = process.env.NODE_ENV !== 'production';
 
@@ -74,6 +75,10 @@ module.exports = {
       'process.env.TEST': JSON.stringify(process.env.TEST),
       __VUE_OPTIONS_API__: true,
       __VUE_PROD_DEVTOOLS__: false
+    }),
+    new WorkboxPlugin.GenerateSW({
+      clientsClaim: true,
+      skipWaiting: true
     })
   ]
 };

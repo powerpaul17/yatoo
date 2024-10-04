@@ -14,6 +14,21 @@ import App from './App.vue';
 
 import router from './router';
 
+import { Logger } from './classes/Logger';
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker
+      .register('/service-worker.js')
+      .then((registration) => {
+        Logger.log('main', 'service worker registered:', registration);
+      })
+      .catch((reason) => {
+        Logger.warn('main', 'service worker registration failed:', reason);
+      });
+  });
+}
+
 const app = createApp({
   render: () => {
     return h(Suspense, null, {
