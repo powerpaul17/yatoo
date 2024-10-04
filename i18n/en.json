@@ -50,6 +50,12 @@
       "name": "Name"
     }
   },
+  "plugins": {
+    "importExportPlugin": {
+      "export": "Export",
+      "label": "Import / Export"
+    }
+  },
   "routes": {
     "label": "Label",
     "settings": "Settings",
