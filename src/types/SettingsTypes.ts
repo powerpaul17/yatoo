@@ -14,6 +14,7 @@ export enum SettingInputType {
 
 export type SettingsConfig = {
   name: string;
+  labelTk: string;
   settings: Record<string, SettingDefinition>;
 };
 
