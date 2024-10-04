@@ -54,5 +54,10 @@
     "label": "Label",
     "settings": "Settings",
     "todos": "Todos"
+  },
+  "views": {
+    "settings": {
+      "plugins": "Plugins"
+    }
   }
 }
