@@ -56,5 +56,5 @@ type InputGroupDefinition = CommonDefinition & {
 
 type CommonDefinition = {
   name: string;
-  label: string;
+  labelTk: string;
 };

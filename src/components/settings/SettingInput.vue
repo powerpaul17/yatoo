@@ -5,9 +5,19 @@
 </template>
 
 <script setup lang="ts">
-  import { type PropType, type Component } from 'vue';
+  import { type PropType, type Component, h } from 'vue';
+  import { useI18n } from 'vue-i18n';
 
-  import { type SettingDefinition } from '../../types/SettingsTypes';
+  import Button from 'primevue/button';
+
+  import SettingInput from './SettingInput.vue';
+
+  import {
+    SettingInputType,
+    type SettingDefinition
+  } from '../../types/SettingsTypes';
+
+  const { t } = useI18n();
 
   defineProps({
     settingDefinition: {
@@ -18,6 +28,21 @@
 
   function getComponentForType(definition: SettingDefinition): Component {
     switch (definition.type) {
+      case SettingInputType.BUTTON:
+        return h(Button, {
+          label: t(definition.labelTk),
+          onClick: definition.handler
+        });
+
+      case SettingInputType.INPUT_GROUP:
+        return h(
+          'div',
+          { class: 'flex gap-2' },
+          definition.children.map((def) =>
+            h(SettingInput, { key: def.name, settingDefinition: def })
+          )
+        );
+
       default:
         throw new Error(
           `component for setting input type ${definition.type} not implemented`
