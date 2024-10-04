@@ -55,6 +55,26 @@ describe('StorageManager', () => {
     ]);
   });
 
+  it('should export data of all stores', async () => {
+    const { createStore } = setupEnvironment();
+
+    const store1 = createStore();
+    const id = await store1.create({ testValue: 'test1' });
+
+    createStore('store2');
+
+    const storageManager = useStorageManager();
+
+    expect(await storageManager.exportData()).to.deep.equal({
+      test: {
+        entities: [{ id, testValue: 'test1', createdAt: 100, updatedAt: 100 }]
+      },
+      store2: {
+        entities: []
+      }
+    });
+  });
+
   let clock: SinonFakeTimers;
 
   beforeEach(() => {
