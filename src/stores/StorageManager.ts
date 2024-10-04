@@ -59,6 +59,18 @@ export class StorageManager {
     });
   }
 
+  public async exportData(): Promise<Record<string, { entities: Array<any> }>> {
+    const exportData: Record<string, { entities: Array<any> }> = {};
+
+    for (const [storeName, store] of this.stores.entries()) {
+      exportData[storeName] = {
+        entities: await store.getAll()
+      };
+    }
+
+    return exportData;
+  }
+
   private notifyEntityRemoved(tableName: string, entityId: string): void {
     this.notifySubscribers('entityRemoved', tableName, entityId);
   }
