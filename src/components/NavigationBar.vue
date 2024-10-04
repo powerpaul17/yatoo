@@ -54,6 +54,17 @@
             />
           </template>
         </NavigationItem>
+
+        <div class="grow"></div>
+
+        <NavigationItem
+          :title="$t('components.NavigationBar.settings')"
+          :route="{ name: 'settings' }"
+        >
+          <template #icon>
+            <Settings></Settings>
+          </template>
+        </NavigationItem>
       </ul>
 
       <div class="p-2">
@@ -70,7 +81,7 @@
 <script setup lang="ts">
   import { computed, inject } from 'vue';
 
-  import { CheckCheck, Plus, Tags } from 'lucide-vue-next';
+  import { CheckCheck, Plus, Settings, Tags } from 'lucide-vue-next';
 
   import NavigationItem from './navigation/NavigationItem.vue';
   import LabelNavigationItem from './navigation/LabelNavigationItem.vue';

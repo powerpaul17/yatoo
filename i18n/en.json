@@ -29,6 +29,7 @@
     "NavigationBar": {
       "labels": "Labels",
       "noLabels": "no labels",
+      "settings": "Settings",
       "todos": "Todos"
     },
     "todos": {
@@ -51,6 +52,7 @@
   },
   "routes": {
     "label": "Label",
+    "settings": "Settings",
     "todos": "Todos"
   }
 }

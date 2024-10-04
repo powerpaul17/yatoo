@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
 
 import TodoView from './views/TodoView.vue';
+import SettingsView from './views/SettingsView.vue';
 
 import TodoSidebar from './components/todos/TodoSidebar.vue';
 import FilterBar from './components/FilterBar.vue';
@@ -29,6 +30,16 @@ export default createRouter({
         sidebar: (route): Record<string, any> => ({
           todoId: route.query.todoId
         })
+      }
+    },
+    {
+      path: '/settings',
+      name: 'settings',
+      components: {
+        default: SettingsView
+      },
+      meta: {
+        titleTk: 'routes.settings'
       }
     }
   ],
