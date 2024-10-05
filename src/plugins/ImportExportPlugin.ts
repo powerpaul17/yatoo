@@ -1,3 +1,6 @@
+import { Device } from '@capacitor/device';
+import { Directory, Encoding, Filesystem } from '@capacitor/filesystem';
+
 import { useI18n } from 'vue-i18n';
 
 import { useToast } from 'primevue/usetoast';
@@ -93,7 +96,7 @@ export class ImportExportPlugin extends Plugin {
                 handler: async (): Promise<void> => {
                   const exportData = await this.storageManager.exportData();
 
-                  this.downloadFile(
+                  await this.downloadFile(
                     JSON.stringify(exportData, undefined, 2),
                     `yatoo-export-${exportData.exportedAt}.json`
                   );
@@ -108,19 +111,36 @@ export class ImportExportPlugin extends Plugin {
     return Promise.resolve();
   }
 
-  private downloadFile(content: string, fileName: string): void {
-    const element = document.createElement('a');
-    element.setAttribute(
-      'href',
-      'data:text/plain;charset=utf-8,' + encodeURIComponent(content)
-    );
-    element.setAttribute('download', fileName);
+  private async downloadFile(content: string, fileName: string): Promise<void> {
+    const deviceInfo = await Device.getInfo();
 
-    element.style.display = 'none';
-    document.body.appendChild(element);
+    if (deviceInfo.platform === 'web') {
+      const element = document.createElement('a');
+      element.setAttribute(
+        'href',
+        'data:text/plain;charset=utf-8,' + encodeURIComponent(content)
+      );
+      element.setAttribute('download', fileName);
 
-    element.click();
+      element.style.display = 'none';
+      document.body.appendChild(element);
 
-    document.body.removeChild(element);
+      element.click();
+
+      document.body.removeChild(element);
+    } else {
+      const result = await Filesystem.writeFile({
+        data: content,
+        encoding: Encoding.UTF8,
+        path: fileName,
+        directory: Directory.Documents
+      });
+
+      this.toast.add({
+        summary: this.t('plugins.importExportPlugin.fileSaved'),
+        detail: result.uri,
+        life: 5000
+      });
+    }
   }
 }
