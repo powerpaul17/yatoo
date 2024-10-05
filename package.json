@@ -45,8 +45,8 @@
   },
   "devDependencies": {
     "@capacitor-community/electron": "^5.0.1",
-    "@capacitor/android": "^5.0.5",
-    "@capacitor/cli": "^5.0.5",
+    "@capacitor/android": "^6.0.0",
+    "@capacitor/cli": "^6.0.0",
     "@happy-dom/global-registrator": "^11.2.0",
     "@j-ulrich/release-it-regex-bumper": "^5.0.0",
     "@release-it/bumper": "^5.1.0",
