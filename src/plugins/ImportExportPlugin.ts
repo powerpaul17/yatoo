@@ -25,11 +25,11 @@ export class ImportExportPlugin extends Plugin {
                 handler: async (): Promise<void> => {
                   const storageManager = useStorageManager();
 
-                  const entities = await storageManager.exportData();
+                  const exportData = await storageManager.exportData();
 
                   this.downloadFile(
-                    JSON.stringify(entities, undefined, 2),
-                    'export.json'
+                    JSON.stringify(exportData, undefined, 2),
+                    `yatoo-export-${exportData.exportedAt}.json`
                   );
                 }
               }
