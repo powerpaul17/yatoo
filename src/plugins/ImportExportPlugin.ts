@@ -65,6 +65,13 @@ export class ImportExportPlugin extends Plugin {
                     const parsedData = ZodImportExportFormat.parse(data);
 
                     await this.storageManager.importData(parsedData);
+
+                    toast.add({
+                      summary: this.t(
+                        'plugins.importExportPlugin.importSuccessful'
+                      ),
+                      life: 5000
+                    });
                   } catch (error) {
                     toast.add({
                       summary: this.t('errors.wrongFileFormat'),

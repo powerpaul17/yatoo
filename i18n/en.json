@@ -57,6 +57,7 @@
     "importExportPlugin": {
       "export": "Export",
       "import": "Import",
+      "importSuccessful": "Import successful",
       "label": "Import / Export"
     }
   },
