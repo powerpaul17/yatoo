@@ -66,11 +66,14 @@ describe('StorageManager', () => {
     const storageManager = useStorageManager();
 
     expect(await storageManager.exportData()).to.deep.equal({
-      test: {
-        entities: [{ id, testValue: 'test1', createdAt: 100, updatedAt: 100 }]
-      },
-      store2: {
-        entities: []
+      exportedAt: 100,
+      stores: {
+        test: {
+          entities: [{ id, testValue: 'test1', createdAt: 100, updatedAt: 100 }]
+        },
+        store2: {
+          entities: []
+        }
       }
     });
   });
