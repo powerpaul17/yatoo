@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="flex flex-col items-center">
     <div
       id="plugin-settings"
       class="my-8 text-center text-lg"
