@@ -73,6 +73,7 @@ export class StorageManager {
       latestStoreUpdate = Math.max(latestStoreUpdate, lastUpdatedAt);
 
       exportData[storeName] = {
+        version: await store.getStoreVersion(),
         lastUpdatedAt,
         entities
       };
@@ -132,6 +133,7 @@ export const ZodImportExportFormat = z.object({
   stores: z.record(
     z.string(),
     z.object({
+      version: z.number(),
       lastUpdatedAt: z.number(),
       entities: z.array(z.any())
     })
