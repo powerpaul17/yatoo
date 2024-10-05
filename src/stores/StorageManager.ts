@@ -76,6 +76,17 @@ export class StorageManager {
     };
   }
 
+  public async importData(data: ImportExportFormatType): Promise<void> {
+    for (const [storeName, storeData] of Object.entries(data.stores)) {
+      const store = this.stores.get(storeName);
+      if (!store) {
+        continue;
+      }
+
+      await store.importData(storeData.entities);
+    }
+  }
+
   private notifyEntityRemoved(tableName: string, entityId: string): void {
     this.notifySubscribers('entityRemoved', tableName, entityId);
   }

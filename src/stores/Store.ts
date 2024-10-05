@@ -61,6 +61,11 @@ export class Store<
     return this.store.many({});
   }
 
+  public async importData(entities: Array<TEntity>): Promise<void> {
+    await this.clear();
+    await this.store.upsertMany(entities);
+  }
+
   protected _watchForComputedQuery(
     computedQuery: ComputedRef<Query<TEntity, 'id'>>,
     callback: (entities: Array<TEntity>) => void
