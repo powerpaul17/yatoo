@@ -4,6 +4,8 @@ import { Plugin } from './Plugin';
 import type { PluginInitOptions } from './PluginManager';
 
 export class ImportExportPlugin extends Plugin {
+  private storageManager = useStorageManager();
+
   public getPluginId(): string {
     return 'importExportPlugin';
   }
@@ -23,9 +25,7 @@ export class ImportExportPlugin extends Plugin {
                 labelTk: 'plugins.importExportPlugin.export',
                 type: SettingInputType.BUTTON,
                 handler: async (): Promise<void> => {
-                  const storageManager = useStorageManager();
-
-                  const exportData = await storageManager.exportData();
+                  const exportData = await this.storageManager.exportData();
 
                   this.downloadFile(
                     JSON.stringify(exportData, undefined, 2),
@@ -38,6 +38,7 @@ export class ImportExportPlugin extends Plugin {
         }
       }
     ]);
+
     return Promise.resolve();
   }
 
