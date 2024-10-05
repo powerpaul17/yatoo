@@ -47,6 +47,8 @@
       </div>
     </div>
   </div>
+
+  <Toast />
 </template>
 
 <style>
@@ -66,6 +68,8 @@
   import { provide, ref } from 'vue';
   import type { useScroll } from '@vueuse/core';
   import { vScroll } from '@vueuse/components';
+
+  import Toast from 'primevue/toast';
 
   import NavigationBar from './components/NavigationBar.vue';
   import TopNavigation from './components/TopNavigation.vue';

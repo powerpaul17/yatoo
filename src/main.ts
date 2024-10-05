@@ -8,6 +8,8 @@ import PrimeVue from 'primevue/config';
 import { definePreset } from '@primevue/themes';
 import Lara from '@primevue/themes/lara';
 
+import ToastService from 'primevue/toastservice';
+
 import en from '../i18n/en.json';
 
 import App from './App.vue';
@@ -72,6 +74,8 @@ app.use(PrimeVue, {
     }
   }
 });
+
+app.use(ToastService);
 
 type MessageSchema = typeof en;
 
