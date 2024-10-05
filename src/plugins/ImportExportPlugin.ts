@@ -14,6 +14,8 @@ import { Logger } from '../classes/Logger';
 export class ImportExportPlugin extends Plugin {
   private t;
 
+  private toast = useToast();
+
   private storageManager = useStorageManager();
 
   constructor() {
@@ -28,8 +30,6 @@ export class ImportExportPlugin extends Plugin {
   }
 
   public async init({ registerSettings }: PluginInitOptions): Promise<void> {
-    const toast = useToast();
-
     registerSettings([
       {
         name: this.getPluginId(),
@@ -66,14 +66,14 @@ export class ImportExportPlugin extends Plugin {
 
                     await this.storageManager.importData(parsedData);
 
-                    toast.add({
+                    this.toast.add({
                       summary: this.t(
                         'plugins.importExportPlugin.importSuccessful'
                       ),
                       life: 5000
                     });
                   } catch (error) {
-                    toast.add({
+                    this.toast.add({
                       summary: this.t('errors.wrongFileFormat'),
                       severity: 'error'
                     });
