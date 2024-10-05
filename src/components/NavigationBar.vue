@@ -16,7 +16,7 @@
     <div
       class="flex h-full flex-col overflow-y-scroll bg-surface-300 dark:bg-surface-700"
     >
-      <ul class="grow p-2">
+      <ul class="flex grow flex-col px-2 pt-2">
         <NavigationItem
           :title="$t('components.NavigationBar.todos')"
           :route="{ name: 'todos' }"
@@ -67,7 +67,7 @@
         </NavigationItem>
       </ul>
 
-      <div class="p-2">
+      <div class="px-2 pb-2">
         <DarkModeSwitcher />
       </div>
 
