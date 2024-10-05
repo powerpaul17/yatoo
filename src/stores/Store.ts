@@ -26,6 +26,8 @@ export class Store<
   private notifyRemoved;
   private notifyUpserted;
 
+  private migrationHelper;
+
   protected readonly initializePromise;
 
   protected constructor({
@@ -45,6 +47,8 @@ export class Store<
 
     this.notifyRemoved = notifyEntityRemoved;
     this.notifyUpserted = notifyEntityUpserted;
+
+    this.migrationHelper = new MigrationHelper(this.tableName);
 
     this.initializePromise = migrationConfig
       ? this.migrate(migrationConfig)
@@ -226,12 +230,14 @@ export class Store<
     }
   }
 
+  public async getStoreVersion(): Promise<number> {
+    return this.migrationHelper.getLastDbVersion();
+  }
+
   private async migrate(
     migrationConfig: MigrationConfig<TEntity, TRenamedProperties>
   ): Promise<void> {
-    const migrationHelper = new MigrationHelper(this.tableName);
-
-    const lastDbVersion = await migrationHelper.getLastDbVersion();
+    const lastDbVersion = await this.migrationHelper.getLastDbVersion();
     const newDbVersion = migrationConfig.version;
 
     if (newDbVersion < lastDbVersion) {
@@ -243,7 +249,7 @@ export class Store<
     const migratedEntities = migrationConfig.migrationFunction(entities);
     await this.store.upsertMany(migratedEntities);
 
-    await migrationHelper.setLastDbVersion(migrationConfig.version);
+    await this.migrationHelper.setLastDbVersion(migrationConfig.version);
   }
 }
 
