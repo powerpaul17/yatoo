@@ -33,7 +33,7 @@
     switch (definition.type) {
       case SettingInputType.BUTTON:
         return h(Button, {
-          label: t(definition.labelTk),
+          label: definition.labelTk ? t(definition.labelTk) : '',
           onClick: definition.handler
         });
 
@@ -42,7 +42,7 @@
           mode: 'basic',
           auto: true,
           customUpload: true,
-          chooseLabel: t(definition.labelTk),
+          chooseLabel: definition.labelTk ? t(definition.labelTk) : undefined,
           accept: definition.accept,
           onUploader: (event: FileUploadUploaderEvent) => {
             const file = Array.isArray(event.files)
