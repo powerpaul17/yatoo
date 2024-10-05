@@ -53,6 +53,7 @@
   "plugins": {
     "importExportPlugin": {
       "export": "Export",
+      "import": "Import",
       "label": "Import / Export"
     }
   },
