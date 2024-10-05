@@ -8,6 +8,7 @@ export enum SettingInputType {
   CHECKBOX = 'checkbox',
   DROPDOWN = 'dropdown',
   RADIOBUTTON = 'radiobutton',
+  FILE = 'file',
   BUTTON = 'button',
   INPUT_GROUP = 'input_group'
 }
@@ -22,6 +23,7 @@ export type SettingDefinition =
   | InputDefinition
   | SelectDefinition
   | CheckboxDefinition
+  | FileDefinition
   | ButtonDefinition
   | InputGroupDefinition;
 
@@ -42,6 +44,11 @@ type SelectDefinition = CommonDefinition & {
 
 type CheckboxDefinition = CommonDefinition & {
   type: SettingInputType.CHECKBOX;
+};
+
+type FileDefinition = CommonDefinition & {
+  type: SettingInputType.FILE;
+  handler: (file: File) => Promise<void>;
 };
 
 type ButtonDefinition = CommonDefinition & {

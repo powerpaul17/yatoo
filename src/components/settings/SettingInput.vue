@@ -9,6 +9,9 @@
   import { useI18n } from 'vue-i18n';
 
   import Button from 'primevue/button';
+  import FileUpload, {
+    type FileUploadUploaderEvent
+  } from 'primevue/fileupload';
 
   import SettingInput from './SettingInput.vue';
 
@@ -32,6 +35,22 @@
         return h(Button, {
           label: t(definition.labelTk),
           onClick: definition.handler
+        });
+
+      case SettingInputType.FILE:
+        return h(FileUpload, {
+          mode: 'basic',
+          auto: true,
+          customUpload: true,
+          chooseLabel: t(definition.labelTk),
+          onUploader: (event: FileUploadUploaderEvent) => {
+            const file = Array.isArray(event.files)
+              ? event.files[0]
+              : event.files;
+            if (!file) throw new Error('no file selected');
+
+            void definition.handler(file);
+          }
         });
 
       case SettingInputType.INPUT_GROUP:
