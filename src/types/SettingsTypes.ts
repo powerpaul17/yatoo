@@ -48,6 +48,7 @@ type CheckboxDefinition = CommonDefinition & {
 
 type FileDefinition = CommonDefinition & {
   type: SettingInputType.FILE;
+  accept?: string;
   handler: (file: File) => Promise<void>;
 };
 

@@ -43,6 +43,7 @@
           auto: true,
           customUpload: true,
           chooseLabel: t(definition.labelTk),
+          accept: definition.accept,
           onUploader: (event: FileUploadUploaderEvent) => {
             const file = Array.isArray(event.files)
               ? event.files[0]
