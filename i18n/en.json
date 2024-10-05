@@ -50,6 +50,9 @@
       "name": "Name"
     }
   },
+  "errors": {
+    "wrongFileFormat": "Wrong file format"
+  },
   "plugins": {
     "importExportPlugin": {
       "export": "Export",

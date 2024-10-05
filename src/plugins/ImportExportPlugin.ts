@@ -1,5 +1,7 @@
 import { useI18n } from 'vue-i18n';
 
+import { useToast } from 'primevue/usetoast';
+
 import {
   ZodImportExportFormat,
   useStorageManager
@@ -10,13 +12,24 @@ import type { PluginInitOptions } from './PluginManager';
 import { Logger } from '../classes/Logger';
 
 export class ImportExportPlugin extends Plugin {
+  private t;
+
   private storageManager = useStorageManager();
+
+  constructor() {
+    super();
+
+    const { t } = useI18n();
+    this.t = t;
+  }
 
   public getPluginId(): string {
     return 'importExportPlugin';
   }
 
   public async init({ registerSettings }: PluginInitOptions): Promise<void> {
+    const toast = useToast();
+
     registerSettings([
       {
         name: this.getPluginId(),
@@ -53,6 +66,11 @@ export class ImportExportPlugin extends Plugin {
 
                     await this.storageManager.importData(parsedData);
                   } catch (error) {
+                    toast.add({
+                      summary: this.t('errors.wrongFileFormat'),
+                      severity: 'error'
+                    });
+
                     Logger.error(
                       this.getPluginId(),
                       'wrong file format',
