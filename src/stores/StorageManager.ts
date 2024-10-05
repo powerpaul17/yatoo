@@ -62,15 +62,24 @@ export class StorageManager {
   }
 
   public async exportData(): Promise<ImportExportFormatType> {
-    const exportData: Record<string, { entities: Array<any> }> = {};
+    const exportData: ImportExportFormatType['stores'] = {};
+
+    let latestStoreUpdate = 0;
 
     for (const [storeName, store] of this.stores.entries()) {
+      const entities = await store.getAll();
+      const lastUpdatedAt = Math.max(0, ...entities.map((e) => e.updatedAt));
+
+      latestStoreUpdate = Math.max(latestStoreUpdate, lastUpdatedAt);
+
       exportData[storeName] = {
-        entities: await store.getAll()
+        lastUpdatedAt,
+        entities
       };
     }
 
     return {
+      lastUpdatedAt: latestStoreUpdate,
       exportedAt: Date.now(),
       stores: exportData
     };
@@ -118,10 +127,12 @@ export class StoreAlreadyRegisteredError extends Error {
 }
 
 export const ZodImportExportFormat = z.object({
+  lastUpdatedAt: z.number(),
   exportedAt: z.number(),
   stores: z.record(
     z.string(),
     z.object({
+      lastUpdatedAt: z.number(),
       entities: z.array(z.any())
     })
   )
