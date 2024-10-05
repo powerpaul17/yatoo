@@ -78,6 +78,51 @@ describe('StorageManager', () => {
     });
   });
 
+  it('should allow importing data of all stores', async () => {
+    const { createStore } = setupEnvironment();
+
+    const store1 = createStore();
+    await store1.create({ testValue: 'test1' });
+
+    createStore('store2');
+
+    const storageManager = useStorageManager();
+
+    await storageManager.importData({
+      exportedAt: 100,
+      stores: {
+        test: {
+          entities: []
+        },
+        store2: {
+          entities: [
+            {
+              id: '2-1',
+              testValue: 'test1-Store2'
+            }
+          ]
+        }
+      }
+    });
+
+    expect(await storageManager.exportData()).to.deep.equal({
+      exportedAt: 100,
+      stores: {
+        test: {
+          entities: []
+        },
+        store2: {
+          entities: [
+            {
+              id: '2-1',
+              testValue: 'test1-Store2'
+            }
+          ]
+        }
+      }
+    });
+  });
+
   let clock: SinonFakeTimers;
 
   beforeEach(() => {
