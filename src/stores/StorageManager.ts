@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 import { PubSubManager } from '../classes/PubSubManager';
 import { useSingleInstance } from '../classes/useSingleInstance';
 import type { Store } from './Store';
@@ -59,7 +61,7 @@ export class StorageManager {
     });
   }
 
-  public async exportData(): Promise<Record<string, { entities: Array<any> }>> {
+  public async exportData(): Promise<ImportExportFormatType> {
     const exportData: Record<string, { entities: Array<any> }> = {};
 
     for (const [storeName, store] of this.stores.entries()) {
@@ -68,7 +70,10 @@ export class StorageManager {
       };
     }
 
-    return exportData;
+    return {
+      exportedAt: Date.now(),
+      stores: exportData
+    };
   }
 
   private notifyEntityRemoved(tableName: string, entityId: string): void {
@@ -100,3 +105,15 @@ export class StoreAlreadyRegisteredError extends Error {
     super('store already registered');
   }
 }
+
+export const ZodImportExportFormat = z.object({
+  exportedAt: z.number(),
+  stores: z.record(
+    z.string(),
+    z.object({
+      entities: z.array(z.any())
+    })
+  )
+});
+
+type ImportExportFormatType = z.infer<typeof ZodImportExportFormat>;
