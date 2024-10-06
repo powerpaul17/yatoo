@@ -9,6 +9,7 @@ import { definePreset } from '@primevue/themes';
 import Lara from '@primevue/themes/lara';
 
 import ToastService from 'primevue/toastservice';
+import ConfirmationService from 'primevue/confirmationservice';
 
 import en from '../i18n/en.json';
 
@@ -76,6 +77,7 @@ app.use(PrimeVue, {
 });
 
 app.use(ToastService);
+app.use(ConfirmationService);
 
 type MessageSchema = typeof en;
 
