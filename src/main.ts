@@ -1,5 +1,8 @@
 import './main.css';
 
+import dayjs from 'dayjs';
+import LocalizedFormat from 'dayjs/plugin/localizedFormat';
+
 import { createApp, h, Suspense } from 'vue';
 import { createI18n } from 'vue-i18n';
 
@@ -31,6 +34,8 @@ if ('serviceWorker' in navigator) {
       });
   });
 }
+
+dayjs.extend(LocalizedFormat);
 
 const app = createApp({
   render: () => {
