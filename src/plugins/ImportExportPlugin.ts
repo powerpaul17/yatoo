@@ -3,6 +3,8 @@ import { Directory, Encoding, Filesystem } from '@capacitor/filesystem';
 
 import { useI18n } from 'vue-i18n';
 
+import dayjs from 'dayjs';
+
 import { useToast } from 'primevue/usetoast';
 import { useConfirm } from 'primevue/useconfirm';
 
@@ -80,11 +82,11 @@ export class ImportExportPlugin extends Plugin {
                             ),
                             message: `${this.t(
                               'plugins.importExportPlugin.storedDataNewerThanImportData'
-                            )}:\n\nStore updated: ${new Date(
+                            )}:\n\nStore updated: ${dayjs(
                               exportData.lastUpdatedAt
-                            ).toISOString()}\nImport data updated: ${new Date(
+                            ).format('L LT')}\nImport data updated: ${dayjs(
                               parsedData.lastUpdatedAt
-                            ).toISOString()}`,
+                            ).format('L LT')}`,
                             acceptProps: {
                               label: this.t(
                                 'plugins.importExportPlugin.overwrite'
