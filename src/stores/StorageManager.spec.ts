@@ -66,12 +66,17 @@ describe('StorageManager', () => {
     const storageManager = useStorageManager();
 
     expect(await storageManager.exportData()).to.deep.equal({
+      lastUpdatedAt: 100,
       exportedAt: 100,
       stores: {
         test: {
+          version: 0,
+          lastUpdatedAt: 100,
           entities: [{ id, testValue: 'test1', createdAt: 100, updatedAt: 100 }]
         },
         store2: {
+          version: 0,
+          lastUpdatedAt: 0,
           entities: []
         }
       }
@@ -89,16 +94,22 @@ describe('StorageManager', () => {
     const storageManager = useStorageManager();
 
     await storageManager.importData({
+      lastUpdatedAt: 100,
       exportedAt: 100,
       stores: {
         test: {
+          version: 0,
+          lastUpdatedAt: 0,
           entities: []
         },
         store2: {
+          version: 0,
+          lastUpdatedAt: 100,
           entities: [
             {
               id: '2-1',
-              testValue: 'test1-Store2'
+              testValue: 'test1-Store2',
+              updatedAt: 100
             }
           ]
         }
@@ -106,16 +117,22 @@ describe('StorageManager', () => {
     });
 
     expect(await storageManager.exportData()).to.deep.equal({
+      lastUpdatedAt: 100,
       exportedAt: 100,
       stores: {
         test: {
+          version: 0,
+          lastUpdatedAt: 0,
           entities: []
         },
         store2: {
+          version: 0,
+          lastUpdatedAt: 100,
           entities: [
             {
               id: '2-1',
-              testValue: 'test1-Store2'
+              testValue: 'test1-Store2',
+              updatedAt: 100
             }
           ]
         }
