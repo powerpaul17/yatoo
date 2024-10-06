@@ -59,7 +59,9 @@
       "fileSaved": "File saved",
       "import": "Import",
       "importSuccessful": "Import successful",
-      "label": "Import / Export"
+      "label": "Import / Export",
+      "overwrite": "Overwrite",
+      "storedDataNewerThanImportData": "Stored data is newer than import data"
     }
   },
   "routes": {

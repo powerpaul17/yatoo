@@ -4,6 +4,7 @@ import { Directory, Encoding, Filesystem } from '@capacitor/filesystem';
 import { useI18n } from 'vue-i18n';
 
 import { useToast } from 'primevue/usetoast';
+import { useConfirm } from 'primevue/useconfirm';
 
 import {
   ZodImportExportFormat,
@@ -18,6 +19,7 @@ export class ImportExportPlugin extends Plugin {
   private t;
 
   private toast = useToast();
+  private confirm = useConfirm();
 
   private storageManager = useStorageManager();
 
@@ -66,6 +68,41 @@ export class ImportExportPlugin extends Plugin {
                     const data = JSON.parse(fileContents) as unknown;
 
                     const parsedData = ZodImportExportFormat.parse(data);
+
+                    const exportData = await this.storageManager.exportData();
+
+                    if (parsedData.lastUpdatedAt < exportData.lastUpdatedAt) {
+                      const overwrite = await new Promise<boolean>(
+                        (res, rej) => {
+                          this.confirm.require({
+                            header: this.t(
+                              'plugins.importExportPlugin.overwrite'
+                            ),
+                            message: `${this.t(
+                              'plugins.importExportPlugin.storedDataNewerThanImportData'
+                            )}:\n\nStore updated: ${new Date(
+                              exportData.lastUpdatedAt
+                            ).toISOString()}\nImport data updated: ${new Date(
+                              parsedData.lastUpdatedAt
+                            ).toISOString()}`,
+                            acceptProps: {
+                              label: this.t(
+                                'plugins.importExportPlugin.overwrite'
+                              ),
+                              severity: 'warn'
+                            },
+                            accept: () => {
+                              res(true);
+                            },
+                            reject: () => {
+                              res(false);
+                            }
+                          });
+                        }
+                      );
+
+                      if (!overwrite) return;
+                    }
 
                     await this.storageManager.importData(parsedData);
 
