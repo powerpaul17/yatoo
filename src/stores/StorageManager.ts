@@ -95,6 +95,7 @@ export class StorageManager {
         continue;
       }
 
+      Logger.debug('StorageManager', `Importing data into '${storeName}'`);
       await store.importData(storeData.entities);
     }
   }
