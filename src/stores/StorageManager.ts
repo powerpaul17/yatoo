@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
+import { Logger } from '../classes/Logger';
 import { PubSubManager } from '../classes/PubSubManager';
 import { useSingleInstance } from '../classes/useSingleInstance';
 import type { Store } from './Store';
@@ -90,6 +91,7 @@ export class StorageManager {
     for (const [storeName, storeData] of Object.entries(data.stores)) {
       const store = this.stores.get(storeName);
       if (!store) {
+        Logger.warn('StorageManager', `Store '${storeName}' does not exist.`);
         continue;
       }
 
