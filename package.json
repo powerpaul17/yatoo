@@ -60,6 +60,7 @@
     "@vitejs/plugin-vue": "^4.5.1",
     "@vue/tsconfig": "^0.4.0",
     "css-loader": "^6.8.1",
+    "dayjs": "^1.11.13",
     "dotenv-cli": "^7.2.1",
     "eslint": "^8.42.0",
     "eslint-config-prettier": "^9.0.0",
