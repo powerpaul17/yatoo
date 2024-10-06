@@ -8,12 +8,14 @@ export enum SettingInputType {
   CHECKBOX = 'checkbox',
   DROPDOWN = 'dropdown',
   RADIOBUTTON = 'radiobutton',
+  FILE = 'file',
   BUTTON = 'button',
-  BUTTON_GROUP = 'button_group'
+  INPUT_GROUP = 'input_group'
 }
 
 export type SettingsConfig = {
   name: string;
+  labelTk: string;
   settings: Record<string, SettingDefinition>;
 };
 
@@ -21,8 +23,9 @@ export type SettingDefinition =
   | InputDefinition
   | SelectDefinition
   | CheckboxDefinition
+  | FileDefinition
   | ButtonDefinition
-  | ButtonGroupDefinition;
+  | InputGroupDefinition;
 
 type InputDefinition = CommonDefinition & {
   type:
@@ -43,17 +46,23 @@ type CheckboxDefinition = CommonDefinition & {
   type: SettingInputType.CHECKBOX;
 };
 
+type FileDefinition = CommonDefinition & {
+  type: SettingInputType.FILE;
+  accept?: string;
+  handler: (file: File) => Promise<void>;
+};
+
 type ButtonDefinition = CommonDefinition & {
   type: SettingInputType.BUTTON;
   handler: () => Promise<void>;
 };
 
-type ButtonGroupDefinition = CommonDefinition & {
-  type: SettingInputType.BUTTON_GROUP;
-  buttons: Array<ButtonDefinition>;
+type InputGroupDefinition = CommonDefinition & {
+  type: SettingInputType.INPUT_GROUP;
+  children: Array<SettingDefinition>;
 };
 
 type CommonDefinition = {
   name: string;
-  label: string;
+  labelTk?: string;
 };

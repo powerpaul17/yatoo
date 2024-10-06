@@ -16,7 +16,7 @@
     <div
       class="flex h-full flex-col overflow-y-scroll bg-surface-300 dark:bg-surface-700"
     >
-      <ul class="grow p-2">
+      <ul class="flex grow flex-col px-2 pt-2">
         <NavigationItem
           :title="$t('components.NavigationBar.todos')"
           :route="{ name: 'todos' }"
@@ -54,9 +54,20 @@
             />
           </template>
         </NavigationItem>
+
+        <div class="grow"></div>
+
+        <NavigationItem
+          :title="$t('components.NavigationBar.settings')"
+          :route="{ name: 'settings' }"
+        >
+          <template #icon>
+            <Settings></Settings>
+          </template>
+        </NavigationItem>
       </ul>
 
-      <div class="p-2">
+      <div class="px-2 pb-2">
         <DarkModeSwitcher />
       </div>
 
@@ -70,7 +81,7 @@
 <script setup lang="ts">
   import { computed, inject } from 'vue';
 
-  import { CheckCheck, Plus, Tags } from 'lucide-vue-next';
+  import { CheckCheck, Plus, Settings, Tags } from 'lucide-vue-next';
 
   import NavigationItem from './navigation/NavigationItem.vue';
   import LabelNavigationItem from './navigation/LabelNavigationItem.vue';

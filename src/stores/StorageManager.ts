@@ -1,3 +1,6 @@
+import { z } from 'zod';
+
+import { Logger } from '../classes/Logger';
 import { PubSubManager } from '../classes/PubSubManager';
 import { useSingleInstance } from '../classes/useSingleInstance';
 import type { Store } from './Store';
@@ -59,6 +62,46 @@ export class StorageManager {
     });
   }
 
+  public async exportData(): Promise<ImportExportFormatType> {
+    const exportData: ImportExportFormatType['stores'] = {};
+
+    let latestStoreUpdate = 0;
+
+    for (const [storeName, store] of this.stores.entries()) {
+      const entities = await store.getAll();
+      const lastUpdatedAt = Math.max(0, ...entities.map((e) => e.updatedAt));
+
+      latestStoreUpdate = Math.max(latestStoreUpdate, lastUpdatedAt);
+
+      exportData[storeName] = {
+        version: await store.getStoreVersion(),
+        lastUpdatedAt,
+        entities
+      };
+    }
+
+    return {
+      lastUpdatedAt: latestStoreUpdate,
+      exportedAt: Date.now(),
+      stores: exportData
+    };
+  }
+
+  public async importData(data: ImportExportFormatType): Promise<void> {
+    // TODO: validate data
+
+    for (const [storeName, storeData] of Object.entries(data.stores)) {
+      const store = this.stores.get(storeName);
+      if (!store) {
+        Logger.warn('StorageManager', `Store '${storeName}' does not exist.`);
+        continue;
+      }
+
+      Logger.debug('StorageManager', `Importing data into '${storeName}'`);
+      await store.importData(storeData.entities);
+    }
+  }
+
   private notifyEntityRemoved(tableName: string, entityId: string): void {
     this.notifySubscribers('entityRemoved', tableName, entityId);
   }
@@ -88,3 +131,18 @@ export class StoreAlreadyRegisteredError extends Error {
     super('store already registered');
   }
 }
+
+export const ZodImportExportFormat = z.object({
+  lastUpdatedAt: z.number(),
+  exportedAt: z.number(),
+  stores: z.record(
+    z.string(),
+    z.object({
+      version: z.number(),
+      lastUpdatedAt: z.number(),
+      entities: z.array(z.any())
+    })
+  )
+});
+
+type ImportExportFormatType = z.infer<typeof ZodImportExportFormat>;

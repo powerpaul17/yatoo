@@ -29,6 +29,7 @@
     "NavigationBar": {
       "labels": "Labels",
       "noLabels": "no labels",
+      "settings": "Settings",
       "todos": "Todos"
     },
     "todos": {
@@ -49,8 +50,28 @@
       "name": "Name"
     }
   },
+  "errors": {
+    "wrongFileFormat": "Wrong file format"
+  },
+  "plugins": {
+    "importExportPlugin": {
+      "export": "Export",
+      "fileSaved": "File saved",
+      "import": "Import",
+      "importSuccessful": "Import successful",
+      "label": "Import / Export",
+      "overwrite": "Overwrite",
+      "storedDataNewerThanImportData": "Stored data is newer than import data"
+    }
+  },
   "routes": {
     "label": "Label",
+    "settings": "Settings",
     "todos": "Todos"
+  },
+  "views": {
+    "settings": {
+      "plugins": "Plugins"
+    }
   }
 }

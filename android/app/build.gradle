@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     namespace "com.paultirk.yatoo"
-    compileSdkVersion rootProject.ext.compileSdkVersion
+    compileSdk rootProject.ext.compileSdkVersion
     defaultConfig {
         applicationId "com.paultirk.yatoo"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -19,9 +19,9 @@ android {
     signingConfigs {
         release {
             keyAlias "yatoo"
-            keyPassword System.env.ANDROID_KEYSTORE_PASSWORD
-            storeFile file(System.env.ANDROID_KEYSTORE_PATH)
-            storePassword System.env.ANDROID_KEYSTORE_PASSWORD
+            keyPassword System.env.ANDROID_KEYSTORE_PASSWORD ?: ''
+            storeFile file(System.env.ANDROID_KEYSTORE_PATH ?: '.')
+            storePassword System.env.ANDROID_KEYSTORE_PASSWORD ?: ''
         }
     }
     buildTypes {

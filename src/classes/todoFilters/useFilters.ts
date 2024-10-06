@@ -5,9 +5,6 @@ import { TodoFilterer, type TodoFilter } from '../TodoFilterer';
 import { LabelFilter } from './LabelFilter';
 import { TextFilter } from './TextFilter';
 import type { Todo } from '../../stores/todoStore';
-import { useSingleInstance } from '../useSingleInstance';
-
-const createTodoFilterer = (): TodoFilterer => new TodoFilterer();
 
 export function useFilter(): {
   filteredTodos: Ref<Array<Todo>>;
@@ -15,8 +12,7 @@ export function useFilter(): {
 } {
   const currentFilters: Ref<Array<TodoFilter<any>>> = ref([]);
 
-  const todoFilterer = useSingleInstance(createTodoFilterer);
-
+  const todoFilterer = new TodoFilterer();
   onMounted(() => {
     updateFiltersFromRoute();
   });

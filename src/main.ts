@@ -1,5 +1,8 @@
 import './main.css';
 
+import dayjs from 'dayjs';
+import LocalizedFormat from 'dayjs/plugin/localizedFormat';
+
 import { createApp, h, Suspense } from 'vue';
 import { createI18n } from 'vue-i18n';
 
@@ -7,6 +10,9 @@ import PrimeVue from 'primevue/config';
 
 import { definePreset } from '@primevue/themes';
 import Lara from '@primevue/themes/lara';
+
+import ToastService from 'primevue/toastservice';
+import ConfirmationService from 'primevue/confirmationservice';
 
 import en from '../i18n/en.json';
 
@@ -28,6 +34,8 @@ if ('serviceWorker' in navigator) {
       });
   });
 }
+
+dayjs.extend(LocalizedFormat);
 
 const app = createApp({
   render: () => {
@@ -72,6 +80,9 @@ app.use(PrimeVue, {
     }
   }
 });
+
+app.use(ToastService);
+app.use(ConfirmationService);
 
 type MessageSchema = typeof en;
 

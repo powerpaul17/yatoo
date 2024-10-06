@@ -8,10 +8,10 @@ import {
   type UpdateEntity
 } from './Store';
 
-export class TestStore extends Store<'test', TestEntity> {
+export class TestStore extends Store<string, TestEntity> {
   public migrationSpy;
 
-  constructor({ version }: { version: number }) {
+  constructor({ name = 'test', version }: { name?: string; version: number }) {
     const migrationSpy = sinon.spy<Migration<TestEntity>>((entities) => {
       return entities.map((entity) => {
         return {
@@ -24,7 +24,7 @@ export class TestStore extends Store<'test', TestEntity> {
     });
 
     super({
-      tableName: 'test',
+      tableName: name,
       migrationConfig: {
         version,
         migrationFunction: migrationSpy

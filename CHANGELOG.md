@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- add import/export plugin
+
 ## [0.9.0] - 2024-09-27
 
 - allow creation of labels in selection dialog
