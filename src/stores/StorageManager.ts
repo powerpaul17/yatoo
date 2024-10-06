@@ -88,6 +88,8 @@ export class StorageManager {
   }
 
   public async importData(data: ImportExportFormatType): Promise<void> {
+    // TODO: validate data
+
     for (const [storeName, storeData] of Object.entries(data.stores)) {
       const store = this.stores.get(storeName);
       if (!store) {
