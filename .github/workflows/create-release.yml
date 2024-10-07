@@ -63,3 +63,6 @@ jobs:
 
       - name: Updateversion in electron/package.json
         run: sed -i -r 's/("version":\s*")(.*)"/\1${{steps.bump-version.outputs.version}}"/' electron/package.json
+
+      - name: Update version in android/app/build.gradle
+        run: sed -i -r 's/versionName\s"([0-9.]+)"/versionName "${{steps.bump-version.outputs.version}}"/' android/app/build.gradle
