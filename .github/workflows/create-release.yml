@@ -52,24 +52,23 @@ jobs:
       - name: Run tests
         run: npm run ci:test
 
-      - name: read versions
-        id: read-version
-        run: |
-          echo "version=$(jq -r ".version" package.json)" >> $GITHUB_OUTPUT
-          echo "tag=v$(jq -r ".version" package.json)"  >> $GITHUB_OUTPUT
-
-      - name: Bump version
-        id: bump-version
-        run: echo "version=$(npx --yes semver -i ${{inputs.increment}} ${{steps.read-version.outputs.version}})" >> $GITHUB_OUTPUT
+      - name: Update changelog
+        id: update-changelog
+        uses: release-flow/keep-a-changelog-action@v2
+        with:
+          command: bump
+          version: minor # ${{inputs.increment}}
+          fail-on-empty-release-notes: true
+          keep-unreleased-section: true
 
       - name: Update version in package.json
-        run: sed -i -r 's/("version":\s*")(.*)"/\1${{steps.bump-version.outputs.version}}"/' package.json
+        run: sed -i -r 's/("version":\s*")(.*)"/\1${{steps.update-changelog.outputs.version}}"/' package.json
 
       - name: Updateversion in electron/package.json
-        run: sed -i -r 's/("version":\s*")(.*)"/\1${{steps.bump-version.outputs.version}}"/' electron/package.json
+        run: sed -i -r 's/("version":\s*")(.*)"/\1${{steps.update-changelog.outputs.version}}"/' electron/package.json
 
       - name: Update version in android/app/build.gradle
-        run: sed -i -r 's/versionName\s"([0-9.]+)"/versionName "${{steps.bump-version.outputs.version}}"/' android/app/build.gradle
+        run: sed -i -r 's/versionName\s"([0-9.]+)"/versionName "${{steps.update-changelog.outputs.version}}"/' android/app/build.gradle
 
       - name: Increment android version code
         run: sed -i -r 's/(.*versionCode\s*)([0-9]+)/echo "\1$((\2+1))"/e' android/app/build.gradle
@@ -78,10 +77,10 @@ jobs:
         run: npm i && cd electron && npm i
 
       - name: Commit new version
-        run: git commit --all --message "Release ${{steps.bump-version.outputs.version}}"
+        run: git commit --all --message "Release ${{steps.update-changelog.outputs.version}}"
 
       - name: Add git tag
-        run: git tag --annotate --message "v${{steps.bump-version.outputs.version}}" v${{steps.bump-version.outputs.version}}
+        run: git tag --annotate --message "v${{steps.update-changelog.outputs.version}}" v${{steps.update-changelog.outputs.version}}
 
       - name: Run production build
         run: npm run build-prod
