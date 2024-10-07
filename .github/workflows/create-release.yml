@@ -81,3 +81,12 @@ jobs:
 
       - name: Run production build
         run: npm run build-prod
+
+      - name: Prepare capacitor
+        run: npm run capacitor-sync
+
+      - name: Run android build
+        run: npm run build-android
+        env:
+          ANDROID_KEYSTORE_PATH: ${{ runner.temp }}/keystore/yatoo.jks
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
