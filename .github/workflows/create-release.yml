@@ -66,3 +66,6 @@ jobs:
 
       - name: Update version in android/app/build.gradle
         run: sed -i -r 's/versionName\s"([0-9.]+)"/versionName "${{steps.bump-version.outputs.version}}"/' android/app/build.gradle
+
+      - name: Increment android version code
+        run: sed -i -r 's/(.*versionCode\s*)([0-9]+)/echo "\1$((\2+1))"/e' android/app/build.gradle
