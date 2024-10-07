@@ -48,9 +48,3 @@ jobs:
 
       - run: npm ci
 
-      - run: npx release-it ${{ inputs.increment }}
-        id: release-it
-        env:
-          ANDROID_KEYSTORE_PATH: ${{ runner.temp }}/keystore/yatoo.jks
-          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
