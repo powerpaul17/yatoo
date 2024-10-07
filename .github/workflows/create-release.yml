@@ -48,3 +48,12 @@ jobs:
 
       - run: npm ci
 
+      - name: read versions
+        id: read-version
+        run: |
+          echo "version=$(jq -r ".version" package.json)" >> $GITHUB_OUTPUT
+          echo "tag=v$(jq -r ".version" package.json)"  >> $GITHUB_OUTPUT
+
+      - name: Bump version
+        id: bump-version
+        run: echo "version=$(npx --yes semver -i ${{inputs.increment}} ${{steps.read-version.outputs.version}})" >> $GITHUB_OUTPUT
