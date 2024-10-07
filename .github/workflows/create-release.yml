@@ -48,6 +48,9 @@ jobs:
 
       - run: npm ci
 
+      - name: Run tests
+        run: npm run ci:test
+
       - name: read versions
         id: read-version
         run: |
