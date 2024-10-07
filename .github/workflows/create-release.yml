@@ -75,3 +75,6 @@ jobs:
 
       - name: Commit new version
         run: git commit --all --message "Release ${{steps.bump-version.outputs.version}}"
+
+      - name: Add git tag
+        run: git tag --annotate --message "v${{steps.bump-version.outputs.version}}" v${{steps.bump-version.outputs.version}}
