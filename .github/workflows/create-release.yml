@@ -78,3 +78,6 @@ jobs:
 
       - name: Add git tag
         run: git tag --annotate --message "v${{steps.bump-version.outputs.version}}" v${{steps.bump-version.outputs.version}}
+
+      - name: Run production build
+        run: npm run build-prod
