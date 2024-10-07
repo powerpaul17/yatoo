@@ -90,3 +90,6 @@ jobs:
         env:
           ANDROID_KEYSTORE_PATH: ${{ runner.temp }}/keystore/yatoo.jks
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+
+      - name: Push tag & release commit
+        run: git push --follow-tags
