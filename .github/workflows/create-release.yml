@@ -17,7 +17,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     outputs:
-      version: ${{ steps.release-it.outputs.version }}
+      version: ${{ steps.bump-version.outputs.version }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
