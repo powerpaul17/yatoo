@@ -57,3 +57,9 @@ jobs:
       - name: Bump version
         id: bump-version
         run: echo "version=$(npx --yes semver -i ${{inputs.increment}} ${{steps.read-version.outputs.version}})" >> $GITHUB_OUTPUT
+
+      - name: Update version in package.json
+        run: sed -i -r 's/("version":\s*")(.*)"/\1${{steps.bump-version.outputs.version}}"/' package.json
+
+      - name: Updateversion in electron/package.json
+        run: sed -i -r 's/("version":\s*")(.*)"/\1${{steps.bump-version.outputs.version}}"/' electron/package.json
