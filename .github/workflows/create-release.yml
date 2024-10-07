@@ -72,3 +72,6 @@ jobs:
 
       - name: Fix version in package-lock.json files
         run: npm i && cd electron && npm i
+
+      - name: Commit new version
+        run: git commit --all --message "Release ${{steps.bump-version.outputs.version}}"
