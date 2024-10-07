@@ -96,3 +96,17 @@ jobs:
 
       - name: Push tag & release commit
         run: git push --follow-tags
+
+      - name: Create Github release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Release ${{steps.update-changelog.outputs.version}}
+          body: ${{steps.update-changelog.outputs.release-notes}}
+          draft: false
+          make_latest: true
+          files: |
+            android/app/build/outputs/apk/release/app-release.apk
+            electron/dist/yatoo.AppImage
+            electron/dist/yatoo-*.flatpak
+          fail_on_unmatched_files: true
+          token: ${{secrets.GITHUB_TOKEN}}
