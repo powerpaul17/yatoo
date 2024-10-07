@@ -46,7 +46,8 @@ jobs:
           mkdir -p "${TMP_KEYSTORE_PATH}"
           echo $ANDROID_KEYSTORE_BASE64 | base64 -di > "${TMP_KEYSTORE_PATH}"/yatoo.jks
 
-      - run: npm ci
+      - name: Install NPM packages
+        run: npm ci
 
       - name: Run tests
         run: npm run ci:test
