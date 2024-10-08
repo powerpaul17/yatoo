@@ -77,6 +77,12 @@ jobs:
       - name: Increment android version code
         run: sed -i -r 's/(.*versionCode\s*)([0-9]+)/echo "\1$((\2+1))"/e' android/app/build.gradle
 
+      - name: Write changelog for android package
+        run: |
+          mkdir -p metadata/en-US/changelogs \
+          && echo "${{steps.update-changelog.outputs.release-notes}}" > metadata/en-US/changelogs/${{steps.increment-version-code.outputs.versionCode}}.txt \
+          && git add metadata/en-US/changelogs/${{steps.increment-version-code.outputs.versionCode}}.txt
+
       - name: Fix version in package-lock.json files
         run: npm i && cd electron && npm i
 
