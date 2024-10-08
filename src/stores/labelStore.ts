@@ -1,10 +1,11 @@
 import { computed, type ComputedRef, type Ref } from 'vue';
 import { ItemNotFoundError, type Query } from 'blinkdb';
+import { z } from 'zod';
 
 import {
   Store,
+  ZodEntitySchema,
   type CreationEntity,
-  type Entity,
   type UpdateEntity
 } from './Store';
 import { useSingleInstance } from '../classes/useSingleInstance';
@@ -18,6 +19,7 @@ class LabelStore extends Store<'labels', InternalLabel> {
   constructor() {
     super({
       tableName: 'labels',
+      entitySchema: ZodInternalLabelSchema,
       migrationConfig: {
         version: 2,
         migrationFunction: (labels) =>
@@ -98,12 +100,14 @@ class LabelStore extends Store<'labels', InternalLabel> {
   }
 }
 
-export type InternalLabel = Entity & {
-  name: string;
-  color: string;
-  icon: string;
+export const ZodInternalLabelSchema = ZodEntitySchema.extend({
+  name: z.string(),
+  color: z.string(),
+  icon: z.string(),
 
-  _internalName: string;
-};
+  _internalName: z.string()
+});
+
+export type InternalLabel = z.infer<typeof ZodInternalLabelSchema>;
 
 export type Label = Omit<InternalLabel, '_internalName'>;

@@ -1,11 +1,13 @@
 import sinon from 'sinon';
+import { z } from 'zod';
 
 import {
   type CreationEntity,
   type Entity,
   type Migration,
   Store,
-  type UpdateEntity
+  type UpdateEntity,
+  ZodEntitySchema
 } from './Store';
 
 export class TestStore extends Store<string, TestEntity> {
@@ -25,6 +27,7 @@ export class TestStore extends Store<string, TestEntity> {
 
     super({
       tableName: name,
+      entitySchema: ZodTestEntitySchema,
       migrationConfig: {
         version,
         migrationFunction: migrationSpy
@@ -47,6 +50,8 @@ export class TestStore extends Store<string, TestEntity> {
   }
 }
 
-export type TestEntity = Entity & {
-  testValue: string;
-};
+export const ZodTestEntitySchema = ZodEntitySchema.extend({
+  testValue: z.string()
+});
+
+export type TestEntity = z.infer<typeof ZodTestEntitySchema>;

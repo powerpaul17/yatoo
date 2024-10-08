@@ -1,10 +1,11 @@
 import type { Query } from 'blinkdb';
 import type { ComputedRef, Ref } from 'vue';
+import { z } from 'zod';
 
 import {
   Store,
+  ZodEntitySchema,
   type CreationEntity,
-  type Entity,
   type UpdateEntity
 } from './Store';
 import { useSingleInstance } from '../classes/useSingleInstance';
@@ -19,6 +20,7 @@ class TodoStore extends Store<'todos', Todo> {
   constructor() {
     super({
       tableName: 'todos',
+      entitySchema: ZodTodoSchema,
       migrationConfig: {
         version: 2,
         migrationFunction: (todos) =>
@@ -76,10 +78,12 @@ class TodoStore extends Store<'todos', Todo> {
   }
 }
 
-export type Todo = Entity & {
-  title: string;
-  description: string;
+export const ZodTodoSchema = ZodEntitySchema.extend({
+  title: z.string(),
+  description: z.string(),
 
-  done: boolean;
-  doneAt: number | null;
-};
+  done: z.boolean(),
+  doneAt: z.number().nullable(),
+});
+
+export type Todo = z.infer<typeof ZodTodoSchema>;

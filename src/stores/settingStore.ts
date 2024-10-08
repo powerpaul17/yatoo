@@ -1,7 +1,8 @@
 import { v4 as uuid } from 'uuid';
 import { ItemNotFoundError } from 'blinkdb';
+import { z } from 'zod';
 
-import { Store, type Entity } from './Store';
+import { Store, ZodEntitySchema } from './Store';
 import { useSingleInstance } from '../classes/useSingleInstance';
 
 const createSettingStore = (): SettingStore => new SettingStore();
@@ -10,10 +11,11 @@ export const useSettingStore = (): SettingStore => {
   return useSingleInstance(createSettingStore);
 };
 
-class SettingStore extends Store<'settings', Setting<any>> {
+class SettingStore extends Store<'settings', Setting> {
   constructor() {
     super({
       tableName: 'settings',
+      entitySchema: ZodSettingSchema,
       migrationConfig: {
         version: 2,
         migrationFunction: (settings) =>
@@ -108,7 +110,7 @@ class SettingStore extends Store<'settings', Setting<any>> {
     group?: string | null;
     name: string;
     type: TSettingType;
-  }): Promise<Setting<TSettingType>> {
+  }): Promise<Setting> {
     return await super._one({
       where: {
         section,
@@ -120,11 +122,11 @@ class SettingStore extends Store<'settings', Setting<any>> {
   }
 }
 
-type GeneralSetting = Entity & {
-  section: string;
-  group: string | null;
-  name: string;
-};
+const ZodGeneralSettingSchema = ZodEntitySchema.extend({
+  section: z.string(),
+  group: z.string().nullable(),
+  name: z.string()
+});
 
 export enum SettingType {
   STRING = 'string',
@@ -132,10 +134,22 @@ export enum SettingType {
   NUMBER = 'number'
 }
 
-export type Setting<T extends SettingType> = GeneralSetting & {
-  type: T;
-  value: SettingTypeMap[T];
-};
+export const ZodSettingSchema = z.discriminatedUnion('type', [
+  ZodGeneralSettingSchema.extend({
+    type: z.literal('string'),
+    value: z.string()
+  }),
+  ZodGeneralSettingSchema.extend({
+    type: z.literal('boolean'),
+    value: z.boolean()
+  }),
+  ZodGeneralSettingSchema.extend({
+    type: z.literal('number'),
+    value: z.number()
+  })
+]);
+
+export type Setting = z.infer<typeof ZodSettingSchema>;
 
 type SettingTypeMap = {
   [SettingType.STRING]: string;

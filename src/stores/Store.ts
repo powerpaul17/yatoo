@@ -1,4 +1,5 @@
 import { v4 as uuid } from 'uuid';
+import { z, type ZodSchema } from 'zod';
 
 import { type Query, type ValidEntity } from 'blinkdb';
 
@@ -21,6 +22,8 @@ export class Store<
   TRenamedProperties = {}
 > {
   private readonly tableName: string;
+  private readonly entitySchema;
+
   private readonly store: BaseStore<TTableName, TEntity, 'id'>;
 
   private notifyRemoved;
@@ -32,12 +35,16 @@ export class Store<
 
   protected constructor({
     tableName,
+    entitySchema,
     migrationConfig
   }: {
     tableName: TTableName;
+    entitySchema: ZodSchema;
     migrationConfig?: MigrationConfig<TEntity, TRenamedProperties>;
   }) {
     this.tableName = tableName;
+    this.entitySchema = entitySchema;
+
     this.store = new BaseStore({ tableName, primaryKey: 'id' });
 
     const storageManager = useStorageManager();
@@ -255,12 +262,14 @@ export class Store<
 
 export class DbVersionMismatchError extends Error {}
 
-export type Entity = {
-  id: string;
-  createdAt: number;
-  updatedAt: number;
-  pluginId?: string;
-};
+export const ZodEntitySchema = z.object({
+  id: z.string(),
+  createdAt: z.number(),
+  updatedAt: z.number(),
+  pluginId: z.string().optional()
+});
+
+export type Entity = z.infer<typeof ZodEntitySchema>;
 
 export type GeneratedFields = 'id' | 'createdAt' | 'updatedAt';
 

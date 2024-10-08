@@ -138,7 +138,7 @@ describe('settingStore', () => {
     await settingStore.clear();
   });
 
-  const latestSettingItem: Setting<SettingType.STRING> = {
+  const latestSettingItem: Setting = {
     id: '1',
     name: 'setting1',
     group: 'group1',

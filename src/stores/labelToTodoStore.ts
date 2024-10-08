@@ -1,7 +1,8 @@
 import { computed, type ComputedRef, type Ref } from 'vue';
+import { z } from 'zod';
 
 import { useSingleInstance } from '../classes/useSingleInstance';
-import { Store, type CreationEntity, type Entity } from './Store';
+import { Store, ZodEntitySchema, type CreationEntity } from './Store';
 import { useStorageManager } from './StorageManager';
 
 const createLabelToTodoStore = (): LabelToTodoStore => new LabelToTodoStore();
@@ -13,6 +14,7 @@ class LabelToTodoStore extends Store<'label_to_todos', LabelToTodo> {
   constructor() {
     super({
       tableName: 'label_to_todos',
+      entitySchema: ZodLabelToTodoSchema,
       migrationConfig: {
         version: 2,
         migrationFunction: (entities) =>
@@ -113,7 +115,9 @@ class LabelToTodoStore extends Store<'label_to_todos', LabelToTodo> {
   }
 }
 
-export type LabelToTodo = Entity & {
-  labelId: string;
-  todoId: string;
-};
+export const ZodLabelToTodoSchema = ZodEntitySchema.extend({
+  labelId: z.string(),
+  todoId: z.string()
+});
+
+export type LabelToTodo = z.infer<typeof ZodLabelToTodoSchema>;
