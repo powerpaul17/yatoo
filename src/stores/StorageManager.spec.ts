@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import sinon, { type SinonFakeTimers } from 'sinon';
+import { ZodError } from 'zod';
 
 import {
   StoreAlreadyRegisteredError,
@@ -140,6 +141,46 @@ describe('StorageManager', () => {
                 updatedAt: 100
               }
             ]
+          }
+        }
+      });
+    });
+
+    it('should validate entities before importing', async () => {
+      const { createStore } = setupEnvironment();
+
+      createStore();
+
+      const storageManager = useStorageManager();
+
+      await expect(() =>
+        storageManager.importData({
+          lastUpdatedAt: 100,
+          exportedAt: 100,
+          stores: {
+            test: {
+              version: 0,
+              lastUpdatedAt: 0,
+              entities: [
+                {
+                  id: '1-1',
+                  updatedAt: 100,
+                  createdAt: 100
+                }
+              ]
+            }
+          }
+        })
+      ).rejects.toThrowError(ZodError);
+
+      expect(await storageManager.exportData()).to.deep.equal({
+        exportedAt: 100,
+        lastUpdatedAt: 0,
+        stores: {
+          test: {
+            version: 0,
+            lastUpdatedAt: 0,
+            entities: []
           }
         }
       });
