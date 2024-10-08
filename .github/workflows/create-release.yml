@@ -17,7 +17,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     outputs:
-      version: ${{ steps.release-it.outputs.version }}
+      version: ${{ steps.bump-version.outputs.version }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -46,11 +46,77 @@ jobs:
           mkdir -p "${TMP_KEYSTORE_PATH}"
           echo $ANDROID_KEYSTORE_BASE64 | base64 -di > "${TMP_KEYSTORE_PATH}"/yatoo.jks
 
-      - run: npm ci
+      - name: Install NPM packages
+        run: npm ci
 
-      - run: npx release-it ${{ inputs.increment }}
-        id: release-it
+      - name: Run tests
+        run: npm run ci:test
+
+      - name: Update changelog
+        id: update-changelog
+        uses: release-flow/keep-a-changelog-action@v2
+        with:
+          command: bump
+          version: minor # ${{inputs.increment}}
+          fail-on-empty-release-notes: true
+          keep-unreleased-section: true
+
+      - name: Update version in package.json
+        run: sed -i -r 's/("version":\s*")(.*)"/\1${{steps.update-changelog.outputs.version}}"/' package.json
+
+      - name: Updateversion in electron/package.json
+        run: sed -i -r 's/("version":\s*")(.*)"/\1${{steps.update-changelog.outputs.version}}"/' electron/package.json
+
+      - name: Update version in android/app/build.gradle
+        run: sed -i -r 's/versionName\s"([0-9.]+)"/versionName "${{steps.update-changelog.outputs.version}}"/' android/app/build.gradle
+
+      - name: Read android version code & increment it
+        id: increment-version-code
+        run: echo "versionCode=$(($(grep -oP '(?<=versionCode\s)(\d*)' android/app/build.gradle)+1))" >> "$GITHUB_OUTPUT"
+
+      - name: Increment android version code
+        run: sed -i -r 's/(.*versionCode\s*)([0-9]+)/echo "\1$((\2+1))"/e' android/app/build.gradle
+
+      - name: Write changelog for android package
+        run: |
+          mkdir -p metadata/en-US/changelogs \
+          && echo "${{steps.update-changelog.outputs.release-notes}}" > metadata/en-US/changelogs/${{steps.increment-version-code.outputs.versionCode}}.txt \
+          && git add metadata/en-US/changelogs/${{steps.increment-version-code.outputs.versionCode}}.txt
+
+      - name: Fix version in package-lock.json files
+        run: npm i && cd electron && npm i
+
+      - name: Commit new version
+        run: git commit --all --message "Release ${{steps.update-changelog.outputs.version}}"
+
+      - name: Add git tag
+        run: git tag --annotate --message "v${{steps.update-changelog.outputs.version}}" v${{steps.update-changelog.outputs.version}}
+
+      - name: Run production build
+        run: npm run build-prod
+
+      - name: Prepare capacitor
+        run: npm run capacitor-sync
+
+      - name: Run android build
+        run: npm run build-android
         env:
           ANDROID_KEYSTORE_PATH: ${{ runner.temp }}/keystore/yatoo.jks
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push tag & release commit
+        run: git push --follow-tags
+
+      - name: Create Github release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Release ${{steps.update-changelog.outputs.version}}
+          body: ${{steps.update-changelog.outputs.release-notes}}
+          draft: false
+          make_latest: true
+          files: |
+            android/app/build/outputs/apk/release/app-release.apk
+            electron/dist/yatoo.AppImage
+            electron/dist/yatoo-*.flatpak
+          fail_on_unmatched_files: true
+          token: ${{secrets.GITHUB_TOKEN}}

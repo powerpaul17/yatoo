@@ -14,7 +14,14 @@ module.exports = {
   mode: devMode ? 'development' : 'production',
   devtool: devMode ? 'eval' : false,
   devServer: {
-    static: './dist'
+    static: './dist',
+    client: {
+      overlay: {
+        errors: true,
+        warnings: false,
+        runtimeErrors: true
+      }
+    }
   },
   module: {
     rules: [
