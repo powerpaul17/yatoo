@@ -70,6 +70,10 @@ jobs:
       - name: Update version in android/app/build.gradle
         run: sed -i -r 's/versionName\s"([0-9.]+)"/versionName "${{steps.update-changelog.outputs.version}}"/' android/app/build.gradle
 
+      - name: Read android version code & increment it
+        id: increment-version-code
+        run: echo "versionCode=$(($(grep -oP '(?<=versionCode\s)(\d*)' android/app/build.gradle)+1))" >> "$GITHUB_OUTPUT"
+
       - name: Increment android version code
         run: sed -i -r 's/(.*versionCode\s*)([0-9]+)/echo "\1$((\2+1))"/e' android/app/build.gradle
 
