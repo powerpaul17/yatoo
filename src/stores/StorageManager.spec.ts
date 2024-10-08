@@ -147,6 +147,7 @@ describe('StorageManager', () => {
   });
 
   let clock: SinonFakeTimers;
+  let stores: Array<string> = [];
 
   beforeEach(() => {
     clock = sinon.useFakeTimers(100);
@@ -156,8 +157,12 @@ describe('StorageManager', () => {
     const storageManager = useStorageManager();
     storageManager.clear();
 
-    const localStorage = await useLocalStorage('test');
-    await localStorage.clear();
+    for (const store of stores) {
+      const localStorage = await useLocalStorage(store);
+      await localStorage.clear();
+    }
+
+    stores = [];
 
     clock.restore();
   });
@@ -166,11 +171,14 @@ describe('StorageManager', () => {
     createStore: (name?: string) => TestStore;
   } {
     return {
-      createStore: (name = 'test') =>
-        new TestStore({
+      createStore: (name = 'test'): TestStore => {
+        stores.push(name);
+
+        return new TestStore({
           name,
           version: 0
-        })
+        });
+      }
     };
   }
 });
