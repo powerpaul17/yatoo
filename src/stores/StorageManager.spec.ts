@@ -116,6 +116,7 @@ describe('StorageManager', () => {
               {
                 id: '2-1',
                 testValue: 'test1-Store2',
+                createdAt: 100,
                 updatedAt: 100
               }
             ]
@@ -139,6 +140,7 @@ describe('StorageManager', () => {
               {
                 id: '2-1',
                 testValue: 'test1-Store2',
+                createdAt: 100,
                 updatedAt: 100
               }
             ]
