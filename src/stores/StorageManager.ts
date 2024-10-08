@@ -98,6 +98,8 @@ export class StorageManager {
       if (storeData.version > (await store.getStoreVersion())) {
         throw new WrongStoreVersionError(storeName, storeData.version);
       }
+
+      store.validateEntities(storeData.entities);
     }
 
     for (const [storeName, storeData] of Object.entries(data.stores)) {

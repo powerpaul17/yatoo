@@ -73,6 +73,8 @@ export class Store<
   }
 
   public async importData(entities: Array<TEntity>): Promise<void> {
+    this.validateEntities(entities);
+
     await this.clear();
     await this.store.upsertMany(entities);
   }
@@ -239,6 +241,14 @@ export class Store<
 
   public async getStoreVersion(): Promise<number> {
     return this.migrationHelper.getLastDbVersion();
+  }
+
+  public validateEntities(entities: Array<TEntity>): void {
+    entities.forEach(this.validateEntity.bind(this));
+  }
+
+  private validateEntity(entity: TEntity): asserts entity is TEntity {
+    this.entitySchema.parse(entity);
   }
 
   private async migrate(
