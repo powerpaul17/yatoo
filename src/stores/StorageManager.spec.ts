@@ -19,124 +19,130 @@ describe('StorageManager', () => {
     }).toThrow(StoreAlreadyRegisteredError);
   });
 
-  it('should notify subscribers if an entity is created', async () => {
-    const { createStore } = setupEnvironment();
+  describe('notifications', () => {
+    it('should notify subscribers if an entity is created', async () => {
+      const { createStore } = setupEnvironment();
 
-    const store = createStore();
+      const store = createStore();
 
-    const storageManager = useStorageManager();
+      const storageManager = useStorageManager();
 
-    const spy = sinon.spy();
-    storageManager.subscribeEntityUpserted(spy);
+      const spy = sinon.spy();
+      storageManager.subscribeEntityUpserted(spy);
 
-    const id = await store.create({ testValue: 'abc' });
+      const id = await store.create({ testValue: 'abc' });
 
-    expect(spy.getCalls().map((c) => c.args)).to.deep.equal([
-      ['test', { id, testValue: 'abc', createdAt: 100, updatedAt: 100 }]
-    ]);
-  });
+      expect(spy.getCalls().map((c) => c.args)).to.deep.equal([
+        ['test', { id, testValue: 'abc', createdAt: 100, updatedAt: 100 }]
+      ]);
+    });
 
-  it('should notify subscribers if an entity is updated', async () => {
-    const { createStore } = setupEnvironment();
+    it('should notify subscribers if an entity is updated', async () => {
+      const { createStore } = setupEnvironment();
 
-    const store = createStore();
+      const store = createStore();
 
-    const storageManager = useStorageManager();
+      const storageManager = useStorageManager();
 
-    const id = await store.create({ testValue: 'abc' });
+      const id = await store.create({ testValue: 'abc' });
 
-    const spy = sinon.spy();
-    storageManager.subscribeEntityUpserted(spy);
+      const spy = sinon.spy();
+      storageManager.subscribeEntityUpserted(spy);
 
-    await store.update({ id, testValue: 'def' });
+      await store.update({ id, testValue: 'def' });
 
-    expect(spy.getCalls().map((c) => c.args)).to.deep.equal([
-      ['test', { id, testValue: 'def', createdAt: 100, updatedAt: 100 }]
-    ]);
-  });
-
-  it('should export data of all stores', async () => {
-    const { createStore } = setupEnvironment();
-
-    const store1 = createStore();
-    const id = await store1.create({ testValue: 'test1' });
-
-    createStore('store2');
-
-    const storageManager = useStorageManager();
-
-    expect(await storageManager.exportData()).to.deep.equal({
-      lastUpdatedAt: 100,
-      exportedAt: 100,
-      stores: {
-        test: {
-          version: 0,
-          lastUpdatedAt: 100,
-          entities: [{ id, testValue: 'test1', createdAt: 100, updatedAt: 100 }]
-        },
-        store2: {
-          version: 0,
-          lastUpdatedAt: 0,
-          entities: []
-        }
-      }
+      expect(spy.getCalls().map((c) => c.args)).to.deep.equal([
+        ['test', { id, testValue: 'def', createdAt: 100, updatedAt: 100 }]
+      ]);
     });
   });
 
-  it('should allow importing data of all stores', async () => {
-    const { createStore } = setupEnvironment();
+  describe('import/export', () => {
+    it('should export data of all stores', async () => {
+      const { createStore } = setupEnvironment();
 
-    const store1 = createStore();
-    await store1.create({ testValue: 'test1' });
+      const store1 = createStore();
+      const id = await store1.create({ testValue: 'test1' });
 
-    createStore('store2');
+      createStore('store2');
 
-    const storageManager = useStorageManager();
+      const storageManager = useStorageManager();
 
-    await storageManager.importData({
-      lastUpdatedAt: 100,
-      exportedAt: 100,
-      stores: {
-        test: {
-          version: 0,
-          lastUpdatedAt: 0,
-          entities: []
-        },
-        store2: {
-          version: 0,
-          lastUpdatedAt: 100,
-          entities: [
-            {
-              id: '2-1',
-              testValue: 'test1-Store2',
-              updatedAt: 100
-            }
-          ]
+      expect(await storageManager.exportData()).to.deep.equal({
+        lastUpdatedAt: 100,
+        exportedAt: 100,
+        stores: {
+          test: {
+            version: 0,
+            lastUpdatedAt: 100,
+            entities: [
+              { id, testValue: 'test1', createdAt: 100, updatedAt: 100 }
+            ]
+          },
+          store2: {
+            version: 0,
+            lastUpdatedAt: 0,
+            entities: []
+          }
         }
-      }
+      });
     });
 
-    expect(await storageManager.exportData()).to.deep.equal({
-      lastUpdatedAt: 100,
-      exportedAt: 100,
-      stores: {
-        test: {
-          version: 0,
-          lastUpdatedAt: 0,
-          entities: []
-        },
-        store2: {
-          version: 0,
-          lastUpdatedAt: 100,
-          entities: [
-            {
-              id: '2-1',
-              testValue: 'test1-Store2',
-              updatedAt: 100
-            }
-          ]
+    it('should allow importing data of all stores', async () => {
+      const { createStore } = setupEnvironment();
+
+      const store1 = createStore();
+      await store1.create({ testValue: 'test1' });
+
+      createStore('store2');
+
+      const storageManager = useStorageManager();
+
+      await storageManager.importData({
+        lastUpdatedAt: 100,
+        exportedAt: 100,
+        stores: {
+          test: {
+            version: 0,
+            lastUpdatedAt: 0,
+            entities: []
+          },
+          store2: {
+            version: 0,
+            lastUpdatedAt: 100,
+            entities: [
+              {
+                id: '2-1',
+                testValue: 'test1-Store2',
+                updatedAt: 100
+              }
+            ]
+          }
         }
-      }
+      });
+
+      expect(await storageManager.exportData()).to.deep.equal({
+        lastUpdatedAt: 100,
+        exportedAt: 100,
+        stores: {
+          test: {
+            version: 0,
+            lastUpdatedAt: 0,
+            entities: []
+          },
+          store2: {
+            version: 0,
+            lastUpdatedAt: 100,
+            entities: [
+              {
+                id: '2-1',
+                testValue: 'test1-Store2',
+                updatedAt: 100
+              }
+            ]
+          }
+        }
+      });
     });
   });
 
