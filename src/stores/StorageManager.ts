@@ -88,14 +88,21 @@ export class StorageManager {
   }
 
   public async importData(data: ImportExportFormatType): Promise<void> {
-    // TODO: validate data
-
     for (const [storeName, storeData] of Object.entries(data.stores)) {
       const store = this.stores.get(storeName);
       if (!store) {
         Logger.warn('StorageManager', `Store '${storeName}' does not exist.`);
         continue;
       }
+
+      if (storeData.version > (await store.getStoreVersion())) {
+        throw new WrongStoreVersionError(storeName, storeData.version);
+      }
+    }
+
+    for (const [storeName, storeData] of Object.entries(data.stores)) {
+      const store = this.stores.get(storeName);
+      if (!store) continue;
 
       Logger.debug('StorageManager', `Importing data into '${storeName}'`);
       await store.importData(storeData.entities);
@@ -146,3 +153,11 @@ export const ZodImportExportFormat = z.object({
 });
 
 type ImportExportFormatType = z.infer<typeof ZodImportExportFormat>;
+
+export class WrongStoreVersionError extends Error {
+  constructor(storeName: string, storeVersion: number) {
+    super(
+      `cannot import store '${storeName}' with a newer version ${storeVersion}`
+    );
+  }
+}

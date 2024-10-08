@@ -4,7 +4,8 @@ import { ZodError } from 'zod';
 
 import {
   StoreAlreadyRegisteredError,
-  useStorageManager
+  useStorageManager,
+  WrongStoreVersionError
 } from './StorageManager';
 import { TestStore } from './TestStore';
 import { useLocalStorage } from './LocalStorage/useLocalStorage';
