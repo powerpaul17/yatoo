@@ -168,15 +168,15 @@ describe('StorageManager', () => {
   });
 
   function setupEnvironment(): {
-    createStore: (name?: string) => TestStore;
+    createStore: (name?: string, version?: number) => TestStore;
   } {
     return {
-      createStore: (name = 'test'): TestStore => {
+      createStore: (name = 'test', version = 0): TestStore => {
         stores.push(name);
 
         return new TestStore({
           name,
-          version: 0
+          version
         });
       }
     };
