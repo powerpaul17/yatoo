@@ -256,6 +256,50 @@ describe('StorageManager', () => {
         }
       });
     });
+
+    it('should migrate entities of an older store version', async () => {
+      const { createStore } = setupEnvironment();
+
+      createStore('test', 1);
+
+      const storageManager = useStorageManager();
+
+      await storageManager.importData({
+        lastUpdatedAt: 100,
+        exportedAt: 100,
+        stores: {
+          test: {
+            version: 0,
+            lastUpdatedAt: 0,
+            entities: [
+              {
+                id: '1-1',
+                testValue: 'test'
+              }
+            ]
+          }
+        }
+      });
+
+      expect(await storageManager.exportData()).to.deep.equal({
+        exportedAt: 100,
+        lastUpdatedAt: 100,
+        stores: {
+          test: {
+            version: 1,
+            lastUpdatedAt: 100,
+            entities: [
+              {
+                id: '1-1',
+                testValue: 'test',
+                updatedAt: 100,
+                createdAt: 100
+              }
+            ]
+          }
+        }
+      });
+    });
   });
 
   let clock: SinonFakeTimers;
