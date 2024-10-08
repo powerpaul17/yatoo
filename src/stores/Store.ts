@@ -30,6 +30,7 @@ export class Store<
   private notifyUpserted;
 
   private migrationHelper;
+  private migrationConfig;
 
   protected readonly initializePromise;
 
@@ -56,6 +57,7 @@ export class Store<
     this.notifyUpserted = notifyEntityUpserted;
 
     this.migrationHelper = new MigrationHelper(this.tableName);
+    this.migrationConfig = migrationConfig;
 
     this.initializePromise = migrationConfig
       ? this.migrate(migrationConfig)
@@ -76,11 +78,14 @@ export class Store<
     entities: Array<TEntity>,
     dryRun = false
   ): Promise<void> {
-    this.validateEntities(entities);
+    const migratedEntities =
+      this.migrationConfig?.migrationFunction(entities) ?? entities;
+
+    this.validateEntities(migratedEntities);
 
     if (!dryRun) {
       await this.clear();
-      await this.store.upsertMany(entities);
+      await this.store.upsertMany(migratedEntities);
     }
   }
 
