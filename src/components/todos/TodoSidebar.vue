@@ -140,10 +140,12 @@
   const labels = labelService.getLabelRefForTodoId(todoId);
 
   const router = useRouter();
+  const route = useRoute();
 
   async function handleClose(): Promise<void> {
     await router.push({
       query: {
+        ...route.query,
         todoId: undefined
       }
     });
@@ -176,5 +178,4 @@
   function handleSelectLabels(): void {
     labelSelectDialogOpen.value = true;
   }
-
 </script>
