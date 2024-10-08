@@ -185,6 +185,76 @@ describe('StorageManager', () => {
         }
       });
     });
+
+    it('should not import a store with a newer version', async () => {
+      const { createStore } = setupEnvironment();
+
+      createStore();
+
+      const store2 = createStore('store2');
+      const store2EntityId = await store2.create({
+        testValue: 'existing entity value'
+      });
+
+      const storageManager = useStorageManager();
+
+      await expect(() =>
+        storageManager.importData({
+          lastUpdatedAt: 100,
+          exportedAt: 100,
+          stores: {
+            store2: {
+              version: 0,
+              lastUpdatedAt: 100,
+              entities: [
+                {
+                  id: '2-1',
+                  testValue: 'I should not have been imported!',
+                  updatedAt: 100,
+                  createdAt: 100
+                }
+              ]
+            },
+            test: {
+              version: 1,
+              lastUpdatedAt: 100,
+              entities: [
+                {
+                  id: '1-1',
+                  testValue: 'test',
+                  updatedAt: 100,
+                  createdAt: 100
+                }
+              ]
+            }
+          }
+        })
+      ).rejects.toThrowError(WrongStoreVersionError);
+
+      expect(await storageManager.exportData()).to.deep.equal({
+        exportedAt: 100,
+        lastUpdatedAt: 100,
+        stores: {
+          test: {
+            version: 0,
+            lastUpdatedAt: 0,
+            entities: []
+          },
+          store2: {
+            version: 0,
+            lastUpdatedAt: 100,
+            entities: [
+              {
+                id: store2EntityId,
+                testValue: 'existing entity value',
+                updatedAt: 100,
+                createdAt: 100
+              }
+            ]
+          }
+        }
+      });
+    });
   });
 
   let clock: SinonFakeTimers;
