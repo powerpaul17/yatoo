@@ -72,11 +72,16 @@ export class Store<
     return this.store.many({});
   }
 
-  public async importData(entities: Array<TEntity>): Promise<void> {
+  public async importData(
+    entities: Array<TEntity>,
+    dryRun = false
+  ): Promise<void> {
     this.validateEntities(entities);
 
-    await this.clear();
-    await this.store.upsertMany(entities);
+    if (!dryRun) {
+      await this.clear();
+      await this.store.upsertMany(entities);
+    }
   }
 
   protected _watchForComputedQuery(

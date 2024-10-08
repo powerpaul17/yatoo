@@ -99,7 +99,7 @@ export class StorageManager {
         throw new WrongStoreVersionError(storeName, storeData.version);
       }
 
-      store.validateEntities(storeData.entities);
+      await store.importData(storeData.entities, true);
     }
 
     for (const [storeName, storeData] of Object.entries(data.stores)) {
