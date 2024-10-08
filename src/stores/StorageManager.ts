@@ -95,19 +95,34 @@ export class StorageManager {
         continue;
       }
 
-      if (storeData.version > (await store.getStoreVersion())) {
+      const storeVersion = await store.getStoreVersion();
+
+      if (storeData.version > storeVersion) {
         throw new WrongStoreVersionError(storeName, storeData.version);
       }
 
-      await store.importData(storeData.entities, true);
+      const migrate = storeData.version < storeVersion ? true : false;
+
+      await store.importData({
+        entities: storeData.entities,
+        dryRun: true,
+        migrate
+      });
     }
 
     for (const [storeName, storeData] of Object.entries(data.stores)) {
       const store = this.stores.get(storeName);
       if (!store) continue;
 
+      const storeVersion = await store.getStoreVersion();
+      const migrate = storeData.version < storeVersion ? true : false;
+
       Logger.debug('StorageManager', `Importing data into '${storeName}'`);
-      await store.importData(storeData.entities);
+
+      await store.importData({
+        entities: storeData.entities,
+        migrate
+      });
     }
   }
 

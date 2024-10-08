@@ -74,12 +74,19 @@ export class Store<
     return this.store.many({});
   }
 
-  public async importData(
-    entities: Array<TEntity>,
-    dryRun = false
-  ): Promise<void> {
+  public async importData({
+    entities,
+    dryRun = false,
+    migrate = false
+  }: {
+    entities: Array<TEntity>;
+    dryRun?: boolean;
+    migrate?: boolean;
+  }): Promise<void> {
     const migratedEntities =
-      this.migrationConfig?.migrationFunction(entities) ?? entities;
+      migrate && this.migrationConfig
+        ? this.migrationConfig.migrationFunction(entities)
+        : entities;
 
     this.validateEntities(migratedEntities);
 
