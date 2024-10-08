@@ -11,21 +11,21 @@ import { TestStore } from './TestStore';
 import { useLocalStorage } from './LocalStorage/useLocalStorage';
 
 describe('StorageManager', () => {
-  it('should throw an error if store is already registered', () => {
+  it('should throw an error if store is already registered', async () => {
     const { createStore } = setupEnvironment();
 
-    createStore();
+    await createStore();
 
-    expect(() => {
-      createStore();
-    }).toThrow(StoreAlreadyRegisteredError);
+    await expect(async () => {
+      await createStore();
+    }).rejects.toThrow(StoreAlreadyRegisteredError);
   });
 
   describe('notifications', () => {
     it('should notify subscribers if an entity is created', async () => {
       const { createStore } = setupEnvironment();
 
-      const store = createStore();
+      const store = await createStore();
 
       const storageManager = useStorageManager();
 
@@ -42,7 +42,7 @@ describe('StorageManager', () => {
     it('should notify subscribers if an entity is updated', async () => {
       const { createStore } = setupEnvironment();
 
-      const store = createStore();
+      const store = await createStore();
 
       const storageManager = useStorageManager();
 
@@ -63,10 +63,10 @@ describe('StorageManager', () => {
     it('should export data of all stores', async () => {
       const { createStore } = setupEnvironment();
 
-      const store1 = createStore();
+      const store1 = await createStore();
       const id = await store1.create({ testValue: 'test1' });
 
-      createStore('store2');
+      await createStore('store2');
 
       const storageManager = useStorageManager();
 
@@ -93,10 +93,10 @@ describe('StorageManager', () => {
     it('should allow importing data of all stores', async () => {
       const { createStore } = setupEnvironment();
 
-      const store1 = createStore();
+      const store1 = await createStore();
       await store1.create({ testValue: 'test1' });
 
-      createStore('store2');
+      await createStore('store2');
 
       const storageManager = useStorageManager();
 
@@ -150,7 +150,7 @@ describe('StorageManager', () => {
     it('should validate entities before importing', async () => {
       const { createStore } = setupEnvironment();
 
-      createStore();
+      await createStore();
 
       const storageManager = useStorageManager();
 
@@ -190,9 +190,9 @@ describe('StorageManager', () => {
     it('should not import a store with a newer version', async () => {
       const { createStore } = setupEnvironment();
 
-      createStore();
+      await createStore();
 
-      const store2 = createStore('store2');
+      const store2 = await createStore('store2');
       const store2EntityId = await store2.create({
         testValue: 'existing entity value'
       });
@@ -260,7 +260,7 @@ describe('StorageManager', () => {
     it('should migrate entities of an older store version', async () => {
       const { createStore } = setupEnvironment();
 
-      createStore('test', 1);
+      await createStore('test', 1);
 
       const storageManager = useStorageManager();
 
@@ -324,16 +324,20 @@ describe('StorageManager', () => {
   });
 
   function setupEnvironment(): {
-    createStore: (name?: string, version?: number) => TestStore;
+    createStore: (name?: string, version?: number) => Promise<TestStore>;
   } {
     return {
-      createStore: (name = 'test', version = 0): TestStore => {
+      createStore: async (name = 'test', version = 0): Promise<TestStore> => {
         stores.push(name);
 
-        return new TestStore({
+        const store = new TestStore({
           name,
           version
         });
+
+        await store.awaitReady();
+
+        return store;
       }
     };
   }
