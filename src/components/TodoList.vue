@@ -12,7 +12,7 @@
 
 <script setup lang="ts">
   import type { PropType } from 'vue';
-  import { useRouter } from 'vue-router';
+  import { useRoute, useRouter } from 'vue-router';
 
   import type { Todo } from '../stores/todoStore';
 
@@ -20,6 +20,7 @@
   import TodoItem from '../components/TodoItem.vue';
 
   const router = useRouter();
+  const route = useRoute();
 
   defineProps({
     todos: {
@@ -31,6 +32,7 @@
   async function handleTodoOpenClicked(todoId?: string): Promise<void> {
     await router.push({
       query: {
+        ...route.query,
         todoId
       }
     });
