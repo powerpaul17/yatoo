@@ -111,6 +111,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           name: Release ${{steps.update-changelog.outputs.version}}
+          tag_name: v${{steps.update-changelog.outputs.version}}
           body: ${{steps.update-changelog.outputs.release-notes}}
           draft: false
           make_latest: true
