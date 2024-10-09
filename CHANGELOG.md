@@ -1,6 +1,7 @@
 ## [Unreleased]
 
 - add import/export plugin
+- open todo in sidebar on click
 
 ## [0.9.0] - 2024-09-27
 

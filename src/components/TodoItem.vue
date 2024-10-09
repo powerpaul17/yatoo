@@ -5,13 +5,14 @@
       'opacity-40': todo.done,
       'bg-surface-100 dark:bg-surface-900': isOpen
     }"
+    @click="handleToggleOpenClicked()"
   >
     <div class="flex items-center gap-2 p-1">
       <div class="shrink-0">
         <Button
           text
           plain
-          @click="handleToggleDoneClicked()"
+          @click.stop="handleToggleDoneClicked()"
         >
           <template #icon="{ class: cls }">
             <Square
@@ -50,24 +51,6 @@
             :compact="false"
           />
         </div>
-      </div>
-      <div class="shrink-0">
-        <Button
-          text
-          plain
-          @click="handleToggleOpenClicked()"
-        >
-          <template #icon="{ class: cls }">
-            <X
-              v-if="isOpen"
-              :class="cls"
-            />
-            <PanelRightOpen
-              v-else
-              :class="cls"
-            />
-          </template>
-        </Button>
       </div>
     </div>
   </div>
