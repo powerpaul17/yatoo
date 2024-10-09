@@ -70,7 +70,8 @@
 </style>
 
 <script setup lang="ts">
-  import { provide, ref } from 'vue';
+  import { provide, ref, watch } from 'vue';
+  import { useRoute } from 'vue-router';
   import type { useScroll } from '@vueuse/core';
   import { vScroll } from '@vueuse/components';
 
@@ -86,6 +87,8 @@
 
   import { ImportExportPlugin } from './plugins/ImportExportPlugin';
 
+  const route = useRoute();
+
   // instantiate plugins after everything else
 
   const pluginManager = new PluginManager(new ImportExportPlugin());
@@ -100,4 +103,8 @@
   }
 
   const menuOpen = ref(false);
+
+  watch(route, () => {
+    menuOpen.value = false;
+  });
 </script>
