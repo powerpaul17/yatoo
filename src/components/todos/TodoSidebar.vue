@@ -87,7 +87,7 @@
 
 <script setup lang="ts">
   import { computed, onMounted, ref, watch } from 'vue';
-  import { useRouter } from 'vue-router';
+  import { useRoute, useRouter } from 'vue-router';
 
   import InputText from 'primevue/inputtext';
   import TextArea from 'primevue/textarea';
