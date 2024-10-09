@@ -116,7 +116,5 @@ jobs:
           make_latest: true
           files: |
             android/app/build/outputs/apk/release/app-release.apk
-            electron/dist/yatoo.AppImage
-            electron/dist/yatoo-*.flatpak
           fail_on_unmatched_files: true
           token: ${{secrets.GITHUB_TOKEN}}
