@@ -1,0 +1,3 @@
+- add import/export plugin
+- open todo in sidebar on click
+
