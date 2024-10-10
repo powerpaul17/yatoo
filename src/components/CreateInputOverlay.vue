@@ -1,5 +1,5 @@
 <template>
-  <Sidebar
+  <Drawer
     pt:root="h-auto max-w-5xl rounded-b-md"
     :pt-options="{
       mergeProps: true
@@ -51,14 +51,14 @@
         </div>
       </div>
     </template>
-  </Sidebar>
+  </Drawer>
 </template>
 
 <script setup lang="ts">
   import { computed, ref, watch } from 'vue';
   import { useRoute } from 'vue-router';
 
-  import Sidebar from 'primevue/sidebar';
+  import Drawer from 'primevue/drawer';
   import InputGroup from 'primevue/inputgroup';
   import InputText from 'primevue/inputtext';
   import Button from 'primevue/button';
