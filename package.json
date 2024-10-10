@@ -3,7 +3,7 @@
   "version": "0.10.0",
   "description": "Organize your life!",
   "scripts": {
-    "build": "COMMIT_HASH=\"${COMMIT_HASH:-`git rev-parse --short HEAD`}\" VERSION=$(node -pe 'require(\"./package.json\").version') webpack",
+    "build": "COMMIT_HASH=\"${COMMIT_HASH:-`git rev-parse --short=7 HEAD`}\" VERSION=$(node -pe 'require(\"./package.json\").version') webpack",
     "build-dev": "npm run build",
     "build-prod": "NODE_ENV=production npm run build",
     "test": "TEST=true vitest",
