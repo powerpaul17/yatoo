@@ -9,7 +9,8 @@ import {
   type Table,
   upsertMany,
   many,
-  watch
+  watch,
+  first
 } from 'blinkdb';
 
 import { createTable } from './blinkdb';
@@ -57,6 +58,15 @@ export class BaseStore<
     this.assertTable(this.table);
 
     await upsertMany(this.table, entities);
+  }
+
+  public async first(
+    query: Query<TEntity, PrimaryKeyOf<TEntity>>
+  ): Promise<TEntity | null> {
+    await this.initializePromise;
+    this.assertTable(this.table);
+
+    return await first(this.table, query);
   }
 
   public async one(
