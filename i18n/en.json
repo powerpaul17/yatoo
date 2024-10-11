@@ -42,14 +42,14 @@
     }
   },
   "entities": {
-    "todo": {
-      "title": "Title",
-      "description": "Description"
-    },
     "label": {
       "color": "Color",
       "icon": "Icon",
       "name": "Name"
+    },
+    "todo": {
+      "title": "Title",
+      "description": "Description"
     }
   },
   "errors": {
