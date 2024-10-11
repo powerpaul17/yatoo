@@ -7,7 +7,8 @@
     :route="{
       name: 'todos',
       query: {
-        filter_label: label.id
+        filter_label: label.id,
+        filter_text: undefined
       }
     }"
     :badge-value="numberOfTodos"
@@ -64,6 +65,7 @@
 
 <script setup lang="ts">
   import { ref, type PropType, watch, computed } from 'vue';
+  import { useRoute } from 'vue-router';
   import { useI18n } from 'vue-i18n';
 
   import { useGlobalMessageBus } from '../../classes/useGlobalMessageBus';
@@ -79,6 +81,8 @@
   import CustomIcon from '../CustomIcon.vue';
   import LabelEditDialog from '../dialogs/LabelEditDialog.vue';
   import DeleteDialog from '../dialogs/DeleteDialog.vue';
+
+  const route = useRoute();
 
   const { t } = useI18n();
 
