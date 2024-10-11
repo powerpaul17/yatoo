@@ -281,6 +281,16 @@ export class Store<
 
   private async init(): Promise<void> {
     await this.migrate();
+
+    this.updatedAt =
+      (
+        await this.store.first({
+          sort: {
+            key: 'updatedAt',
+            order: 'desc'
+          }
+        })
+      )?.updatedAt ?? 0;
   }
 
   private async migrate(): Promise<void> {
