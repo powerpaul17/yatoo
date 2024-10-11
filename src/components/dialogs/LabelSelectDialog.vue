@@ -11,6 +11,7 @@
         option-label="name"
         data-key="id"
         dropdown
+        :placeholder="$t('components.dialogs.LabelSelectDialog.placeholder')"
         multiple
         :force-selection="true"
         dropdown-mode="current"

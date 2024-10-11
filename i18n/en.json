@@ -12,6 +12,7 @@
       },
       "LabelSelectDialog": {
         "discard": "Discard changes",
+        "placeholder": "Add labels...",
         "save": "Save labels",
         "title": "Select labels"
       }
