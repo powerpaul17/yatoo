@@ -27,10 +27,10 @@
     />
   </div>
 
-  <OverlayPanel
+  <Popover
+    class="before:!content-none after:!content-none"
     ref="suggestionsOverlayPanel"
     pt:content="!p-0"
-    :pt-options="{ mergeProps: true }"
   >
     <Listbox
       :options="suggestedFilters"
@@ -41,7 +41,7 @@
         <component :is="option.getFilterBarComponent()" />
       </template>
     </Listbox>
-  </OverlayPanel>
+  </Popover>
 </template>
 
 <script lang="ts">
@@ -58,7 +58,7 @@
 
   import { X } from 'lucide-vue-next';
 
-  import OverlayPanel from 'primevue/overlaypanel';
+  import Popover from 'primevue/popover';
   import Listbox, { type ListboxChangeEvent } from 'primevue/listbox';
 
   import { useLabelStore } from '../stores/labelStore';
@@ -73,7 +73,7 @@
   const labelStore = useLabelStore();
   const labels = labelStore.getRef({});
 
-  const suggestionsOverlayPanel = ref<OverlayPanel>();
+  const suggestionsOverlayPanel = ref<Popover>();
 
   const { filters: selectedFilters } = useFilter();
 
