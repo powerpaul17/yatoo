@@ -3,6 +3,7 @@
     v-model:visible="visible"
     :header="title"
     :modal="true"
+    :dismissable-mask="true"
     :position="smallScreen ? 'bottom' : 'center'"
     :pt="{
       root: {
