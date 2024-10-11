@@ -15,12 +15,15 @@ import {
 import { MigrationHelper } from '../classes/MigrationHelper';
 import { BaseStore } from './BaseStore';
 import { useStorageManager } from './StorageManager';
+import { useSystemStore } from './systemStore';
 
 export class Store<
   TTableName extends string,
   TEntity extends Entity,
   TRenamedProperties = {}
 > {
+  private systemStore = useSystemStore();
+
   private readonly tableName: string;
   private readonly entitySchema;
 
@@ -245,7 +248,7 @@ export class Store<
       updatedAt: now
     });
 
-    this.updateUpdatedAt(now);
+    await this.updateUpdatedAt(now);
     this.notifyUpserted(updatedEntity);
   }
 
@@ -253,7 +256,7 @@ export class Store<
     await this.initializePromise;
     await this.store.remove(id);
 
-    this.updateUpdatedAt(Date.now());
+    await this.updateUpdatedAt(Date.now());
     this.notifyRemoved(id);
   }
 
@@ -277,22 +280,17 @@ export class Store<
     this.entitySchema.parse(entity);
   }
 
-  private updateUpdatedAt(now: number): void {
+  private async updateUpdatedAt(now: number): Promise<void> {
     this.updatedAt = now;
+    await this.systemStore.setValue(`lastUpdatedAt_${this.tableName}`, now);
   }
 
   private async init(): Promise<void> {
     await this.migrate();
 
-    this.updatedAt =
-      (
-        await this.store.first({
-          sort: {
-            key: 'updatedAt',
-            order: 'desc'
-          }
-        })
-      )?.updatedAt ?? 0;
+    this.updatedAt = Number(
+      (await this.systemStore.getValue(`lastUpdatedAt_${this.tableName}`)) || 0
+    );
   }
 
   private async migrate(): Promise<void> {
