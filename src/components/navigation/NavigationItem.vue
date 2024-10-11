@@ -8,11 +8,10 @@
         <component
           :is="route ? 'router-link' : 'div'"
           :to="route ? route : undefined"
-          class="group/link flex w-full rounded-lg p-2 hover:bg-surface-200 dark:hover:bg-surface-800"
+          class="group/link flex w-full rounded-lg p-2 after:transition-transform hover:bg-surface-200 dark:hover:bg-surface-800"
           :class="{
             'after:size-2 after:-translate-x-full after:translate-y-full after:-rotate-45 after:border-b-2 after:border-r-2 after:border-black after:content-[\'\'] group-[[open]]/details:after:!rotate-45':
               !!$slots.children,
-            'after:!rotate-45': open,
             'hover:after:content-none': !!$slots.buttonIcon
           }"
         >
