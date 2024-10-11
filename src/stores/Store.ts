@@ -252,6 +252,8 @@ export class Store<
   public async removeById(id: string): Promise<void> {
     await this.initializePromise;
     await this.store.remove(id);
+
+    this.updateUpdatedAt(Date.now());
     this.notifyRemoved(id);
   }
 
@@ -259,7 +261,7 @@ export class Store<
     await this.initializePromise;
 
     for (const id of ids) {
-      await this.store.remove(id);
+      await this.removeById(id);
     }
   }
 
