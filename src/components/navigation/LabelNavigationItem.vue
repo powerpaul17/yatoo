@@ -11,7 +11,7 @@
       }
     }"
     :badge-value="numberOfTodos"
-    @button-click="handleEditButtonClick()"
+    @button-click="openContextMenu($event)"
     @contextmenu="openContextMenu($event)"
   >
     <template #icon>
@@ -23,7 +23,7 @@
     </template>
 
     <template #buttonIcon>
-      <Pen />
+      <EllipsisVertical />
     </template>
   </NavigationItem>
 
@@ -71,7 +71,7 @@
   import { useLabelStore, type Label } from '../../stores/labelStore';
   import { useTodoService } from '../../services/todoService';
 
-  import { Pen, Tag } from 'lucide-vue-next';
+  import { EllipsisVertical, Pen, Tag, Trash } from 'lucide-vue-next';
 
   import NavigationItem from './NavigationItem.vue';
   import CustomIcon from '../CustomIcon.vue';
@@ -89,7 +89,7 @@
     {
       label: t('components.navigation.LabelNavigationItem.editLabel'),
       iconComponent: Pen,
-      command: () => handleEditButtonClick()
+      command: () => (labelEditDialogOpen.value = true)
     },
     {
       label: t('components.navigation.LabelNavigationItem.deleteLabel'),
@@ -125,10 +125,6 @@
   });
 
   const labelEditDialogOpen = ref(false);
-
-  function handleEditButtonClick(): void {
-    labelEditDialogOpen.value = true;
-  }
 
   function openContextMenu(event: Event) {
     contextMenu.value.show(event);

@@ -32,7 +32,7 @@
             <IconButton
               v-if="$slots.buttonIcon"
               class="-my-2 ml-2 hidden h-8 w-8 shrink-0 group-hover/summary:flex group-[.active]/link:flex"
-              @click.prevent="emit('button-click')"
+              @click.prevent="emit('button-click', $event)"
             >
               <template #icon>
                 <slot name="buttonIcon" />
@@ -81,6 +81,6 @@
   });
 
   const emit = defineEmits<{
-    (event: 'button-click'): void;
+    (event: 'button-click', originalEvent: Event): void;
   }>();
 </script>
