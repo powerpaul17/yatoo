@@ -34,6 +34,8 @@ export class Store<
 
   protected readonly initializePromise;
 
+  private updatedAt = 0;
+
   protected constructor({
     tableName,
     entitySchema,
@@ -60,6 +62,10 @@ export class Store<
     this.migrationConfig = migrationConfig;
 
     this.initializePromise = this.init();
+  }
+
+  public get lastUpdatedAt(): number {
+    return this.updatedAt;
   }
 
   public async clear(): Promise<void> {
@@ -232,11 +238,14 @@ export class Store<
   protected async _update(entity: UpdateEntity<TEntity>): Promise<void> {
     await this.initializePromise;
 
+    const now = Date.now();
+
     const updatedEntity = await this.store.upsert({
       ...entity,
-      updatedAt: Date.now()
+      updatedAt: now
     });
 
+    this.updateUpdatedAt(now);
     this.notifyUpserted(updatedEntity);
   }
 
@@ -264,6 +273,10 @@ export class Store<
 
   private validateEntity(entity: TEntity): asserts entity is TEntity {
     this.entitySchema.parse(entity);
+  }
+
+  private updateUpdatedAt(now: number): void {
+    this.updatedAt = now;
   }
 
   private async init(): Promise<void> {
