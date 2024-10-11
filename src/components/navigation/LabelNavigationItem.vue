@@ -66,6 +66,8 @@
   import { ref, type PropType, watch, computed } from 'vue';
   import { useI18n } from 'vue-i18n';
 
+  import { useGlobalMessageBus } from '../../classes/useGlobalMessageBus';
+
   import ContextMenu from 'primevue/contextmenu';
 
   import { useLabelStore, type Label } from '../../stores/labelStore';
@@ -79,6 +81,12 @@
   import DeleteDialog from '../dialogs/DeleteDialog.vue';
 
   const { t } = useI18n();
+
+  const { emit: emitGlobalMessage, subscribe } = useGlobalMessageBus();
+
+  subscribe('open-context-menu', () => {
+    contextMenu.value.hide();
+  });
 
   const labelStore = useLabelStore();
   const todoService = useTodoService();
@@ -127,6 +135,7 @@
   const labelEditDialogOpen = ref(false);
 
   function openContextMenu(event: Event) {
+    emitGlobalMessage('open-context-menu', null);
     contextMenu.value.show(event);
   }
 
