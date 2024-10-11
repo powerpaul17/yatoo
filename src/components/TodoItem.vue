@@ -42,12 +42,13 @@
         >
           <LabelList
             class="mr-1 last:mr-0"
-            :labels="labels.filter((l) => l.id === route.params.labelId)"
+            :labels="labels.filter((l) => labelIdsInQuery.includes(l.id))"
             :compact="true"
           />
+
           <LabelList
             class="mr-1 last:mr-0"
-            :labels="labels.filter((l) => l.id !== route.params.labelId)"
+            :labels="labels.filter((l) => !labelIdsInQuery.includes(l.id))"
             :compact="false"
           />
         </div>
@@ -103,6 +104,16 @@
   const labels = labelService.getLabelRefForTodoId(
     computed(() => todo.value.id)
   );
+
+  const labelIdsInQuery = computed(() => {
+    const labelIdQueryParam = route.query.filter_label;
+
+    if (Array.isArray(labelIdQueryParam)) {
+      return labelIdQueryParam;
+    } else {
+      return [labelIdQueryParam];
+    }
+  });
 
   function handleToggleOpenClicked(): void {
     if (route.query.todoId === props.todo.id) {
