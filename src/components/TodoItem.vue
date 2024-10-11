@@ -62,14 +62,7 @@
 
   import Button from 'primevue/button';
 
-  import {
-    Check,
-    CheckSquare,
-    PanelRightOpen,
-    Square,
-    Undo,
-    X
-  } from 'lucide-vue-next';
+  import { CheckSquare, Square } from 'lucide-vue-next';
 
   import LabelList from './labels/LabelList.vue';
 
