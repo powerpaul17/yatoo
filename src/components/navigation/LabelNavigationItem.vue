@@ -12,6 +12,7 @@
     }"
     :badge-value="numberOfTodos"
     @button-click="handleEditButtonClick()"
+    @contextmenu="openContextMenu($event)"
   >
     <template #icon>
       <CustomIcon
@@ -40,17 +41,32 @@
   <DeleteDialog
     :open="deleteDialogOpen"
     :title="
-      $t('components.navigation.LabelNavigationItem.deleteLabel', {
+      $t('components.navigation.LabelNavigationItem.deleteLabelWithLabelName', {
         labelName: label.name
       })
     "
     @close="deleteDialogOpen = false"
     @delete="emit('delete')"
   />
+
+  <ContextMenu
+    ref="contextMenu"
+    :model="menuItems"
+  >
+    <template #itemicon="{ item, class: cls }">
+      <component
+        :is="item.iconComponent"
+        :class="cls"
+      ></component>
+    </template>
+  </ContextMenu>
 </template>
 
 <script setup lang="ts">
   import { ref, type PropType, watch, computed } from 'vue';
+  import { useI18n } from 'vue-i18n';
+
+  import ContextMenu from 'primevue/contextmenu';
 
   import { useLabelStore, type Label } from '../../stores/labelStore';
   import { useTodoService } from '../../services/todoService';
@@ -62,8 +78,25 @@
   import LabelEditDialog from '../dialogs/LabelEditDialog.vue';
   import DeleteDialog from '../dialogs/DeleteDialog.vue';
 
+  const { t } = useI18n();
+
   const labelStore = useLabelStore();
   const todoService = useTodoService();
+
+  const contextMenu = ref();
+
+  const menuItems = [
+    {
+      label: t('components.navigation.LabelNavigationItem.editLabel'),
+      iconComponent: Pen,
+      command: () => handleEditButtonClick()
+    },
+    {
+      label: t('components.navigation.LabelNavigationItem.deleteLabel'),
+      iconComponent: Trash,
+      command: () => (deleteDialogOpen.value = true)
+    }
+  ];
 
   const props = defineProps({
     label: {
@@ -95,6 +128,10 @@
 
   function handleEditButtonClick(): void {
     labelEditDialogOpen.value = true;
+  }
+
+  function openContextMenu(event: Event) {
+    contextMenu.value.show(event);
   }
 
   async function handleLabelSaved(newProperties: {

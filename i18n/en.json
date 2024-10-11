@@ -22,7 +22,9 @@
     },
     "navigation": {
       "LabelNavigationItem": {
-        "deleteLabel": "Delete label \"{labelName}\"",
+        "deleteLabel": "Delete label",
+        "deleteLabelWithLabelName": "Delete label \"{labelName}\"",
+        "editLabel": "Edit label",
         "noLabelName": "no name"
       }
     },
