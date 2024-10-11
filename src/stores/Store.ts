@@ -59,9 +59,7 @@ export class Store<
     this.migrationHelper = new MigrationHelper(this.tableName);
     this.migrationConfig = migrationConfig;
 
-    this.initializePromise = migrationConfig
-      ? this.migrate(migrationConfig)
-      : Promise.resolve();
+    this.initializePromise = this.init();
   }
 
   public async clear(): Promise<void> {
@@ -268,11 +266,15 @@ export class Store<
     this.entitySchema.parse(entity);
   }
 
-  private async migrate(
-    migrationConfig: MigrationConfig<TEntity, TRenamedProperties>
-  ): Promise<void> {
+  private async init(): Promise<void> {
+    await this.migrate();
+  }
+
+  private async migrate(): Promise<void> {
+    if (!this.migrationConfig) return;
+
     const lastDbVersion = await this.migrationHelper.getLastDbVersion();
-    const newDbVersion = migrationConfig.version;
+    const newDbVersion = this.migrationConfig.version;
 
     if (newDbVersion < lastDbVersion) {
       throw new DbVersionMismatchError();
@@ -280,10 +282,10 @@ export class Store<
 
     const entities = await this.store.many({});
 
-    const migratedEntities = migrationConfig.migrationFunction(entities);
+    const migratedEntities = this.migrationConfig.migrationFunction(entities);
     await this.store.upsertMany(migratedEntities);
 
-    await this.migrationHelper.setLastDbVersion(migrationConfig.version);
+    await this.migrationHelper.setLastDbVersion(this.migrationConfig.version);
   }
 }
 
