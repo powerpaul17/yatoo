@@ -17,15 +17,14 @@ class SettingStore extends Store<'settings', Setting> {
       tableName: 'settings',
       entitySchema: ZodSettingSchema,
       migrationConfig: {
-        version: 2,
+        version: 3,
         migrationFunction: (settings) =>
           settings.map((s) => ({
             id: s.id,
             name: s.name ?? '',
             group: s.group ?? '',
             section: s.section ?? '',
-            type: s.type ?? SettingType.STRING,
-            value: s.value ?? '',
+            value: s.value?.toString() ?? '',
             createdAt: s.createdAt ?? Date.now(),
             updatedAt: s.updatedAt ?? Date.now()
           }))
@@ -33,23 +32,20 @@ class SettingStore extends Store<'settings', Setting> {
     });
   }
 
-  public async getValue<TSettingType extends SettingType>({
+  public async getValue({
     section,
     group,
-    name,
-    type
+    name
   }: {
     section: string;
     group?: string | null;
     name: string;
-    type: TSettingType;
-  }): Promise<SettingTypeMap[TSettingType] | null> {
+  }): Promise<string | null> {
     try {
       const setting = await this.getSetting({
         section,
         group,
-        name,
-        type
+        name
       });
 
       return setting.value;
@@ -62,25 +58,22 @@ class SettingStore extends Store<'settings', Setting> {
     }
   }
 
-  public async setValue<TSettingType extends SettingType>({
+  public async setValue({
     section,
     group = null,
     name,
-    type,
     value
   }: {
     section: string;
     group?: string | null;
     name: string;
-    type: TSettingType;
-    value: SettingTypeMap[TSettingType];
+    value: string;
   }): Promise<void> {
     try {
       const setting = await this.getSetting({
         section,
         group,
-        name,
-        type
+        name
       });
 
       setting.value = value;
@@ -94,65 +87,35 @@ class SettingStore extends Store<'settings', Setting> {
         section,
         group,
         name,
-        type,
         value
       });
     }
   }
 
-  private async getSetting<TSettingType extends SettingType>({
+  private async getSetting({
     section,
     group,
-    name,
-    type
+    name
   }: {
     section: string;
     group?: string | null;
     name: string;
-    type: TSettingType;
   }): Promise<Setting> {
     return await super._one({
       where: {
         section,
         group,
-        name,
-        type
+        name
       }
     });
   }
 }
 
-const ZodGeneralSettingSchema = ZodEntitySchema.extend({
+export const ZodSettingSchema = ZodEntitySchema.extend({
   section: z.string(),
   group: z.string().nullable(),
-  name: z.string()
+  name: z.string(),
+  value: z.string()
 });
 
-export enum SettingType {
-  STRING = 'string',
-  BOOLEAN = 'boolean',
-  NUMBER = 'number'
-}
-
-export const ZodSettingSchema = z.discriminatedUnion('type', [
-  ZodGeneralSettingSchema.extend({
-    type: z.literal('string'),
-    value: z.string()
-  }),
-  ZodGeneralSettingSchema.extend({
-    type: z.literal('boolean'),
-    value: z.boolean()
-  }),
-  ZodGeneralSettingSchema.extend({
-    type: z.literal('number'),
-    value: z.number()
-  })
-]);
-
 export type Setting = z.infer<typeof ZodSettingSchema>;
-
-type SettingTypeMap = {
-  [SettingType.STRING]: string;
-  [SettingType.NUMBER]: number;
-  [SettingType.BOOLEAN]: boolean;
-};
