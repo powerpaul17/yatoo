@@ -30,6 +30,27 @@ describe('settingStore', () => {
       const settingStore = useSettingStore();
       expect(await settingStore.getAll()).toEqual([latestSettingItem]);
     });
+
+    it('should migrate from version 2', async () => {
+      clock = sinon.useFakeTimers(100);
+
+      const storage = await useLocalStorage('settings');
+      await storage.setItem('1', {
+        id: '1',
+        name: 'setting1',
+        group: 'group1',
+        section: 'section1',
+        value: 123.456,
+        type: 'number',
+        createdAt: 100,
+        updatedAt: 100
+      });
+
+      const settingStore = useSettingStore();
+      expect(await settingStore.getAll()).toEqual([
+        { ...latestSettingItem, value: '123.456' }
+      ]);
+    });
   });
 
   describe('getValue', () => {
