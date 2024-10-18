@@ -12,3 +12,7 @@ export const useSingleInstance = <T>(getInstance: () => T): T => {
 
   return newInstance;
 };
+
+export const resetInstance = <T>(getInstance: () => T): void => {
+  instances.delete(getInstance);
+};
