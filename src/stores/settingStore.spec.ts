@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import sinon from 'sinon';
 
-import { SettingType, useSettingStore, type Setting } from './settingStore';
+import { useSettingStore, type Setting } from './settingStore';
 import { useLocalStorage } from './LocalStorage/useLocalStorage';
 
 describe('settingStore', () => {
@@ -16,7 +16,7 @@ describe('settingStore', () => {
         group: 'group1',
         section: 'section1',
         value: 'test value 1',
-        type: SettingType.STRING
+        type: 'string'
       });
 
       const settingStore = useSettingStore();
@@ -32,8 +32,7 @@ describe('settingStore', () => {
         await settingStore.getValue({
           section: 'section',
           group: 'group',
-          name: 'name',
-          type: SettingType.NUMBER
+          name: 'name'
         })
       ).toBeNull();
     });
@@ -45,7 +44,6 @@ describe('settingStore', () => {
         section: 'section',
         group: 'group',
         name: 'name',
-        type: SettingType.STRING,
         value: 'test-value'
       });
 
@@ -53,8 +51,7 @@ describe('settingStore', () => {
         await settingStore.getValue({
           section: 'section',
           group: 'group',
-          name: 'name',
-          type: SettingType.STRING
+          name: 'name'
         })
       ).toBe('test-value');
     });
@@ -68,7 +65,6 @@ describe('settingStore', () => {
         section: 'section',
         group: 'group',
         name: 'name',
-        type: SettingType.STRING,
         value: 'test-value'
       });
 
@@ -76,8 +72,7 @@ describe('settingStore', () => {
         await settingStore.getValue({
           section: 'section',
           group: 'group',
-          name: 'name',
-          type: SettingType.STRING
+          name: 'name'
         })
       ).toBe('test-value');
     });
@@ -89,7 +84,6 @@ describe('settingStore', () => {
         section: 'section',
         group: 'group',
         name: 'name',
-        type: SettingType.STRING,
         value: 'test-value'
       });
 
@@ -97,7 +91,6 @@ describe('settingStore', () => {
         section: 'section',
         group: 'group',
         name: 'name',
-        type: SettingType.STRING,
         value: 'new-test-value'
       });
 
@@ -105,8 +98,7 @@ describe('settingStore', () => {
         await settingStore.getValue({
           section: 'section',
           group: 'group',
-          name: 'name',
-          type: SettingType.STRING
+          name: 'name'
         })
       ).toBe('new-test-value');
     });
@@ -118,18 +110,16 @@ describe('settingStore', () => {
         section: 'section',
         group: 'group',
         name: 'name',
-        type: SettingType.NUMBER,
-        value: 0.123456
+        value: '0.123456'
       });
 
       expect(
         await settingStore.getValue({
           section: 'section',
           group: 'group',
-          name: 'name',
-          type: SettingType.NUMBER
+          name: 'name'
         })
-      ).toBeTypeOf('number');
+      ).toBeTypeOf('string');
     });
   });
 
@@ -143,7 +133,6 @@ describe('settingStore', () => {
     name: 'setting1',
     group: 'group1',
     section: 'section1',
-    type: SettingType.STRING,
     createdAt: 100,
     updatedAt: 100,
     value: 'test value 1'
