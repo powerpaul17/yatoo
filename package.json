@@ -68,6 +68,7 @@
     "postcss-loader": "^7.3.3",
     "prettier": "^3.0.3",
     "prettier-plugin-tailwindcss": "^0.5.7",
+    "register-service-worker": "^1.7.2",
     "sinon": "^15.2.0",
     "style-loader": "^3.3.3",
     "tailwindcss": "^3.3.5",

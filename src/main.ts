@@ -1,5 +1,7 @@
 import './main.css';
 
+import { register } from 'register-service-worker';
+
 import dayjs from 'dayjs';
 import LocalizedFormat from 'dayjs/plugin/localizedFormat';
 
@@ -22,18 +24,14 @@ import router from './router';
 
 import { Logger } from './classes/Logger';
 
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker
-      .register('/service-worker.js')
-      .then((registration) => {
-        Logger.log('main', 'service worker registered:', registration);
-      })
-      .catch((reason) => {
-        Logger.warn('main', 'service worker registration failed:', reason);
-      });
-  });
-}
+register('/service-worker.js', {
+  registered(registration) {
+    Logger.log('main', 'service worker registered:', registration);
+  },
+  error(error) {
+    Logger.warn('main', 'service worker registration failed:', error);
+  }
+});
 
 dayjs.extend(LocalizedFormat);
 
