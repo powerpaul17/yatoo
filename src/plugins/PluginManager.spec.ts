@@ -10,8 +10,7 @@ describe('PluginManager', () => {
     const testPlugin = new TestPlugin();
     const initSpy = sinon.spy(testPlugin, 'init');
 
-    const pluginManager = new PluginManager(testPlugin);
-    await pluginManager.init();
+    await setupEnvironment([testPlugin]);
 
     expect(initSpy.callCount).toBe(1);
   });
@@ -20,16 +19,14 @@ describe('PluginManager', () => {
     it('should return a plugin if it is available', async () => {
       const testPlugin = new TestPlugin();
 
-      const pluginManager = new PluginManager(testPlugin);
-      await pluginManager.init();
+      const { pluginManager } = await setupEnvironment([testPlugin]);
 
       const plugin = pluginManager.getPlugin(TestPlugin);
       expect(plugin).toBeInstanceOf(TestPlugin);
     });
 
     it('should return null if plugin is not available', async () => {
-      const pluginManager = new PluginManager();
-      await pluginManager.init();
+      const { pluginManager } = await setupEnvironment();
 
       const plugin = pluginManager.getPlugin(TestPlugin);
       expect(plugin).toBe(null);
@@ -40,8 +37,7 @@ describe('PluginManager', () => {
     it('should return none if there are no settings defined', async () => {
       const testPlugin = new TestPlugin();
 
-      const pluginManager = new PluginManager(testPlugin);
-      await pluginManager.init();
+      const { pluginManager } = await setupEnvironment([testPlugin]);
 
       const settings = pluginManager.getSettings();
       expect(settings).toEqual([]);
@@ -61,13 +57,21 @@ describe('PluginManager', () => {
       };
       const testPlugin = new TestPlugin({ settings: pluginSettings });
 
-      const pluginManager = new PluginManager(testPlugin);
-      await pluginManager.init();
+      const { pluginManager } = await setupEnvironment([testPlugin]);
 
       const settings = pluginManager.getSettings();
-      expect(settings).toEqual(pluginSettings);
+      expect(settings).toEqual([pluginSettings]);
     });
   });
+
+  async function setupEnvironment(
+    plugins: Array<Plugin> = []
+  ): Promise<{ pluginManager: PluginManager }> {
+    const pluginManager = new PluginManager(...plugins);
+    await pluginManager.init();
+
+    return { pluginManager };
+  }
 });
 
 class TestPlugin extends Plugin {
