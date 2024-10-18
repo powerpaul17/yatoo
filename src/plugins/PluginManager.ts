@@ -1,3 +1,4 @@
+import { useSettingStore } from '../stores/settingStore';
 import type { SettingsConfig } from '../types/SettingsTypes';
 import type { Plugin } from './Plugin';
 
@@ -5,6 +6,8 @@ export class PluginManager {
   private readonly plugins: Array<Plugin> = [];
 
   private readonly settings: Array<SettingsConfig> = [];
+
+  private readonly settingStore = useSettingStore();
 
   constructor(...plugins: Array<Plugin>) {
     this.plugins.push(...plugins);
@@ -15,6 +18,24 @@ export class PluginManager {
       await plugin.init({
         registerSettings: (settingsConfig) => {
           this.settings.push(settingsConfig);
+
+          return {
+            getValue: async (setting): Promise<string> => {
+              const value = await this.settingStore.getValue({
+                section: settingsConfig.name,
+                name: setting
+              });
+
+              return value || '';
+            },
+            setValue: async (setting, value): Promise<void> => {
+              await this.settingStore.setValue({
+                section: settingsConfig.name,
+                name: setting,
+                value
+              });
+            }
+          };
         }
       });
     }
@@ -34,5 +55,12 @@ export class PluginManager {
 export type PluginInitOptions = {
   registerSettings: <TSettingsConfig extends SettingsConfig>(
     settingsConfig: TSettingsConfig
-  ) => void;
+  ) => RegisterSettingsReturnType<
+    Extract<keyof TSettingsConfig['settings'], string>
+  >;
+};
+
+export type RegisterSettingsReturnType<TSettingNames extends string> = {
+  getValue: (setting: TSettingNames) => Promise<string>;
+  setValue: (setting: TSettingNames, value: string) => Promise<void>;
 };
