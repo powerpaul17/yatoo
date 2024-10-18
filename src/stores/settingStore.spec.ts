@@ -1,13 +1,15 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import sinon from 'sinon';
+import sinon, { type SinonFakeTimers } from 'sinon';
 
 import { useSettingStore, type Setting } from './settingStore';
 import { useLocalStorage } from './LocalStorage/useLocalStorage';
 
 describe('settingStore', () => {
+  let clock: SinonFakeTimers | null = null;
+
   describe('migrations', () => {
     it('should migrate to version 2', async () => {
-      sinon.useFakeTimers(100);
+      clock = sinon.useFakeTimers(100);
 
       const storage = await useLocalStorage('settings');
       await storage.setItem('1', {
@@ -126,6 +128,9 @@ describe('settingStore', () => {
   afterEach(async () => {
     const settingStore = useSettingStore();
     await settingStore.clear();
+
+    clock?.restore();
+    clock = null;
   });
 
   const latestSettingItem: Setting = {
