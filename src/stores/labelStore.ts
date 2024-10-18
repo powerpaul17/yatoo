@@ -13,7 +13,7 @@ import { useSingleInstance } from '../classes/useSingleInstance';
 const createLabelStore = (): LabelStore => new LabelStore();
 
 export const useLabelStore = (): LabelStore =>
-  useSingleInstance(createLabelStore);
+  useSingleInstance(createLabelStore).instance;
 
 class LabelStore extends Store<'labels', InternalLabel> {
   constructor() {

@@ -7,9 +7,12 @@ export class PluginManager {
 
   private readonly settings: Array<SettingsConfig> = [];
 
-  private readonly settingStore = useSettingStore();
+  private readonly settingStore;
 
   constructor(...plugins: Array<Plugin>) {
+    const { settingStore } = useSettingStore();
+    this.settingStore = settingStore;
+
     this.plugins.push(...plugins);
   }
 

@@ -13,7 +13,7 @@ import { useSingleInstance } from '../classes/useSingleInstance';
 const createTodoStore = (): TodoStore => new TodoStore();
 
 export const useTodoStore = (): TodoStore => {
-  return useSingleInstance(createTodoStore);
+  return useSingleInstance(createTodoStore).instance;
 };
 
 class TodoStore extends Store<'todos', Todo> {

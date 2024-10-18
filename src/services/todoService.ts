@@ -7,7 +7,7 @@ import { useTodoStore, type Todo } from '../stores/todoStore';
 const createTodoService = (): TodoService => new TodoService();
 
 export const useTodoService = (): TodoService =>
-  useSingleInstance(createTodoService);
+  useSingleInstance(createTodoService).instance;
 
 class TodoService {
   private labelToTodoStore = useLabelToTodoStore();

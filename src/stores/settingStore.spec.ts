@@ -1,11 +1,7 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import sinon, { type SinonFakeTimers } from 'sinon';
 
-import {
-  resetSettingStore,
-  useSettingStore,
-  type Setting
-} from './settingStore';
+import { useSettingStore, type Setting } from './settingStore';
 import { useLocalStorage } from './LocalStorage/useLocalStorage';
 import { useStorageManager } from './StorageManager';
 import { useSystemStore } from './systemStore';
@@ -27,7 +23,7 @@ describe('settingStore', () => {
         type: 'string'
       });
 
-      const settingStore = useSettingStore();
+      const { settingStore } = useSettingStore();
       expect(await settingStore.getAll()).toEqual([latestSettingItem]);
     });
 
@@ -46,7 +42,7 @@ describe('settingStore', () => {
         updatedAt: 100
       });
 
-      const settingStore = useSettingStore();
+      const { settingStore } = useSettingStore();
       expect(await settingStore.getAll()).toEqual([
         { ...latestSettingItem, value: '123.456' }
       ]);
@@ -55,7 +51,7 @@ describe('settingStore', () => {
 
   describe('getValue', () => {
     it('should return null if the value does not exist', async () => {
-      const settingStore = useSettingStore();
+      const { settingStore } = useSettingStore();
 
       expect(
         await settingStore.getValue({
@@ -67,7 +63,7 @@ describe('settingStore', () => {
     });
 
     it('should get the value if it exists', async () => {
-      const settingStore = useSettingStore();
+      const { settingStore } = useSettingStore();
 
       await settingStore.setValue({
         section: 'section',
@@ -88,7 +84,7 @@ describe('settingStore', () => {
 
   describe('setValue', () => {
     it('should create the value if it does not exist', async () => {
-      const settingStore = useSettingStore();
+      const { settingStore } = useSettingStore();
 
       await settingStore.setValue({
         section: 'section',
@@ -107,7 +103,7 @@ describe('settingStore', () => {
     });
 
     it('should set the value if it already exists', async () => {
-      const settingStore = useSettingStore();
+      const { settingStore } = useSettingStore();
 
       await settingStore.setValue({
         section: 'section',
@@ -133,7 +129,7 @@ describe('settingStore', () => {
     });
 
     it('should store & return the correct value type', async () => {
-      const settingStore = useSettingStore();
+      const { settingStore } = useSettingStore();
 
       await settingStore.setValue({
         section: 'section',
@@ -153,6 +149,7 @@ describe('settingStore', () => {
   });
 
   afterEach(async () => {
+    const { resetSettingStore } = useSettingStore();
     resetSettingStore();
 
     const systemStore = useSystemStore();

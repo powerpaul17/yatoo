@@ -7,7 +7,7 @@ import { useLabelStore, type Label } from '../stores/labelStore';
 const createLabelService = (): LabelService => new LabelService();
 
 export const useLabelService = (): LabelService =>
-  useSingleInstance(createLabelService);
+  useSingleInstance(createLabelService).instance;
 
 class LabelService {
   private labelToTodoStore = useLabelToTodoStore();

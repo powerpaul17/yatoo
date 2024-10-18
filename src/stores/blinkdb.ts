@@ -95,7 +95,7 @@ const createBlinkDb = (): Database => {
 };
 
 function useBlinkDB(): Database {
-  return useSingleInstance(createBlinkDb);
+  return useSingleInstance(createBlinkDb).instance;
 }
 
 export async function createTable<T extends Record<string, any>>({

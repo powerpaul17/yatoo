@@ -8,7 +8,7 @@ import type { Store } from './Store';
 const createStorageManager = (): StorageManager => new StorageManager();
 
 export const useStorageManager = (): StorageManager => {
-  return useSingleInstance(createStorageManager);
+  return useSingleInstance(createStorageManager).instance;
 };
 
 export class StorageManager {

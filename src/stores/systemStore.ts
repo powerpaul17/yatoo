@@ -6,7 +6,7 @@ import { useSingleInstance } from '../classes/useSingleInstance';
 const createSystemStore = (): SystemStore => new SystemStore();
 
 export const useSystemStore = (): SystemStore => {
-  return useSingleInstance(createSystemStore);
+  return useSingleInstance(createSystemStore).instance;
 };
 
 class SystemStore {

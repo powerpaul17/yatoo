@@ -1,18 +1,27 @@
 // TODO: find better way to type this
 const instances: Map<() => any, any> = new Map();
 
-export const useSingleInstance = <T>(getInstance: () => T): T => {
+export const useSingleInstance = <T>(
+  getInstance: () => T
+): { instance: T; resetInstance: () => void } => {
   const instance = instances.get(getInstance) as T | undefined;
+
+  const resetInstance = (): void => {
+    instances.delete(getInstance);
+  };
+
   if (instance) {
-    return instance;
+    return {
+      instance,
+      resetInstance
+    };
   }
 
   const newInstance = getInstance();
   instances.set(getInstance, newInstance);
 
-  return newInstance;
-};
-
-export const resetInstance = <T>(getInstance: () => T): void => {
-  instances.delete(getInstance);
+  return {
+    instance: newInstance,
+    resetInstance
+  };
 };

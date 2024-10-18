@@ -8,7 +8,7 @@ import { useStorageManager } from './StorageManager';
 const createLabelToTodoStore = (): LabelToTodoStore => new LabelToTodoStore();
 
 export const useLabelToTodoStore = (): LabelToTodoStore =>
-  useSingleInstance(createLabelToTodoStore);
+  useSingleInstance(createLabelToTodoStore).instance;
 
 class LabelToTodoStore extends Store<'label_to_todos', LabelToTodo> {
   constructor() {
