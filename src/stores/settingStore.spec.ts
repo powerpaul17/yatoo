@@ -1,5 +1,4 @@
-import { afterEach, describe, expect, it } from 'vitest';
-import sinon, { type SinonFakeTimers } from 'sinon';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { useSettingStore, type Setting } from './settingStore';
 import { useLocalStorage } from './LocalStorage/useLocalStorage';
@@ -7,11 +6,9 @@ import { useStorageManager } from './StorageManager';
 import { useSystemStore } from './systemStore';
 
 describe('settingStore', () => {
-  let clock: SinonFakeTimers | null = null;
-
   describe('migrations', () => {
     it('should migrate from version 1', async () => {
-      clock = sinon.useFakeTimers(100);
+      vi.useFakeTimers({ now: 100, toFake: ['Date'] });
 
       const storage = await useLocalStorage('settings');
       await storage.setItem('1', {
@@ -28,7 +25,7 @@ describe('settingStore', () => {
     });
 
     it('should migrate from version 2', async () => {
-      clock = sinon.useFakeTimers(100);
+      vi.useFakeTimers({ now: 100, toFake: ['Date'] });
 
       const storage = await useLocalStorage('settings');
       await storage.setItem('1', {
@@ -157,9 +154,6 @@ describe('settingStore', () => {
 
     const storageManager = useStorageManager();
     storageManager.clear();
-
-    clock?.restore();
-    clock = null;
   });
 
   const latestSettingItem: Setting = {

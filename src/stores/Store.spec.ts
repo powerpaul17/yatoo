@@ -1,5 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import sinon, { type SinonFakeTimers } from 'sinon';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { DbVersionMismatchError } from './Store';
 import { useSystemStore } from './systemStore';
@@ -23,7 +22,7 @@ describe('Store', () => {
         version: 2
       });
 
-      expect(store.migrationSpy.callCount).toBe(0);
+      expect(store.migrationSpy.mock.calls.length).toBe(0);
     });
 
     it('should throw an error if store has an older version', async () => {
@@ -53,7 +52,7 @@ describe('Store', () => {
         version: 2
       });
 
-      expect(store.migrationSpy.callCount).toBe(1);
+      expect(store.migrationSpy.mock.calls.length).toBe(1);
     });
 
     it('should migrate the entities', async () => {
@@ -129,7 +128,7 @@ describe('Store', () => {
         ]
       });
 
-      await clock?.tickAsync(100);
+      await vi.advanceTimersByTimeAsync(100);
 
       await store.update({
         id: '1',
@@ -147,10 +146,8 @@ describe('Store', () => {
     });
   });
 
-  let clock: SinonFakeTimers | null = null;
-
   beforeEach(() => {
-    clock = sinon.useFakeTimers(100);
+    vi.useFakeTimers({ now: 100 });
   });
 
   afterEach(async () => {
@@ -162,8 +159,6 @@ describe('Store', () => {
 
     const storageManager = useStorageManager();
     storageManager.clear();
-
-    clock?.restore();
   });
 
   function setupEnvironment(): {

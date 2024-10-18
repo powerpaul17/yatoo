@@ -1,5 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import sinon, { type SinonFakeTimers } from 'sinon';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ZodError } from 'zod';
 
 import {
@@ -29,12 +28,12 @@ describe('StorageManager', () => {
 
       const storageManager = useStorageManager();
 
-      const spy = sinon.spy();
+      const spy = vi.fn();
       storageManager.subscribeEntityUpserted(spy);
 
       const id = await store.create({ testValue: 'abc' });
 
-      expect(spy.getCalls().map((c) => c.args)).to.deep.equal([
+      expect(spy.mock.calls).to.deep.equal([
         ['test', { id, testValue: 'abc', createdAt: 100, updatedAt: 100 }]
       ]);
     });
@@ -48,12 +47,12 @@ describe('StorageManager', () => {
 
       const id = await store.create({ testValue: 'abc' });
 
-      const spy = sinon.spy();
+      const spy = vi.fn();
       storageManager.subscribeEntityUpserted(spy);
 
       await store.update({ id, testValue: 'def' });
 
-      expect(spy.getCalls().map((c) => c.args)).to.deep.equal([
+      expect(spy.mock.calls).to.deep.equal([
         ['test', { id, testValue: 'def', createdAt: 100, updatedAt: 100 }]
       ]);
     });
@@ -304,11 +303,10 @@ describe('StorageManager', () => {
     });
   });
 
-  let clock: SinonFakeTimers;
   let stores: Array<string> = [];
 
   beforeEach(() => {
-    clock = sinon.useFakeTimers(100);
+    vi.useFakeTimers({ now: 100, toFake: ['Date'] });
   });
 
   afterEach(async () => {
@@ -321,8 +319,6 @@ describe('StorageManager', () => {
     }
 
     stores = [];
-
-    clock.restore();
   });
 
   function setupEnvironment(): {

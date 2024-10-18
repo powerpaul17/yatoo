@@ -1,5 +1,4 @@
-import { describe, expect, it } from 'vitest';
-import sinon from 'sinon';
+import { describe, expect, it, vi } from 'vitest';
 
 import { PluginManager, type PluginInitOptions } from './PluginManager';
 import { Plugin } from './Plugin';
@@ -8,11 +7,11 @@ import { SettingInputType, type SettingsConfig } from '../types/SettingsTypes';
 describe('PluginManager', () => {
   it('should initialize a registered plugin', async () => {
     const testPlugin = new TestPlugin();
-    const initSpy = sinon.spy(testPlugin, 'init');
+    const initSpy = vi.spyOn(testPlugin, 'init');
 
     await setupEnvironment([testPlugin]);
 
-    expect(initSpy.callCount).toBe(1);
+    expect(initSpy.mock.calls.length).toBe(1);
   });
 
   describe('getPlugin', () => {

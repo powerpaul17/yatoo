@@ -1,5 +1,4 @@
-import { afterEach, describe, expect, it } from 'vitest';
-import sinon from 'sinon';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { useLabelStore, type InternalLabel } from './labelStore';
 import { useLocalStorage } from './LocalStorage/useLocalStorage';
@@ -7,7 +6,7 @@ import { useLocalStorage } from './LocalStorage/useLocalStorage';
 describe('labelStore', () => {
   describe('migrations', () => {
     it('should migrate to version 2', async () => {
-      sinon.useFakeTimers(100);
+      vi.useFakeTimers({ now: 100, toFake: ['Date'] });
 
       const storage = await useLocalStorage('labels');
       await storage.setItem('1', {

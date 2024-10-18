@@ -1,9 +1,8 @@
-import sinon from 'sinon';
+import { vi } from 'vitest';
 import { z } from 'zod';
 
 import {
   type CreationEntity,
-  type Entity,
   type Migration,
   Store,
   type UpdateEntity,
@@ -14,7 +13,7 @@ export class TestStore extends Store<string, TestEntity> {
   public migrationSpy;
 
   constructor({ name = 'test', version }: { name?: string; version: number }) {
-    const migrationSpy = sinon.spy<Migration<TestEntity>>((entities) => {
+    const migrationSpy = vi.fn<Migration<TestEntity>>((entities) => {
       return entities.map((entity) => {
         return {
           id: entity.id,
