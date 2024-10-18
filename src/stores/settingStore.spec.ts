@@ -8,7 +8,7 @@ describe('settingStore', () => {
   let clock: SinonFakeTimers | null = null;
 
   describe('migrations', () => {
-    it('should migrate to version 2', async () => {
+    it('should migrate from version 1', async () => {
       clock = sinon.useFakeTimers(100);
 
       const storage = await useLocalStorage('settings');
