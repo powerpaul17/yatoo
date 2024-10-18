@@ -17,16 +17,19 @@ describe('PluginManager', () => {
   });
 
   describe('getPlugin', () => {
-    it('should return a plugin if it is available', () => {
+    it('should return a plugin if it is available', async () => {
       const testPlugin = new TestPlugin();
+
       const pluginManager = new PluginManager(testPlugin);
+      await pluginManager.init();
 
       const plugin = pluginManager.getPlugin(TestPlugin);
       expect(plugin).toBeInstanceOf(TestPlugin);
     });
 
-    it('should return null if plugin is not available', () => {
+    it('should return null if plugin is not available', async () => {
       const pluginManager = new PluginManager();
+      await pluginManager.init();
 
       const plugin = pluginManager.getPlugin(TestPlugin);
       expect(plugin).toBe(null);
@@ -34,15 +37,17 @@ describe('PluginManager', () => {
   });
 
   describe('getSettings', () => {
-    it('should return none if there are no settings defined', () => {
+    it('should return none if there are no settings defined', async () => {
       const testPlugin = new TestPlugin();
+
       const pluginManager = new PluginManager(testPlugin);
+      await pluginManager.init();
 
       const settings = pluginManager.getSettings();
       expect(settings).toEqual([]);
     });
 
-    it('should return defined settings', () => {
+    it('should return defined settings', async () => {
       const pluginSettings: SettingsConfig = {
         name: 'setting',
         labelTk: 'setting',
@@ -55,9 +60,9 @@ describe('PluginManager', () => {
         }
       };
       const testPlugin = new TestPlugin({ settings: pluginSettings });
-      const pluginManager = new PluginManager(testPlugin);
 
-      pluginManager.init();
+      const pluginManager = new PluginManager(testPlugin);
+      await pluginManager.init();
 
       const settings = pluginManager.getSettings();
       expect(settings).toEqual(pluginSettings);
