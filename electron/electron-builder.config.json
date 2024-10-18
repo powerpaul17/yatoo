@@ -4,17 +4,9 @@
     "buildResources": "resources"
   },
   "artifactName": "${productName}.${ext}",
-  "files": [
-    "assets/**/*",
-    "build/**/*",
-    "capacitor.config.*",
-    "app/**/*"
-  ],
+  "files": ["assets/**/*", "build/**/*", "capacitor.config.*", "app/**/*"],
   "linux": {
-    "target": [
-      "AppImage",
-      "flatpak"
-    ]
+    "target": ["AppImage", "flatpak"]
   },
   "flatpak": {
     "artifactName": "${productName}-${arch}.${ext}"

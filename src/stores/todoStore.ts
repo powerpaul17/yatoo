@@ -83,7 +83,7 @@ export const ZodTodoSchema = ZodEntitySchema.extend({
   description: z.string(),
 
   done: z.boolean(),
-  doneAt: z.number().nullable(),
+  doneAt: z.number().nullable()
 });
 
 export type Todo = z.infer<typeof ZodTodoSchema>;

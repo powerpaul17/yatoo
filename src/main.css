@@ -10,7 +10,6 @@
 }
 
 @layer base {
-
   :root {
     --primary-50: 236 254 255;
     --primary-100: 207 250 254;
@@ -38,14 +37,13 @@
     --surface-950: 8 8 8;
   }
 
-  :root[data-theme="dark"] {
+  :root[data-theme='dark'] {
     color-scheme: dark !important;
   }
 
   dialog {
     color: inherit;
   }
-
 }
 
 #app {

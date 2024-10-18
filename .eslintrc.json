@@ -13,41 +13,25 @@
   ],
   "overrides": [
     {
-      "files": [
-        "*.vue"
-      ],
+      "files": ["*.vue"],
       "rules": {
         "@typescript-eslint/indent": "off"
       }
     }
   ],
-  "ignorePatterns": [
-    "src/theme/**/*.js"
-  ],
+  "ignorePatterns": ["src/theme/**/*.js"],
   "parser": "vue-eslint-parser",
   "parserOptions": {
     "parser": "@typescript-eslint/parser",
     "project": "./tsconfig.json",
     "ecmaVersion": "latest",
     "sourceType": "module",
-    "extraFileExtensions": [
-      ".vue"
-    ]
+    "extraFileExtensions": [".vue"]
   },
-  "plugins": [
-    "@typescript-eslint",
-    "vue",
-    "tailwindcss"
-  ],
+  "plugins": ["@typescript-eslint", "vue", "tailwindcss"],
   "rules": {
-    "max-len": [
-      "warn",
-      120
-    ],
-    "one-var": [
-      "error",
-      "never"
-    ],
+    "max-len": ["warn", 120],
+    "one-var": ["error", "never"],
     "no-unused-vars": "off",
     "default-case": "error",
     "@typescript-eslint/explicit-function-return-type": "error",

@@ -2,10 +2,7 @@ const colors = require('tailwindcss/colors');
 
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    "./src/index.html",
-    "./src/**/*.{ts,vue,js}",
-  ],
+  content: ['./src/index.html', './src/**/*.{ts,vue,js}'],
   theme: {
     extend: {
       colors: {
@@ -32,10 +29,10 @@ export default {
         'surface-700': 'rgb(var(--surface-700))',
         'surface-800': 'rgb(var(--surface-800))',
         'surface-900': 'rgb(var(--surface-900))',
-        'surface-950': 'rgb(var(--surface-950))',
+        'surface-950': 'rgb(var(--surface-950))'
       }
     }
   },
   darkMode: ['class', '[data-theme="dark"]'],
   plugins: []
-}
+};

@@ -10,7 +10,7 @@ const reloadWatcher = {
   debouncer: null,
   ready: false,
   watcher: null,
-  restarting: false,
+  restarting: false
 };
 
 ///*
@@ -45,7 +45,7 @@ function setupReloadWatcher() {
   reloadWatcher.watcher = chokidar
     .watch('./src/**/*', {
       ignored: /[/\\]\./,
-      persistent: true,
+      persistent: true
     })
     .on('ready', () => {
       reloadWatcher.ready = true;

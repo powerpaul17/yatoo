@@ -13,10 +13,7 @@
   "compilerOptions": {
     "types": [],
     "noEmit": true,
-    "lib": [
-      "esnext",
-      "dom"
-    ],
+    "lib": ["esnext", "dom"],
     "module": "esnext",
     "target": "esnext",
     "moduleResolution": "bundler",
