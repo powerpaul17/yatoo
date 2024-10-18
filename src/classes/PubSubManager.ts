@@ -1,7 +1,9 @@
 export class PubSubManager<TMessages extends Messages> {
-  private messages: Array<TMessages> = [];
+  private messages: Array<Partial<TMessages>> = [];
 
-  public registerMessages(messages: TMessages): { dispose: () => void } {
+  public registerMessages(messages: Partial<TMessages>): {
+    dispose: () => void;
+  } {
     this.messages.push(messages);
 
     return {
