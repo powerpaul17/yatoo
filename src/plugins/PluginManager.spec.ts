@@ -43,19 +43,17 @@ describe('PluginManager', () => {
     });
 
     it('should return defined settings', () => {
-      const pluginSettings: Array<SettingsConfig> = [
-        {
-          name: 'setting',
-          labelTk: 'setting',
-          settings: {
-            testSetting1: {
-              name: 'test',
-              labelTk: 'test',
-              type: SettingInputType.STRING
-            }
+      const pluginSettings: SettingsConfig = {
+        name: 'setting',
+        labelTk: 'setting',
+        settings: {
+          testSetting1: {
+            name: 'test',
+            labelTk: 'test',
+            type: SettingInputType.STRING
           }
         }
-      ];
+      };
       const testPlugin = new TestPlugin({ settings: pluginSettings });
       const pluginManager = new PluginManager(testPlugin);
 
@@ -68,12 +66,12 @@ describe('PluginManager', () => {
 });
 
 class TestPlugin extends Plugin {
-  private readonly settings: Array<SettingsConfig> = [];
+  private readonly settings: SettingsConfig | null = null;
 
-  constructor(options?: { settings?: Array<SettingsConfig> }) {
+  constructor(options?: { settings?: SettingsConfig }) {
     super();
 
-    if (options?.settings) this.settings.push(...options.settings);
+    if (options?.settings) this.settings = options.settings;
   }
 
   public getPluginId(): string {
@@ -81,7 +79,7 @@ class TestPlugin extends Plugin {
   }
 
   public init({ registerSettings }: PluginInitOptions): Promise<void> {
-    registerSettings(this.settings);
+    if (this.settings) registerSettings(this.settings);
 
     return Promise.resolve();
   }

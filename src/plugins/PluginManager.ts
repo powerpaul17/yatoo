@@ -13,8 +13,8 @@ export class PluginManager {
   public async init(): Promise<void> {
     for (const plugin of this.plugins) {
       await plugin.init({
-        registerSettings: (settings) => {
-          this.settings.push(...settings);
+        registerSettings: (settingsConfig) => {
+          this.settings.push(settingsConfig);
         }
       });
     }
@@ -32,5 +32,7 @@ export class PluginManager {
 }
 
 export type PluginInitOptions = {
-  registerSettings: (settings: Array<SettingsConfig>) => void;
+  registerSettings: <TSettingsConfig extends SettingsConfig>(
+    settingsConfig: TSettingsConfig
+  ) => void;
 };
