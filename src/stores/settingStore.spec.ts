@@ -8,6 +8,7 @@ import {
 } from './settingStore';
 import { useLocalStorage } from './LocalStorage/useLocalStorage';
 import { useStorageManager } from './StorageManager';
+import { useSystemStore } from './systemStore';
 
 describe('settingStore', () => {
   let clock: SinonFakeTimers | null = null;
@@ -132,6 +133,9 @@ describe('settingStore', () => {
 
   afterEach(async () => {
     resetSettingStore();
+
+    const systemStore = useSystemStore();
+    await systemStore.clear();
 
     const storageManager = useStorageManager();
     storageManager.clear();
