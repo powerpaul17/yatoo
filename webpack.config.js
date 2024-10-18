@@ -5,6 +5,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const DefinePlugin = require('webpack').DefinePlugin;
 const WorkboxPlugin = require('workbox-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const devMode = process.env.NODE_ENV !== 'production';
 
@@ -86,6 +87,11 @@ module.exports = {
     new WorkboxPlugin.GenerateSW({
       clientsClaim: true,
       skipWaiting: true
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: '*', context: path.resolve(__dirname, 'icons/favicons') }
+      ]
     })
   ]
 };
