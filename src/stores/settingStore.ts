@@ -1,4 +1,3 @@
-import { v4 as uuid } from 'uuid';
 import { ItemNotFoundError } from 'blinkdb';
 import { z } from 'zod';
 
@@ -82,8 +81,7 @@ class SettingStore extends Store<'settings', Setting> {
     } catch (error) {
       if (!(error instanceof ItemNotFoundError)) throw error;
 
-      await super._update({
-        id: uuid(),
+      await this._create({
         section,
         group,
         name,
