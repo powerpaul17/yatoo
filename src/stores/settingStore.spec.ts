@@ -1,7 +1,11 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import sinon, { type SinonFakeTimers } from 'sinon';
 
-import { useSettingStore, type Setting } from './settingStore';
+import {
+  resetSettingStore,
+  useSettingStore,
+  type Setting
+} from './settingStore';
 import { useLocalStorage } from './LocalStorage/useLocalStorage';
 
 describe('settingStore', () => {
@@ -126,8 +130,7 @@ describe('settingStore', () => {
   });
 
   afterEach(async () => {
-    const settingStore = useSettingStore();
-    await settingStore.clear();
+    resetSettingStore();
 
     clock?.restore();
     clock = null;

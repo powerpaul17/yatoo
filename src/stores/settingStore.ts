@@ -2,12 +2,16 @@ import { ItemNotFoundError } from 'blinkdb';
 import { z } from 'zod';
 
 import { Store, ZodEntitySchema } from './Store';
-import { useSingleInstance } from '../classes/useSingleInstance';
+import { useSingleInstance, resetInstance } from '../classes/useSingleInstance';
 
 const createSettingStore = (): SettingStore => new SettingStore();
 
 export const useSettingStore = (): SettingStore => {
   return useSingleInstance(createSettingStore);
+};
+
+export const resetSettingStore = (): void => {
+  resetInstance(createSettingStore);
 };
 
 class SettingStore extends Store<'settings', Setting> {
