@@ -306,6 +306,8 @@ export class Store<
     const entities = await this.store.many({});
 
     const migratedEntities = this.migrationConfig.migrationFunction(entities);
+
+    await this.store.clear();
     await this.store.upsertMany(migratedEntities);
 
     await this.migrationHelper.setLastDbVersion(this.migrationConfig.version);
