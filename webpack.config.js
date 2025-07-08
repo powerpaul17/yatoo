@@ -22,7 +22,8 @@ module.exports = {
         warnings: false,
         runtimeErrors: true
       }
-    }
+    },
+    allowedHosts: ".coder.paultirk.com"
   },
   module: {
     rules: [
