@@ -29,6 +29,9 @@
   "license": "AGPL-3.0-or-later",
   "dependencies": {
     "@primevue/themes": "^4.0.4",
+    "@signaldb/core": "^1.7.2",
+    "@signaldb/indexeddb": "^1.1.0",
+    "@signaldb/vue": "^1.0.0",
     "@vueuse/components": "^10.2.1",
     "@vueuse/core": "^10.2.1",
     "blinkdb": "^0.14.0",
