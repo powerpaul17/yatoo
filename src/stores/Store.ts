@@ -1,33 +1,26 @@
 import { v4 as uuid } from 'uuid';
 import { z, type ZodSchema } from 'zod';
 
-import { type Query, type ValidEntity } from 'blinkdb';
+import { Collection, type Selector } from '@signaldb/core';
+import createIndexedDBAdapter from '@signaldb/indexeddb';
+import vueReactivityAdapter from '@signaldb/vue';
 
-import {
-  effectScope,
-  onScopeDispose,
-  ref,
-  watch as vueWatch,
-  type ComputedRef,
-  computed
-} from 'vue';
+import { effectScope, ref, watch, type ComputedRef, computed } from 'vue';
 
 import { MigrationHelper } from '../classes/MigrationHelper';
-import { BaseStore } from './BaseStore';
 import { useStorageManager } from './StorageManager';
 import { useSystemStore } from './systemStore';
+import { useMemoryPersistenceAdapter } from './useMemoryPersistenceAdapter';
 
 export class Store<
   TTableName extends string,
   TEntity extends Entity,
   TRenamedProperties = {}
-> {
+> extends Collection<TEntity, string> {
   private systemStore = useSystemStore();
 
   private readonly tableName: string;
   private readonly entitySchema;
-
-  private readonly store: BaseStore<TTableName, TEntity, 'id'>;
 
   private notifyRemoved;
   private notifyUpserted;
@@ -48,10 +41,15 @@ export class Store<
     entitySchema: ZodSchema;
     migrationConfig?: MigrationConfig<TEntity, TRenamedProperties>;
   }) {
+    super({
+      persistence: process.env.TEST
+        ? useMemoryPersistenceAdapter(tableName)
+        : createIndexedDBAdapter(tableName, { prefix: '' }),
+      reactivity: vueReactivityAdapter
+    });
+
     this.tableName = tableName;
     this.entitySchema = entitySchema;
-
-    this.store = new BaseStore({ tableName, primaryKey: 'id' });
 
     const storageManager = useStorageManager();
 
@@ -73,12 +71,12 @@ export class Store<
 
   public async clear(): Promise<void> {
     await this.initializePromise;
-    await this.store.clear();
+    super.removeMany({});
   }
 
   public async getAll(): Promise<Array<TEntity>> {
     await this.initializePromise;
-    return this.store.many({});
+    return super.find().fetch();
   }
 
   public async importData({
@@ -99,31 +97,26 @@ export class Store<
 
     if (!dryRun) {
       await this.clear();
-      await this.store.upsertMany(migratedEntities);
+      await this.upsertMany(migratedEntities);
     }
   }
 
   protected _watchForComputedQuery(
-    computedQuery: ComputedRef<Query<TEntity, 'id'>>,
+    computedQuery: ComputedRef<Selector<TEntity>>,
     callback: (entities: Array<TEntity>) => void
   ): void {
     effectScope().run(() => {
-      let dispose: (() => void) | null = null;
-      let disposed = false;
-
-      vueWatch(
+      watch(
         computedQuery,
-        () => {
+        (_value, _oldValue, onCleanup) => {
           void this.initializePromise.then(() => {
-            dispose?.();
-            void this.store
-              .watch(computedQuery.value, (entities) => {
-                callback(entities);
-              })
-              .then((d) => {
-                dispose = d;
-                if (disposed) dispose();
-              });
+            const cursor = super.find(computedQuery.value);
+
+            callback(cursor.fetch());
+
+            onCleanup(() => {
+              cursor.cleanup();
+            });
           });
         },
         {
@@ -131,16 +124,11 @@ export class Store<
           immediate: true
         }
       );
-
-      onScopeDispose(() => {
-        dispose?.();
-        disposed = true;
-      });
     });
   }
 
   protected _watch(
-    query: Query<TEntity, 'id'>,
+    query: Selector<TEntity>,
     callback: (entities: Array<TEntity>) => void
   ): void {
     this._watchForComputedQuery(
@@ -150,7 +138,7 @@ export class Store<
   }
 
   protected _getRefForComputedQuery(
-    computedQuery: ComputedRef<Query<TEntity, 'id'>>
+    computedQuery: ComputedRef<Selector<TEntity>>
   ): ComputedRef<Array<TEntity>> {
     const returnValue = effectScope().run(() => {
       const reference = ref<Array<TEntity>>([]);
@@ -167,11 +155,11 @@ export class Store<
     return returnValue;
   }
 
-  protected _getRef(query: Query<TEntity, 'id'>): ComputedRef<Array<TEntity>> {
+  protected _getRef(query: Selector<TEntity>): ComputedRef<Array<TEntity>> {
     return this._getRefForComputedQuery(computed(() => query));
   }
 
-  protected _countRef(query: Query<TEntity, 'id'>): ComputedRef<number> {
+  protected _countRef(query: Selector<TEntity>): ComputedRef<number> {
     const returnValue = effectScope().run(() => {
       const num = ref(0);
 
@@ -190,36 +178,36 @@ export class Store<
     return returnValue;
   }
 
-  protected async _one(query: Query<TEntity, 'id'>): Promise<TEntity> {
+  protected async _one(query: Selector<TEntity>): Promise<TEntity | null> {
     await this.initializePromise;
-    return await this.store.one(query);
+    return super.findOne(query) ?? null;
   }
 
-  protected async _getById(id: TEntity['id']): Promise<TEntity> {
+  protected async _getById(id: TEntity['id']): Promise<TEntity | null> {
     await this.initializePromise;
-    return await this.store.one({
-      where: {
+    return (
+      super.findOne({
         id
-      }
-    });
+      }) ?? null
+    );
   }
 
   protected async _getByIds(ids: Array<string>): Promise<Array<TEntity>> {
     await this.initializePromise;
-    return await this.store.many({
-      where: {
+    return super
+      .find({
         id: {
-          in: ids
+          $in: ids
         }
-      }
-    });
+      })
+      .fetch();
   }
 
   protected async _getByQuery(
-    query: Query<TEntity, 'id'>
+    query: Selector<TEntity>
   ): Promise<Array<TEntity>> {
     await this.initializePromise;
-    return await this.store.many(query);
+    return super.find(query).fetch();
   }
 
   protected async _create(entity: CreationEntity<TEntity>): Promise<string> {
@@ -243,7 +231,7 @@ export class Store<
 
     const now = Date.now();
 
-    const updatedEntity = await this.store.upsert({
+    const updatedEntity = await this.upsert({
       ...entity,
       updatedAt: now
     });
@@ -254,7 +242,7 @@ export class Store<
 
   public async removeById(id: string): Promise<void> {
     await this.initializePromise;
-    await this.store.remove(id);
+    super.removeOne({ id });
 
     await this.updateUpdatedAt(Date.now());
     this.notifyRemoved(id);
@@ -303,14 +291,29 @@ export class Store<
       throw new DbVersionMismatchError();
     } else if (newDbVersion === lastDbVersion) return;
 
-    const entities = await this.store.many({});
+    const entities = super.find().fetch();
 
     const migratedEntities = this.migrationConfig.migrationFunction(entities);
 
-    await this.store.clear();
-    await this.store.upsertMany(migratedEntities);
+    super.removeMany({});
+    super.insertMany(migratedEntities);
 
     await this.migrationHelper.setLastDbVersion(this.migrationConfig.version);
+  }
+
+  private async upsert(entity: TEntity): Promise<TEntity> {
+    await this.initializePromise;
+    super.replaceOne({ id: entity.id }, entity, { upsert: true });
+    const upsertedEntity = super.findOne({ id: entity.id });
+    if (!upsertedEntity) throw new Error('upserted entity not found');
+
+    return upsertedEntity;
+  }
+
+  private async upsertMany(entities: Array<TEntity>): Promise<void> {
+    for (const entity of entities) {
+      await this.upsert(entity);
+    }
   }
 }
 

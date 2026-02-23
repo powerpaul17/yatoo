@@ -58,9 +58,7 @@
 
   const labelQuery = computed(() => {
     return {
-      where: {
-        id: props.labelId
-      }
+      id: props.labelId
     };
   });
 

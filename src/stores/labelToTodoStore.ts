@@ -44,9 +44,7 @@ class LabelToTodoStore extends Store<'label_to_todos', LabelToTodo> {
   ): ComputedRef<Array<LabelToTodo>> {
     return this._getRefForComputedQuery(
       computed(() => ({
-        where: {
-          todoId: todoId.value
-        }
+        todoId: todoId.value
       }))
     );
   }
@@ -56,18 +54,14 @@ class LabelToTodoStore extends Store<'label_to_todos', LabelToTodo> {
   ): ComputedRef<Array<LabelToTodo>> {
     return this._getRefForComputedQuery(
       computed(() => ({
-        where: {
-          labelId: labelId.value
-        }
+        labelId: labelId.value
       }))
     );
   }
 
   public countRefForLabelId(labelId: string): ComputedRef<number> {
     return this._countRef({
-      where: {
-        labelId
-      }
+      labelId
     });
   }
 
@@ -80,25 +74,21 @@ class LabelToTodoStore extends Store<'label_to_todos', LabelToTodo> {
     todoId: string
   ): Promise<void> {
     const labelToTodos = await this._getByQuery({
-      where: {
-        AND: [
-          {
-            labelId
-          },
-          {
-            todoId
-          }
-        ]
-      }
+      $and: [
+        {
+          labelId
+        },
+        {
+          todoId
+        }
+      ]
     });
     await this.removeByIds(labelToTodos.map((l) => l.id));
   }
 
   private async deleteByTodoId(todoId: string): Promise<void> {
     const items = await this._getByQuery({
-      where: {
-        todoId
-      }
+      todoId
     });
 
     await this.removeByIds(items.map((i) => i.id));
@@ -106,9 +96,7 @@ class LabelToTodoStore extends Store<'label_to_todos', LabelToTodo> {
 
   private async deleteByLabelId(labelId: string): Promise<void> {
     const items = await this._getByQuery({
-      where: {
-        labelId
-      }
+      labelId
     });
 
     await this.removeByIds(items.map((i) => i.id));

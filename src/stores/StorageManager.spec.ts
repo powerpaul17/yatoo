@@ -7,7 +7,8 @@ import {
   WrongStoreVersionError
 } from './StorageManager';
 import { TestStore } from './TestStore';
-import { useLocalStorage } from './LocalStorage/useLocalStorage';
+import { useMemoryPersistenceAdapter } from './useMemoryPersistenceAdapter';
+import { useSystemStore } from './systemStore';
 
 describe('StorageManager', () => {
   it('should throw an error if store is already registered', async () => {
@@ -314,8 +315,8 @@ describe('StorageManager', () => {
     storageManager.clear();
 
     for (const store of stores) {
-      const localStorage = await useLocalStorage(store);
-      await localStorage.clear();
+      const memoryPersistenceAdapter = useMemoryPersistenceAdapter(store);
+      await memoryPersistenceAdapter.clear();
     }
 
     stores = [];

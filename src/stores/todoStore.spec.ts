@@ -1,15 +1,15 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { type Todo, useTodoStore } from './todoStore';
-import { useLocalStorage } from './LocalStorage/useLocalStorage';
+import { useMemoryPersistenceAdapter } from './useMemoryPersistenceAdapter';
 
 describe('todoStore', () => {
   describe('migrations', () => {
     it('should migrate to version 2', async () => {
       vi.useFakeTimers({ now: 100, toFake: ['Date'] });
 
-      const storage = await useLocalStorage('todos');
-      await storage.setItem('1', {
+      const memoryPersistenceAdapter = useMemoryPersistenceAdapter('todos');
+      await memoryPersistenceAdapter.setItem({
         id: '1',
         title: 'item1',
         description: 'my very long description',
@@ -23,8 +23,8 @@ describe('todoStore', () => {
   });
 
   afterEach(async () => {
-    const storage = await useLocalStorage('todos');
-    await storage.clear();
+    const memoryPersistenceAdapter = useMemoryPersistenceAdapter('todos');
+    await memoryPersistenceAdapter.clear();
   });
 
   const latestTodoItem: Todo = {

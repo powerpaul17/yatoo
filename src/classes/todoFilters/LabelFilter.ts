@@ -1,5 +1,6 @@
 import { effectScope, h, markRaw, ref, type Component } from 'vue';
-import type { And, Query } from 'blinkdb';
+
+import { type Selector } from '@signaldb/core';
 
 import type { TodoFilter } from '../TodoFilterer';
 import { useLabelToTodoStore } from '../../stores/labelToTodoStore';
@@ -29,22 +30,14 @@ export class LabelFilter implements TodoFilter<string> {
     this.data.labelIdRef.value = labelId;
   }
 
-  public adaptQuery(query: Query<Todo, 'id'>): void {
-    return effectScope().run(() => {
-      const queryAnd: And<Todo> = (query.where?.['AND'] as And<Todo>) ?? [];
+  public adaptQuery(query: Selector<Todo>): void {
+    const queryAnd: Selector<Todo>['$and'] = query.$and ?? [];
 
-      queryAnd.push({
-        id: { in: this.data.labelToTodoRef.value.map((l) => l.todoId) }
-      });
-      const where: Query<Todo, 'id'>['where'] = {
-        AND: queryAnd
-      };
-
-      query.where = {
-        ...query.where,
-        ...where
-      };
+    queryAnd.push({
+      id: { $in: this.data.labelToTodoRef.value.map((l) => l.todoId) }
     });
+
+    query.$and = queryAnd;
   }
 
   public filterResults(todos: Array<Todo>): Array<Todo> {

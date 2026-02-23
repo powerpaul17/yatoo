@@ -93,7 +93,7 @@
   const todoStore = useTodoStore();
   const labelStore = useLabelStore();
 
-  const numberOfTodos = todoStore.countRef({ where: { done: false } });
+  const numberOfTodos = todoStore.countRef({ done: false });
 
   const labels = labelStore.getRef({});
 

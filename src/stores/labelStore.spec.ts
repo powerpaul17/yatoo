@@ -1,15 +1,15 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { useLabelStore, type InternalLabel } from './labelStore';
-import { useLocalStorage } from './LocalStorage/useLocalStorage';
+import { useMemoryPersistenceAdapter } from './useMemoryPersistenceAdapter';
 
 describe('labelStore', () => {
   describe('migrations', () => {
     it('should migrate to version 2', async () => {
       vi.useFakeTimers({ now: 100, toFake: ['Date'] });
 
-      const storage = await useLocalStorage('labels');
-      await storage.setItem('1', {
+      const memoryPersistenceAdapter = useMemoryPersistenceAdapter('labels');
+      await memoryPersistenceAdapter.setItem({
         id: '1',
         name: 'label1',
         color: '',
@@ -22,8 +22,8 @@ describe('labelStore', () => {
   });
 
   afterEach(async () => {
-    const storage = await useLocalStorage('todos');
-    await storage.clear();
+    const memoryPersistenceAdapter = useMemoryPersistenceAdapter('todos');
+    await memoryPersistenceAdapter.clear();
   });
 
   const latestLabelItem: InternalLabel = {

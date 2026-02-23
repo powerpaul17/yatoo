@@ -4,7 +4,7 @@ import { DbVersionMismatchError } from './Store';
 import { useSystemStore } from './systemStore';
 import { type TestEntity, TestStore } from './TestStore';
 
-import { useLocalStorage } from './LocalStorage/useLocalStorage';
+import { useMemoryPersistenceAdapter } from './useMemoryPersistenceAdapter';
 import { StorageManager, useStorageManager } from './StorageManager';
 
 describe('Store', () => {
@@ -34,9 +34,9 @@ describe('Store', () => {
 
       storageManager.clear();
 
-      await expect(() => createTestStore({ version: 0 })).rejects.toThrow(
-        DbVersionMismatchError
-      );
+      await expect(
+        async () => await createTestStore({ version: 0 })
+      ).rejects.toThrow(DbVersionMismatchError);
     });
 
     it('should migrate if store has a newer version', async () => {
@@ -154,8 +154,8 @@ describe('Store', () => {
     const systemStore = useSystemStore();
     await systemStore.clear();
 
-    const localStorage = await useLocalStorage('test');
-    await localStorage.clear();
+    const memoryPersistenceAdapter = useMemoryPersistenceAdapter('test');
+    await memoryPersistenceAdapter.clear();
 
     const storageManager = useStorageManager();
     storageManager.clear();
@@ -174,15 +174,17 @@ describe('Store', () => {
         entities
       }): Promise<{ store: TestStore }> => {
         if (entities) {
-          const localStorage = await useLocalStorage('test');
+          const memoryPersistenceAdapter = useMemoryPersistenceAdapter('test');
+
           for (const entity of entities) {
-            await localStorage.setItem(entity.id, entity);
+            await memoryPersistenceAdapter.setItem(entity);
           }
         }
 
         const store = new TestStore({
           version
         });
+
         await store.awaitReady();
 
         return {

@@ -1,15 +1,16 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { useLabelToTodoStore, type LabelToTodo } from './labelToTodoStore';
-import { useLocalStorage } from './LocalStorage/useLocalStorage';
+import { useMemoryPersistenceAdapter } from './useMemoryPersistenceAdapter';
 
 describe('labelToTodoStore', () => {
   describe('migrations', () => {
     it('should migrate to version 2', async () => {
       vi.useFakeTimers({ now: 100, toFake: ['Date'] });
 
-      const storage = await useLocalStorage('label_to_todos');
-      await storage.setItem('1', {
+      const memoryPersistenceAdapter =
+        useMemoryPersistenceAdapter('label_to_todos');
+      await memoryPersistenceAdapter.setItem({
         id: '1',
         labelId: 'l1',
         todoId: 't1'
@@ -21,8 +22,9 @@ describe('labelToTodoStore', () => {
   });
 
   afterEach(async () => {
-    const storage = await useLocalStorage('label_to_todos');
-    await storage.clear();
+    const memoryPersistenceAdapter =
+      useMemoryPersistenceAdapter('label_to_todos');
+    await memoryPersistenceAdapter.clear();
   });
 
   const latestLabelToTodoItem: LabelToTodo = {

@@ -22,10 +22,8 @@ class LabelService {
 
       this.labelStore.watchForComputedQuery(
         computed(() => ({
-          where: {
-            id: {
-              in: labelToTodos.value.map((l) => l.labelId)
-            }
+          id: {
+            $in: labelToTodos.value.map((l) => l.labelId)
           }
         })),
         (lbls) => {

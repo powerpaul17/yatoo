@@ -11,6 +11,7 @@ export class MigrationHelper {
     const value = await this.systemStore.getValue(
       `lastDbVersion_${this.tableName}`
     );
+
     if (value) {
       return Number(value);
     }

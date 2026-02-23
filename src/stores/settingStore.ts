@@ -1,4 +1,4 @@
-import { ItemNotFoundError } from 'blinkdb';
+import {} from '@signaldb/core';
 import { z } from 'zod';
 
 import { Store, ZodEntitySchema } from './Store';
@@ -48,21 +48,13 @@ class SettingStore extends Store<'settings', Setting> {
     group?: string | null;
     name: string;
   }): Promise<string | null> {
-    try {
-      const setting = await this.getSetting({
-        section,
-        group,
-        name
-      });
+    const setting = await this.getSetting({
+      section,
+      group,
+      name
+    });
 
-      return setting.value;
-    } catch (e) {
-      if (e instanceof ItemNotFoundError) {
-        return null;
-      }
-
-      throw e;
-    }
+    return setting?.value ?? null;
   }
 
   public async setValue({
@@ -76,20 +68,19 @@ class SettingStore extends Store<'settings', Setting> {
     name: string;
     value: string;
   }): Promise<void> {
-    try {
-      const setting = await this.getSetting({
-        section,
-        group,
-        name
+    const setting = await this.getSetting({
+      section,
+      group,
+      name
+    });
+
+    if (setting) {
+      super._update({
+        ...setting,
+        value
       });
-
-      setting.value = value;
-
-      await super._update(setting);
-    } catch (error) {
-      if (!(error instanceof ItemNotFoundError)) throw error;
-
-      await this._create({
+    } else {
+      this._create({
         section,
         group,
         name,
@@ -106,13 +97,13 @@ class SettingStore extends Store<'settings', Setting> {
     section: string;
     group?: string | null;
     name: string;
-  }): Promise<Setting> {
-    return await super._one({
-      where: {
-        section,
-        group,
-        name
-      }
+  }): Promise<Setting | null> {
+    await super.isReady();
+
+    return super._one({
+      section,
+      group,
+      name
     });
   }
 }

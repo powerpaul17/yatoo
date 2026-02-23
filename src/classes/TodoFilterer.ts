@@ -1,7 +1,8 @@
 import { computed, ref, type Component, type ComputedRef, type Ref } from 'vue';
 
+import { type Selector } from '@signaldb/core';
+
 import { useTodoStore, type Todo } from '../stores/todoStore';
-import type { Query } from 'blinkdb';
 
 export class TodoFilterer {
   private readonly filterRef: Ref<Array<TodoFilter<any>>> = ref([]);
@@ -14,17 +15,15 @@ export class TodoFilterer {
     this.filterRef.value = [];
   }
 
-  private readonly computedQuery: ComputedRef<Query<Todo, 'id'>> = computed(
-    () => {
-      const query = {};
+  private readonly computedQuery: ComputedRef<Selector<Todo>> = computed(() => {
+    const query = {};
 
-      for (const filter of this.filterRef.value) {
-        filter.adaptQuery(query);
-      }
-
-      return query;
+    for (const filter of this.filterRef.value) {
+      filter.adaptQuery(query);
     }
-  );
+
+    return query;
+  });
 
   private readonly todos = useTodoStore().getRefForComputedQuery(
     this.computedQuery
@@ -47,7 +46,7 @@ export interface TodoFilter<T> {
   get value(): T;
   setValue(value: T): void;
 
-  adaptQuery(query: Query<Todo, 'id'>): void;
+  adaptQuery(query: Selector<Todo>): void;
   filterResults(todos: Array<Todo>): Array<Todo>;
 
   getFilterBarComponent(): Component | null;

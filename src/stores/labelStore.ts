@@ -1,6 +1,7 @@
-import { computed, type ComputedRef, type Ref } from 'vue';
-import { ItemNotFoundError, type Query } from 'blinkdb';
+import { computed, type ComputedRef } from 'vue';
 import { z } from 'zod';
+
+import type { Selector } from '@signaldb/core';
 
 import {
   Store,
@@ -37,10 +38,10 @@ class LabelStore extends Store<'labels', InternalLabel> {
   }
 
   public watchForComputedQuery(
-    query: ComputedRef<Query<Label, 'id'>>,
+    query: ComputedRef<Selector<Label>>,
     callback: (entities: Array<Label>) => void
   ): void {
-    const internalQuery: ComputedRef<Query<InternalLabel, 'id'>> = computed(
+    const internalQuery: ComputedRef<Selector<InternalLabel>> = computed(
       () => ({
         ...query.value
       })
@@ -60,7 +61,7 @@ class LabelStore extends Store<'labels', InternalLabel> {
     });
   }
 
-  public getRef(query: Query<Label, 'id'>): ComputedRef<Array<Label>> {
+  public getRef(query: Selector<Label>): ComputedRef<Array<Label>> {
     return this._getRef(query);
   }
 
@@ -78,16 +79,9 @@ class LabelStore extends Store<'labels', InternalLabel> {
   }
 
   public async getByName(name: string): Promise<Label | null> {
-    try {
-      return await super._one({
-        where: {
-          _internalName: name.toLowerCase()
-        }
-      });
-    } catch (e) {
-      if (e instanceof ItemNotFoundError) return null;
-      throw e;
-    }
+    return super._one({
+      _internalName: name.toLowerCase()
+    });
   }
 
   public async update(label: UpdateEntity<Label>): Promise<void> {

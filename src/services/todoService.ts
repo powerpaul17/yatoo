@@ -22,10 +22,8 @@ class TodoService {
 
       this.todoStore.watchForComputedQuery(
         computed(() => ({
-          where: {
-            id: {
-              in: labelToTodos.value.map((l) => l.todoId)
-            }
+          id: {
+            $in: labelToTodos.value.map((l) => l.todoId)
           }
         })),
         (tds) => {

@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { useSettingStore, type Setting } from './settingStore';
-import { useLocalStorage } from './LocalStorage/useLocalStorage';
+import { useMemoryPersistenceAdapter } from './useMemoryPersistenceAdapter';
 import { useStorageManager } from './StorageManager';
 import { useSystemStore } from './systemStore';
 
@@ -10,8 +10,8 @@ describe('settingStore', () => {
     it('should migrate from version 1', async () => {
       vi.useFakeTimers({ now: 100, toFake: ['Date'] });
 
-      const storage = await useLocalStorage('settings');
-      await storage.setItem('1', {
+      const memoryPersistenceAdapter = useMemoryPersistenceAdapter('settings');
+      await memoryPersistenceAdapter.setItem({
         id: '1',
         name: 'setting1',
         group: 'group1',
@@ -27,8 +27,8 @@ describe('settingStore', () => {
     it('should migrate from version 2', async () => {
       vi.useFakeTimers({ now: 100, toFake: ['Date'] });
 
-      const storage = await useLocalStorage('settings');
-      await storage.setItem('1', {
+      const memoryPersistenceAdapter = useMemoryPersistenceAdapter('settings');
+      await memoryPersistenceAdapter.setItem({
         id: '1',
         name: 'setting1',
         group: 'group1',
@@ -146,14 +146,14 @@ describe('settingStore', () => {
   });
 
   afterEach(async () => {
+    const storageManager = useStorageManager();
+    storageManager.clear();
+
     const { resetSettingStore } = useSettingStore();
     resetSettingStore();
 
     const systemStore = useSystemStore();
     await systemStore.clear();
-
-    const storageManager = useStorageManager();
-    storageManager.clear();
   });
 
   const latestSettingItem: Setting = {

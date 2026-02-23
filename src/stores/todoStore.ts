@@ -1,6 +1,6 @@
-import type { Query } from 'blinkdb';
 import type { ComputedRef, Ref } from 'vue';
 import { z } from 'zod';
+import { type Selector } from '@signaldb/core';
 
 import {
   Store,
@@ -38,31 +38,31 @@ class TodoStore extends Store<'todos', Todo> {
   }
 
   public watchForComputedQuery(
-    query: ComputedRef<Query<Todo, 'id'>>,
+    query: ComputedRef<Selector<Todo>>,
     callback: (todos: Array<Todo>) => void
   ): void {
     return this._watchForComputedQuery(query, callback);
   }
 
   public getRefForComputedQuery(
-    computedQuery: ComputedRef<Query<Todo, 'id'>>
+    computedQuery: ComputedRef<Selector<Todo>>
   ): ComputedRef<Array<Todo>> {
     return this._getRefForComputedQuery(computedQuery);
   }
 
-  public getRef(query: Query<Todo, 'id'>): ComputedRef<Array<Todo>> {
+  public getRef(query: Selector<Todo>): ComputedRef<Array<Todo>> {
     return this._getRef(query);
   }
 
-  public countRef(query: Query<Todo, 'id'>): ComputedRef<number> {
+  public countRef(query: Selector<Todo>): ComputedRef<number> {
     return this._countRef(query);
   }
 
-  public getById(id: string): Promise<Todo> {
+  public getById(id: string): Promise<Todo | null> {
     return this._getById(id);
   }
 
-  public create(todo: CreationEntity<Todo>): Promise<string> {
+  public async create(todo: CreationEntity<Todo>): Promise<string> {
     return this._create(todo);
   }
 

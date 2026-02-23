@@ -41,7 +41,7 @@ export class TestStore extends Store<string, TestEntity> {
   }
 
   public async create(item: CreationEntity<TestEntity>): Promise<string> {
-    return await this._create(item);
+    return this._create(item);
   }
 
   public async update(item: UpdateEntity<TestEntity>): Promise<void> {

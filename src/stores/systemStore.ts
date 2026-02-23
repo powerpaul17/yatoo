@@ -1,7 +1,8 @@
-import { ItemNotFoundError } from 'blinkdb';
+import { Collection } from '@signaldb/core';
+import createIndexedDBAdapter from '@signaldb/indexeddb';
 
-import { BaseStore } from './BaseStore';
 import { useSingleInstance } from '../classes/useSingleInstance';
+import { useMemoryPersistenceAdapter } from './useMemoryPersistenceAdapter';
 
 const createSystemStore = (): SystemStore => new SystemStore();
 
@@ -10,53 +11,51 @@ export const useSystemStore = (): SystemStore => {
 };
 
 class SystemStore {
-  private readonly store: BaseStore<'system', SystemData, 'name'>;
+  private readonly store: Collection<SystemData>;
 
   constructor() {
-    this.store = new BaseStore({
-      tableName: 'system',
-      primaryKey: 'name'
+    this.store = new Collection({
+      persistence: process.env.TEST
+        ? useMemoryPersistenceAdapter('system')
+        : createIndexedDBAdapter('system', { prefix: '' })
     });
   }
 
   public async getValue(name: string): Promise<string | null> {
-    try {
-      const dataItem = await this.store.one({
-        where: {
-          name
-        }
-      });
-      return dataItem.value;
-    } catch (e) {
-      if (e instanceof ItemNotFoundError) return null;
-      throw e;
-    }
+    await this.store.isReady();
+
+    const dataItem = this.store.findOne({
+      name
+    });
+
+    return dataItem?.value ?? null;
   }
 
   public async setValue(name: string, value: string): Promise<void> {
-    try {
-      const dataItem = await this.store.one({
-        where: {
-          name
+    await this.store.isReady();
+
+    this.store.updateOne(
+      {
+        name
+      },
+      {
+        $set: {
+          name,
+          value
         }
-      });
-      dataItem.value = value;
-      await this.store.upsert(dataItem);
-    } catch (e) {
-      if (!(e instanceof ItemNotFoundError)) throw e;
-      await this.store.upsert({
-        name,
-        value
-      });
-    }
+      },
+      { upsert: true }
+    );
   }
 
   public async clear(): Promise<void> {
-    await this.store.clear();
+    await this.store.isReady();
+    this.store.removeMany({});
   }
 }
 
 type SystemData = {
+  id: string;
   name: string;
   value: string;
 };
