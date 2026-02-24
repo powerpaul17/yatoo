@@ -47,7 +47,7 @@
     "@capacitor/cli": "^6.0.0",
     "@capacitor/device": "^6.0.1",
     "@capacitor/filesystem": "^6.0.1",
-    "@happy-dom/global-registrator": "^18.0.1",
+    "@happy-dom/global-registrator": "^20.7.0",
     "@types/sinon": "^10.0.15",
     "@types/uuid": "^9.0.2",
     "@typescript-eslint/eslint-plugin": "^5.59.9",
