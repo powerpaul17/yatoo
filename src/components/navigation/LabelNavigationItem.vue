@@ -24,7 +24,7 @@
     </template>
 
     <template #buttonIcon>
-      <EllipsisVertical />
+      <MoreVertical />
     </template>
   </NavigationItem>
 
@@ -75,7 +75,7 @@
   import { useLabelStore, type Label } from '../../stores/labelStore';
   import { useTodoService } from '../../services/todoService';
 
-  import { EllipsisVertical, Pen, Tag, Trash } from 'lucide-vue-next';
+  import { MoreVertical, Pen, Tag, Trash } from 'lucide-vue-next';
 
   import NavigationItem from './NavigationItem.vue';
   import CustomIcon from '../CustomIcon.vue';
