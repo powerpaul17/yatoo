@@ -8,6 +8,8 @@ import LocalizedFormat from 'dayjs/plugin/localizedFormat';
 import { createApp, h, Suspense } from 'vue';
 import { createI18n } from 'vue-i18n';
 
+if (process.env.NODE_ENV === 'development') import('@signaldb/devtools');
+
 import PrimeVue from 'primevue/config';
 
 import { definePreset } from '@primevue/themes';
