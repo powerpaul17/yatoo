@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- npm audit fix
+
 ## [0.10.0] - 2024-10-09
 
 - add import/export plugin
