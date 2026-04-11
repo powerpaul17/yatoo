@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- fix f-droid build
+
 ## [0.11.0] - 2026-04-10
 
 - npm audit fix

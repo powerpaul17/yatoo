@@ -32,7 +32,10 @@ module.exports = {
         use: {
           loader: 'ts-loader',
           options: {
-            transpileOnly: true
+            transpileOnly: true,
+            compilerOptions: {
+              sourceMap: devMode
+            }
           }
         },
         exclude: /node_modules/
