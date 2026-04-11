@@ -58,7 +58,7 @@ jobs:
         uses: release-flow/keep-a-changelog-action@v2
         with:
           command: bump
-          version: minor # ${{inputs.increment}}
+          version: ${{inputs.increment}}
           fail-on-empty-release-notes: true
           keep-unreleased-section: true
 
