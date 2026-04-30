@@ -1,0 +1,2 @@
+- add configuration to not add dependency info block during build
+
