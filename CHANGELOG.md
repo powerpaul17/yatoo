@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+- add configuration to not add dependency info block during build
+
 ## [0.12.0] - 2026-04-11
 
 - fix f-droid build
